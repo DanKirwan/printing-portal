@@ -14,7 +14,7 @@ const MainViewerPC: FC = () => {
         <Stack direction='row'>
 
             <Stack width='80%' height='100vh'>
-                <Typography variant='h3'>STL Viewer</Typography>
+                <Typography variant='h3'>STL Viewer - Henley 3D Prints</Typography>
                 <STLLoaderHandler onLoad={geom => setBufferGeom(geom)} />
                 <MainRenderer geometry={bufferGeom ?? new BufferGeometry()} />
                 {/* {bufferGeom && <ModelRender geometry={bufferGeom} />} */}

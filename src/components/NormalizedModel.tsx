@@ -1,4 +1,4 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, Color, useFrame, useThree } from '@react-three/fiber';
 import { FC, useMemo, useState } from 'react';
 import { BufferGeometry, Vector3, } from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
@@ -7,11 +7,12 @@ import { CamControls } from './CameraControls';
 
 interface Props {
     geometry: BufferGeometry;
+    color: Color;
 }
 
 const size = new Vector3();
 
-const NormalizedModel: FC<Props> = ({ geometry }) => {
+const NormalizedModel: FC<Props> = ({ geometry, color }) => {
     const [hovered, setHovered] = useState(false);
     const centerVector = useMemo(() => new Vector3(), []);
     const { setSize } = useModel();
@@ -38,7 +39,7 @@ const NormalizedModel: FC<Props> = ({ geometry }) => {
             ]}
             onPointerOver={_ => setHovered(true)}
             onPointerOut={_ => setHovered(false)}>
-            <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+            <meshStandardMaterial color={color} />
         </mesh>
     )
 }

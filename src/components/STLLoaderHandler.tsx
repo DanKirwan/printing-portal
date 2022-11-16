@@ -1,13 +1,14 @@
-import { Button, Stack, Typography } from '@mui/material';
-import { ChangeEvent, FC, useState } from 'react';
+import { Box, Button, Stack, Typography } from '@mui/material';
+import { ChangeEvent, FC, Suspense, useState } from 'react';
 import { BufferGeometry } from 'three';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { stlToGeom } from '../lib/stlUtils';
+import Loading from './Loading';
+import ModelPreview from './ModelPreview';
 
 interface Props {
     onLoad: (geometry: BufferGeometry) => void;
 }
 
-const loader = new STLLoader();
 
 const STLLoaderHandler: FC<Props> = ({ onLoad }) => {
 
@@ -19,27 +20,31 @@ const STLLoaderHandler: FC<Props> = ({ onLoad }) => {
         if (!files) return;
         const file = files[0];
         setFile(file);
-
-        const fileUrl = URL.createObjectURL(file);
-
-        const bufferGeom = await loader.loadAsync(fileUrl);
+        const bufferGeom = await stlToGeom(file)
         onLoad(bufferGeom);
     }
     return (
-        <Stack>
-            {file && <Typography variant='h5'>Current File: {file.name}</Typography>}
-            <Button
-                variant="contained"
-                component="label"
-            >
-                Upload File
-                <input
-                    type="file"
-                    onChange={handleFileUpload}
-                    hidden
-                />
-            </Button>
-        </Stack>
+        <Suspense fallback={<Loading />}>
+
+            <Stack>
+                {file && <Typography variant='h5'>Current File: {file.name}</Typography>}
+                <Button
+                    variant="contained"
+                    component="label"
+                >
+                    Upload File
+                    <input
+                        type="file"
+                        onChange={handleFileUpload}
+                        hidden
+                    />
+                </Button>
+                <Stack sx={{ width: "100px", height: "100px" }}>
+
+                    {file && <ModelPreview file={file} color="red" />}
+                </Stack>
+            </Stack>
+        </Suspense>
     )
 }
 

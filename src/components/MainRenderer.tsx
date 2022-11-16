@@ -23,7 +23,7 @@ const MainRenderer: FC<Props> = ({ geometry }) => {
                 <CamControls boundary={false} />
                 <ambientLight />
                 <pointLight position={[10, 10, 10]} />
-                <NormalizedModel geometry={geometry} />
+                <NormalizedModel geometry={geometry} color="0xaaaaaa" />
             </ContextBridge>
         </Canvas>
     )
