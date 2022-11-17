@@ -8,7 +8,6 @@ interface Props {
 }
 
 const OrderSummaryPC: FC<Props> = ({ order }) => {
-
     return (
         <Stack>
             <DetailedPartOrder parts={order.parts} />

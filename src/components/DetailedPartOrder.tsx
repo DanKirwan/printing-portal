@@ -3,6 +3,9 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
 import { FC } from 'react';
 import { PartOrder } from '../lib/types';
+import DetailedPartRow from './DetailedPartRow';
+import DetailedPartRowEditor from './DetailedPartRowEditor';
+import ModelPreview from './ModelPreview';
 
 
 
@@ -22,38 +25,15 @@ const DetailedPartOrder: FC<Props> = ({ parts }) => {
     return <Table stickyHeader>
         <TableHead >
             <TableRow>
-                <TableCell></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right">Summary</TableCell>
-                <TableCell align="right">Notes</TableCell>
-                <TableCell align="right">Quantity</TableCell>
+                <TableCell align="left" ></TableCell>
+                <TableCell align="left" >Summary</TableCell>
+                <TableCell align="left">Notes</TableCell>
+                <TableCell align="center">Quantity</TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
             {parts.map((part, i) => (
-                <TableRow
-                    key={i}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                    <TableCell align="right">
-                        <Stack>
-
-                            <Typography>{part.file?.name}</Typography>
-                        </Stack>
-                    </TableCell>
-                    <TableCell align="right">
-                        <Stack>
-                            <Typography>Material: {part.settings.material}</Typography>
-                            <Typography>Colour: {part.settings.color}</Typography>
-                            <Typography>Infil: {part.settings.infill / 100}%</Typography>
-                            <Typography>Resolution: {part.settings.resolution}μm</Typography>
-                        </Stack></TableCell>
-                    <TableCell align="right">
-                        <Typography>{part.notes}</Typography>
-
-                    </TableCell>
-                    <TableCell align="right">{part.quantity}</TableCell>
-                </TableRow>
+                <DetailedPartRowEditor part={part} onChange={(_) => { }} />
             ))}
         </TableBody>
     </Table>
