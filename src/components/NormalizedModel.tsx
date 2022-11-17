@@ -13,6 +13,7 @@ interface Props {
 const size = new Vector3();
 
 const NormalizedModel: FC<Props> = ({ geometry, color }) => {
+    console.log(geometry)
     const [hovered, setHovered] = useState(false);
     const centerVector = useMemo(() => new Vector3(), []);
     const { setSize } = useModel();

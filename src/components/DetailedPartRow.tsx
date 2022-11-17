@@ -3,15 +3,19 @@ import TableRow from '@mui/material/TableRow';
 import { FC } from 'react';
 import { PartOrder } from '../lib/types';
 import ModelPreview from './ModelPreview';
+import PartSummary from './PartSummary';
 
 interface Props {
-    part: PartOrder
+    part: PartOrder;
+    onClick: () => void;
+
 }
 
-const DetailedPartRow: FC<Props> = ({ part }) => {
+const DetailedPartRow: FC<Props> = ({ part, onClick }) => {
     return (
         <TableRow
             sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+            onClick={onClick}
 
         >
             <TableCell align="right" width="20px">
@@ -21,10 +25,7 @@ const DetailedPartRow: FC<Props> = ({ part }) => {
                 </Stack>
             </TableCell>
             <TableCell align="left" valign='bottom'>
-                <Typography>Material: {part.settings.material}</Typography>
-                <Typography>Colour: {part.settings.color}</Typography>
-                <Typography>Infil: {part.settings.infill * 100}%</Typography>
-                <Typography>Resolution: {part.settings.resolution}μm</Typography>
+                <PartSummary part={part} />
             </TableCell>
             <TableCell align="left">
                 <Typography>{part.notes}</Typography>

@@ -3,13 +3,15 @@ import TableRow from '@mui/material/TableRow';
 import { FC } from 'react';
 import { PartOrder } from '../lib/types';
 import ModelPreview from './ModelPreview';
+import PartSummary from './PartSummary';
 
 interface Props {
     part: PartOrder;
-    onChange: (part: PartOrder) => void
+    onChange: (part: PartOrder) => void;
+    onClick: () => void;
 }
 
-const DetailedPartRowEditor: FC<Props> = ({ part, onChange }) => {
+const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick }) => {
     const handleNotesChange = (notes: string) => {
 
     }
@@ -18,20 +20,17 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange }) => {
     }
     return (
         <TableRow
-            sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 
         >
             <TableCell align="right" width="20px">
-                <Stack width={200} alignItems='center'>
+                <Stack width={200} alignItems='center' onClick={onClick} sx={{ cursor: 'pointer' }}>
                     <ModelPreview file={part.file} color={'grey'} />
                     <Typography >{part.file.name}</Typography>
                 </Stack>
             </TableCell>
             <TableCell align="left" valign='bottom'>
-                <Typography>Material: {part.settings.material}</Typography>
-                <Typography>Colour: {part.settings.color}</Typography>
-                <Typography>Infil: {part.settings.infill * 100}%</Typography>
-                <Typography>Resolution: {part.settings.resolution}μm</Typography>
+                <PartSummary part={part} />
             </TableCell>
             <TableCell align="left">
                 <TextField

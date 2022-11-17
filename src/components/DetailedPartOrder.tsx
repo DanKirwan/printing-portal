@@ -18,10 +18,11 @@ const columns: GridColDef[] = [
 
 interface Props {
     parts: PartOrder[]
+    onClick: (part: PartOrder) => void
 }
 
 
-const DetailedPartOrder: FC<Props> = ({ parts }) => {
+const DetailedPartOrder: FC<Props> = ({ parts, onClick }) => {
     return <Table stickyHeader>
         <TableHead >
             <TableRow>
@@ -33,7 +34,7 @@ const DetailedPartOrder: FC<Props> = ({ parts }) => {
         </TableHead>
         <TableBody>
             {parts.map((part, i) => (
-                <DetailedPartRowEditor part={part} onChange={(_) => { }} />
+                <DetailedPartRowEditor part={part} onChange={(_) => { }} onClick={() => onClick(part)} />
             ))}
         </TableBody>
     </Table>

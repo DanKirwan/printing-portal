@@ -16,14 +16,14 @@ const MainRenderer: FC<Props> = ({ geometry }) => {
     const ContextBridge = useContextBridge(ModelContext);
 
     return (
-        <Canvas style={{ height: '90vh' }} flat dpr={window.devicePixelRatio} camera={{ position: [2, 2, 0], fov: 75, near: 0.01, far: 2000, up: [0, 0, -1] }}>
+        <Canvas flat dpr={window.devicePixelRatio} camera={{ position: [2, 2, 0], fov: 75, near: 0.01, far: 2000, up: [0, 0, -1] }} style={{ height: '100%' }}>
             <ContextBridge>
 
                 <color attach="background" args={[0x7799aa]} />
                 <CamControls boundary={false} />
                 <ambientLight />
-                <pointLight position={[10, 10, 10]} />
-                <NormalizedModel geometry={geometry} color="0xaaaaaa" />
+                <pointLight position={[10, 5, -10]} />
+                <NormalizedModel geometry={geometry} color="grey" />
             </ContextBridge>
         </Canvas>
     )
