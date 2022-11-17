@@ -16,6 +16,8 @@ const OrderSummaryPC: FC<Props> = ({ order }) => {
             {openPart && <Dialog
                 open={!!openPart}
                 onClose={() => setOpenPart(undefined)}
+                fullWidth={true}
+                maxWidth={'lg'}
             >
                 <DialogTitle>Part Settings</DialogTitle>
                 <DialogContent sx={{ height: '70vh' }}>
@@ -24,7 +26,7 @@ const OrderSummaryPC: FC<Props> = ({ order }) => {
                 </DialogContent>
 
             </Dialog>}
-        </Stack>
+        </Stack >
     )
 }
 
