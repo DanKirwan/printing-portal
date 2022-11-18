@@ -7,18 +7,23 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import { theme } from './theme';
 import { CssBaseline } from '@mui/material';
+import { AuthProvider } from './contexts/AuthContext';
+
+
 
 
 function App() {
-
   return (
     <ThemeProvider theme={theme}>
-      <ModelProvider>
-        <BrowserRouter>
-          <CssBaseline />
-          <AppRoutes />
-        </BrowserRouter>
-      </ModelProvider>
+      <AuthProvider>
+
+        <ModelProvider>
+          <BrowserRouter>
+            <CssBaseline />
+            <AppRoutes />
+          </BrowserRouter>
+        </ModelProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }
