@@ -9,10 +9,6 @@ import LoginTest from '@src/components/LoginTest';
 
 
 export default () => {
-    // const storageRef = useMemo(() => ref(storage, 'Istanbul EUSA 2022-088.jpg'), []);
-
-    // const url = suspend(() => getDownloadURL(storageRef), []);
-
     return (
         <LoginTest />
     )
