@@ -1,7 +1,7 @@
 import { User, AuthProvider, UserCredential, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider } from "firebase/auth";
 import { FirestoreDataConverter, QueryDocumentSnapshot, Firestore, collection } from "firebase/firestore";
 import { auth, fireStore } from "@src/main"
-import { Order } from "./types";
+import { Order, PartOrder } from "./types";
 
 
 const converter = <T>(): FirestoreDataConverter<T> => ({
@@ -15,10 +15,16 @@ const collections = {
     orders: 'orders'
 };
 
+
+export type DBPart = Omit<PartOrder, 'file'>;
+
+export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
+
 export const getDB = () => ({
-    users: typedCollection<Order>(fireStore, collections.orders),
+    users: typedCollection<DBOrder>(fireStore, collections.orders),
 
 });
+
 
 export const SignInWithSocialMedia = (provider: AuthProvider) =>
     new Promise<UserCredential>((resolve, reject) => {
