@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore"
+
 export type Order = {
     address: Address,
     completed: boolean,
@@ -5,7 +7,7 @@ export type Order = {
     email: string,
     desc: string,
     parts: PartOrder[],
-    ordered: Date,
+    ordered: Timestamp,
     lead: number,
     settings: OrderSettings,
 }

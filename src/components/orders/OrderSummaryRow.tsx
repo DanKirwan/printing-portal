@@ -16,25 +16,21 @@ interface Props {
 // Count
 // Total Count
 export const OrderSummaryRow: FC<Props> = ({ order, onClick }) => {
-    console.log(order.ordered);
-
     return (
         <TableRow
             sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
             onClick={onClick}
 
         >
-            <TableCell width="20px" align='left'>
-                {order.desc}
-            </TableCell>
-            <TableCell align='right'>
+            <TableCell >
                 {order.email}
             </TableCell>
-            <TableCell valign='bottom' align='right'>
-                {/* {order.ordered?.toLocaleDateString()} */}
+
+            <TableCell  >
+                {order.ordered.toDate().toLocaleDateString('en-GB')}
             </TableCell>
 
-            <TableCell width='140px' align='right'>
+            <TableCell >
                 <Stack>
 
                     <Typography>{order.settings.material}</Typography>
@@ -43,7 +39,7 @@ export const OrderSummaryRow: FC<Props> = ({ order, onClick }) => {
 
             </TableCell>
 
-            <TableCell width='140px' align='center'>
+            <TableCell>
                 <Stack>
 
                     <Typography>Parts: {order.parts.length}</Typography>
@@ -51,6 +47,9 @@ export const OrderSummaryRow: FC<Props> = ({ order, onClick }) => {
                     <Typography variant='body2'>Units: {sum(order.parts.map(p => p.quantity))}</Typography>
                 </Stack>
 
+            </TableCell>
+            <TableCell align='right'>
+                {order.desc}
             </TableCell>
         </TableRow>
     )

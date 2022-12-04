@@ -22,11 +22,11 @@ export const OrdersTable: FC<Props> = ({ orders }) => {
             <TableHead >
                 <TableRow>
 
-                    <TableCell align="left" >Description</TableCell>
-                    <TableCell align='right' >Email</TableCell>
-                    <TableCell align='right'>Date</TableCell>
-                    <TableCell align='right'>Material</TableCell>
-                    <TableCell align='center'>Size</TableCell>
+                    <TableCell >Email</TableCell>
+                    <TableCell >Date</TableCell>
+                    <TableCell >Material</TableCell>
+                    <TableCell >Size</TableCell>
+                    <TableCell align="right" >Description</TableCell>
                 </TableRow>
             </TableHead>
 

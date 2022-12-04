@@ -8,7 +8,7 @@ import { FC, useState } from 'react';
 import DetailedPartOrder from '../components/DetailedPartOrder';
 import PartDetailsModal from '../components/parts/PartDetailsModal';
 import { Order, PartOrder } from '../lib/types';
-
+import { Timestamp } from 'firebase/firestore'
 interface Props {
     files: File[]
 }
@@ -19,7 +19,7 @@ const genDefaultOrder = (files: File[]): Order => {
         email: "Test",
         desc: "Test Desc",
         lead: 2,
-        ordered: new Date(),
+        ordered: Timestamp.fromDate(new Date()),
         parts: files.map((file, i) => ({
             file,
             notes: "",
