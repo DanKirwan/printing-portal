@@ -18,8 +18,8 @@ interface Props {
 const genDefaultOrder = (files: File[]): Order => {
 
     const order: Order = {
-        email: "Test",
-        desc: "Test Desc",
+        email: "",
+        desc: "",
         lead: 2,
         ordered: Timestamp.fromDate(new Date()),
         parts: files.map((file, i) => ({
@@ -62,14 +62,20 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
     const handleUpload = async () => {
         setLoading(true);
-        console.log(order);
         const authOrder = email ? { ...order, email } : order;
-        const orderId = await handleOrderUpload(authOrder, uid);
+        try {
+
+            const orderId = await handleOrderUpload(authOrder, uid);
+            navigate(uid ? `/${orderId}` : '/ordercomplete');
+        } catch (e: any) {
+            alert("Failed to upload model, the error has been logged");
+            console.log(e);
+        }
         console.log("Uploaded");
         setLoading(false);
         setDialogOpen(false);
-        if (!uid) return;
-        navigate(`/${orderId}`);
+
+
 
     }
 

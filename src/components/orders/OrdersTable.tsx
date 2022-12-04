@@ -32,7 +32,7 @@ export const OrdersTable: FC<Props> = ({ orders }) => {
 
             <TableBody>
                 {orders.map((order, i) => (
-                    <OrderSummaryRow order={order} onClick={() => handleClick(order.id)} />
+                    <OrderSummaryRow key={i} order={order} onClick={() => handleClick(order.id)} />
                 ))}
             </TableBody>
 

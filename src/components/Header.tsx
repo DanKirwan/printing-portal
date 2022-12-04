@@ -8,7 +8,7 @@ import { SignInWithSocialMedia, Providers, SignOut } from '@src/lib/firebaseUtil
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export const Header: FC = () => {
-    const { uid, photoURL, displayName } = useAuth();
+    const { uid, photoURL, displayName, email } = useAuth();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
@@ -35,7 +35,7 @@ export const Header: FC = () => {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1, padding: 2 }}>
                     Henley Print 3D
                 </Typography>
-                {uid && photoURL && displayName
+                {uid && photoURL && displayName && email
                     ?
                     <Stack sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
@@ -60,6 +60,13 @@ export const Header: FC = () => {
                             onClose={handleCloseUserMenu}
                         >
 
+                            <MenuItem disabled={true}>
+                                <Stack>
+
+                                    <Typography>{displayName}</Typography>
+                                    <Typography variant='body2'>({email})</Typography>
+                                </Stack>
+                            </MenuItem>
                             <MenuItem onClick={handleSignout}>
                                 <Typography textAlign="center">Logout</Typography>
                             </MenuItem>
