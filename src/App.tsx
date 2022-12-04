@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react';
+import { FC, Fragment, Suspense } from 'react';
 import { AppRoutes } from './AppRoutes';
 import { ModelProvider } from './contexts/ModelContext';
 import MainViewerPC from './pageComponents/MainViewer.pc'
@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import { theme } from './theme';
 import { CssBaseline } from '@mui/material';
+import Loading from "@src/components/Loading";
 import { AuthProvider } from './contexts/AuthContext';
 
 
@@ -19,8 +20,11 @@ function App() {
 
         <ModelProvider>
           <BrowserRouter>
-            <CssBaseline />
-            <AppRoutes />
+            <Suspense fallback={<Loading />}>
+
+              <CssBaseline />
+              <AppRoutes />
+            </Suspense>
           </BrowserRouter>
         </ModelProvider>
       </AuthProvider>

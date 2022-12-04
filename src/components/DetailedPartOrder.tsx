@@ -34,7 +34,7 @@ const DetailedPartOrder: FC<Props> = ({ parts, onClick }) => {
         </TableHead>
         <TableBody>
             {parts.map((part, i) => (
-                <DetailedPartRowEditor part={part} onChange={(_) => { }} onClick={() => onClick(part)} />
+                <DetailedPartRowEditor key={i} part={part} onChange={(_) => { }} onClick={() => onClick(part)} />
             ))}
         </TableBody>
     </Table>

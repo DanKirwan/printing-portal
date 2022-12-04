@@ -16,12 +16,12 @@ const collections = {
 };
 
 
-export type DBPart = Omit<PartOrder, 'file'>;
+export type DBPart = Omit<PartOrder, 'file'> & { fileName: string };
 
 export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
 
 export const getDB = () => ({
-    users: typedCollection<DBOrder>(fireStore, collections.orders),
+    orders: typedCollection<DBOrder>(fireStore, collections.orders),
 
 });
 

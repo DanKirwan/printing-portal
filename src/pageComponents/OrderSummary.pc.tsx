@@ -1,5 +1,5 @@
 import { Modal, Stack, Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
-import { handleOrderUpload } from '@src/lib/uploadUtils';
+import { getOrder, handleOrderUpload } from '@src/lib/uploadUtils';
 import { FC, useState } from 'react';
 import DetailedPartOrder from '../components/DetailedPartOrder';
 import PartDetailsModal from '../components/PartDetailsModal';
@@ -14,8 +14,11 @@ const OrderSummaryPC: FC<Props> = ({ order }) => {
     const [loading, setLoading] = useState(false);
     const handleUpload = async () => {
         setLoading(true);
-        await handleOrderUpload(order);
+        console.log(order);
+        const orderId = await handleOrderUpload(order);
         console.log("Upload");
+        const checkOrder = await getOrder(orderId);
+        console.log(checkOrder);
         setLoading(false);
     }
     return (

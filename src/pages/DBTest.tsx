@@ -19,7 +19,7 @@ function useQuery() {
 
 export default () => {
     const query = useQuery();
-    const storageRef = useMemo(() => ref(storage, "100mm_Cube.STL"), []);
+    const storageRef = useMemo(() => ref(storage, "hanging_pumpkin.stl"), []);
 
     const handleFileLoad = async () => {
         const blob = await getBlob(storageRef);

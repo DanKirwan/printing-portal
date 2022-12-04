@@ -9,3 +9,5 @@ export const getFileFromUrl = async (url: string, name: string, defaultType = 'i
         type: data.type || defaultType,
     });
 }
+
+export type WithId<T> = T & { id: string };
