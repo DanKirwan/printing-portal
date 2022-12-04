@@ -1,6 +1,8 @@
 import { Modal, Stack, Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
+import { ShippingInput } from '@src/components/upload/ShippingInput';
+import { UploadDialog } from '@src/components/upload/UploadDialog';
 import { getOrder, handleOrderUpload } from '@src/lib/uploadUtils';
 import { FC, useState } from 'react';
 import DetailedPartOrder from '../components/DetailedPartOrder';
@@ -29,8 +31,10 @@ const genDefaultOrder = (files: File[]): Order => {
             }
         })),
         address: {
+            firstName: '',
+            lastName: '',
             city: '',
-            country: '',
+            countryCode: 'GB',
             line1: '',
             line2: '',
             postCode: '',
@@ -49,6 +53,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
     const [order, setOrder] = useState<Order>(genDefaultOrder(files));
     const [loading, setLoading] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleUpload = async () => {
         setLoading(true);
@@ -58,6 +63,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
         const checkOrder = await getOrder(orderId);
         console.log(checkOrder);
         setLoading(false);
+        setDialogOpen(false);
     }
 
     const fakeUpload = () => {
@@ -68,8 +74,14 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
     return (
         <Stack>
             <OrderEditor order={order} onChange={setOrder} />
-            <LoadingButton loading={loading} onClick={() => fakeUpload()} >Upload</LoadingButton>
-
+            <LoadingButton loading={loading} onClick={() => setDialogOpen(true)} >Upload</LoadingButton>
+            <UploadDialog
+                uploading={loading}
+                order={order}
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                onSubmit={() => handleUpload()}
+                onChange={setOrder} />
         </Stack >
     )
 }

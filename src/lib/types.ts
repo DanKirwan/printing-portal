@@ -31,10 +31,13 @@ export type PartSettings = {
 
 
 export type Address = {
+    firstName: string,
+    lastName: string,
+
     city: string,
-    country: string,
+    countryCode: string,
     line1: string,
-    line2: string,
+    line2?: string,
     postCode: string,
     county: string,
 }

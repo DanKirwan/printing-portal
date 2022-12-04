@@ -17,7 +17,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick }) => {
         onChange({ ...rest, notes });
     }
     const handleQuantityChange = (newQuantityValue: string) => {
-        const quantity = Number.parseInt(newQuantityValue);
+        const quantity = newQuantityValue == '' ? 0 : Number.parseInt(newQuantityValue);
         if (Number.isNaN(quantity)) return;
         const { quantity: _, ...rest } = part;
         onChange({ ...rest, quantity });
