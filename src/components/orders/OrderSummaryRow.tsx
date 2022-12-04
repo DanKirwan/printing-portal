@@ -2,7 +2,7 @@ import { Stack, TableCell, TableRow, Typography } from '@mui/material';
 import { DBOrder } from '@src/lib/firebaseUtils';
 import { FC } from 'react';
 import ModelPreview from '../ModelPreview';
-import PartSummary from '../PartSummary';
+import PartSummary from '../parts/PartSettingsSummary';
 import { sum } from 'lodash';
 
 interface Props {

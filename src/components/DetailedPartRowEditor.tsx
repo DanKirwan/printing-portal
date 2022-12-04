@@ -3,7 +3,7 @@ import TableRow from '@mui/material/TableRow';
 import { FC } from 'react';
 import { PartOrder } from '../lib/types';
 import ModelPreview from './ModelPreview';
-import PartSummary from './PartSummary';
+import PartSummary from './parts/PartSettingsSummary';
 
 interface Props {
     part: PartOrder;

@@ -1,19 +1,22 @@
 import { Accordion, AccordionDetails, AccordionSummary, Paper, Stack, Typography } from '@mui/material';
 import { FC, Suspense } from 'react';
 import { suspend } from 'suspend-react';
-import { stlToGeom } from '../lib/stlUtils';
-import { PartOrder } from '../lib/types';
-import GeometryAnalysis from './GeometryAnalysis';
-import Loading from './Loading';
-import MainRenderer from './MainRenderer';
-import PartSummary from './PartSummary';
+import { stlToGeom } from '../../lib/stlUtils';
+import { PartOrder } from '../../lib/types';
+import GeometryAnalysis from '../GeometryAnalysis';
+import Loading from '../Loading';
+import MainRenderer from '../MainRenderer';
+import { PartSettingsEditor } from './PartSettingsEditor';
+import PartSummary from './PartSettingsSummary';
 
 interface Props {
     part: PartOrder
+    onChange: (part: PartOrder) => void;
+    editing?: boolean;
 }
 
 
-const PartDetailsModal: FC<Props> = ({ part }) => {
+const PartDetailsModal: FC<Props> = ({ part, onChange, editing = false }) => {
     const geometry = suspend(() => stlToGeom(part.file), [part.file]);
 
     return (
@@ -23,9 +26,14 @@ const PartDetailsModal: FC<Props> = ({ part }) => {
             <Stack direction='row' spacing={2} height='100%'>
                 <Stack width="60%">
                     <Accordion defaultExpanded={true}>
-                        <AccordionSummary>Summary</AccordionSummary>
+                        <AccordionSummary>Settings</AccordionSummary>
                         <AccordionDetails>
-                            <PartSummary part={part} />
+                            {editing
+                                ?
+                                <PartSettingsEditor part={part} onChange={onChange} />
+                                :
+                                <PartSummary part={part} />
+                            }
 
                         </AccordionDetails>
                     </Accordion>

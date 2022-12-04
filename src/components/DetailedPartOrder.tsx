@@ -19,7 +19,7 @@ const columns: GridColDef[] = [
 interface Props {
     parts: PartOrder[];
     onChange: (parts: PartOrder[]) => void;
-    onClick: (part: PartOrder) => void;
+    onClick: (index: number) => void;
 }
 
 
@@ -40,7 +40,7 @@ const DetailedPartOrder: FC<Props> = ({ parts, onClick, onChange }) => {
         </TableHead>
         <TableBody>
             {parts.map((part, i) => (
-                <DetailedPartRowEditor key={i} part={part} onChange={newPart => handleChange(newPart, i)} onClick={() => onClick(part)} />
+                <DetailedPartRowEditor key={i} part={part} onChange={newPart => handleChange(newPart, i)} onClick={() => onClick(i)} />
             ))}
         </TableBody>
     </Table>

@@ -4,7 +4,7 @@ import { OrderEditor } from '@src/components/OrderEditor';
 import { getOrder, handleOrderUpload } from '@src/lib/uploadUtils';
 import { FC, useState } from 'react';
 import DetailedPartOrder from '../components/DetailedPartOrder';
-import PartDetailsModal from '../components/PartDetailsModal';
+import PartDetailsModal from '../components/parts/PartDetailsModal';
 import { Order, PartOrder } from '../lib/types';
 
 interface Props {
@@ -20,10 +20,10 @@ const genDefaultOrder = (files: File[]): Order => {
         ordered: new Date(),
         parts: files.map((file, i) => ({
             file,
-            notes: "Great file",
-            quantity: i + 1,
+            notes: "",
+            quantity: 1,
             settings: {
-                color: 'red',
+                color: 'Any',
                 infill: 0.4,
                 resolution: 200
             }

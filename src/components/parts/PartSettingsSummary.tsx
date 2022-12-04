@@ -1,12 +1,12 @@
 import { Typography } from '@mui/material';
 import { FC } from 'react';
-import { PartOrder } from '../lib/types';
+import { PartOrder } from '../../lib/types';
 
 interface Props {
     part: PartOrder;
 }
 
-const PartSummary: FC<Props> = ({ part }) => {
+const PartSettingsSummary: FC<Props> = ({ part }) => {
     return (
         <>
             <Typography>Colour: {part.settings.color}</Typography>
@@ -16,4 +16,4 @@ const PartSummary: FC<Props> = ({ part }) => {
     )
 }
 
-export default PartSummary;
+export default PartSettingsSummary;
