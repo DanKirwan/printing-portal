@@ -5,15 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { getBlob, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@src/main";
 
-export const handleOrderUpload = async (order: Order): Promise<string> => {
+export const handleOrderUpload = async (order: Order, userId: string | null): Promise<string> => {
 
     const { parts, ...rest } = order;
 
     const uuid = uuidv4();
-    const dbOrder = { ...rest, parts: parts.map(convertToDBPart) };
-    const orderUpload = await setDoc(doc(getDB().orders, uuid), Object.assign({}, dbOrder));
+    const dbOrder = { ...rest, parts: parts.map(convertToDBPart), userId };
+    await setDoc(doc(getDB().orders, uuid), Object.assign({}, dbOrder));
     for (var part of parts) {
-        await uploadFile(part.file, uuid);
+        await uploadFile(part.file, uuid, userId);
     }
 
     return uuid;
@@ -27,10 +27,10 @@ export const getOrder = async (uuid: string): Promise<Order> => {
     return convertOrder(orderData, uuid);
 }
 
-const getUploadPath = (uuid: string, fileName: string) => `${uuid}/${fileName}`;
+const getUploadPath = (uuid: string, fileName: string, userId: string | null) => `${userId ?? "anonymous"}/${uuid}/${fileName}`;
 
-const uploadFile = async (file: File, uuid: string) => {
-    const storageRef = ref(storage, getUploadPath(uuid, file.name));
+const uploadFile = async (file: File, uuid: string, userId: string | null) => {
+    const storageRef = ref(storage, getUploadPath(uuid, file.name, userId));
     const uploadTask = await uploadBytesResumable(storageRef, file);
     console.log(uploadTask)
 
@@ -42,9 +42,9 @@ const convertToDBPart = (part: PartOrder): DBPart => {
 
 
 
-const convertPart = async (part: DBPart, orderId: string): Promise<PartOrder> => {
+const convertPart = async (part: DBPart, orderId: string, userId: string | null): Promise<PartOrder> => {
     const { fileName, ...rest } = part;
-    const storageRef = ref(storage, getUploadPath(orderId, fileName));
+    const storageRef = ref(storage, getUploadPath(orderId, fileName, userId));
 
     const blob = await getBlob(storageRef);
     if (!blob) throw "Could not download requested file from server";
@@ -55,7 +55,7 @@ const convertPart = async (part: DBPart, orderId: string): Promise<PartOrder> =>
 
 const convertOrder = async (order: DBOrder, uuid: string): Promise<Order> => {
     const { parts, ...rest } = order;
-    const partPromises = order.parts.map(part => convertPart(part, uuid));
+    const partPromises = order.parts.map(part => convertPart(part, uuid, order.userId));
     const populatedParts = await Promise.all(partPromises);
     return { ...rest, parts: populatedParts };
 }

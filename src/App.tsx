@@ -9,6 +9,7 @@ import { theme } from './theme';
 import { CssBaseline } from '@mui/material';
 import Loading from "@src/components/Loading";
 import { AuthProvider } from './contexts/AuthContext';
+import { Header } from './components/Header';
 
 
 
@@ -23,6 +24,7 @@ function App() {
             <Suspense fallback={<Loading />}>
 
               <CssBaseline />
+              <Header />
               <AppRoutes />
             </Suspense>
           </BrowserRouter>

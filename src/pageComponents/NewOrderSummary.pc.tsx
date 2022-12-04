@@ -9,6 +9,7 @@ import DetailedPartOrder from '../components/DetailedPartOrder';
 import PartDetailsModal from '../components/parts/PartDetailsModal';
 import { Order, PartOrder } from '../lib/types';
 import { Timestamp } from 'firebase/firestore'
+import { useAuth } from '@src/contexts/AuthContext';
 interface Props {
     files: File[]
 }
@@ -54,14 +55,13 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
     const [order, setOrder] = useState<Order>(genDefaultOrder(files));
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const { uid } = useAuth();
 
     const handleUpload = async () => {
         setLoading(true);
         console.log(order);
-        const orderId = await handleOrderUpload(order);
-        console.log("Upload");
-        const checkOrder = await getOrder(orderId);
-        console.log(checkOrder);
+        const orderId = await handleOrderUpload(order, uid);
+        console.log("Uploaded");
         setLoading(false);
         setDialogOpen(false);
     }

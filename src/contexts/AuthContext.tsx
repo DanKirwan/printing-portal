@@ -1,30 +1,38 @@
 import { auth } from "@src/main";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { FCC } from "../lib/utils";
 interface IAuthContext {
     uid: string | null;
+    email: string | null;
+    photoURL: string | null;
+    displayName: string | null;
 }
 
 export const AuthContext = createContext({} as IAuthContext);
 
 export const AuthProvider: FCC = ({ children }) => {
-    const [uid, setUid] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            setUid(null);
+            setUser(currentUser);
             if (!currentUser) return;
             const { uid, email } = currentUser;
-            setUid(uid);
+
             if (!email) throw `User with uid=${uid} has no email`;
         });
         return () => unsubscribe();
     }, []);
 
     return (
-        <AuthContext.Provider value={{ uid }}>
+        <AuthContext.Provider value={{
+            uid: user?.uid ?? null,
+            email: user?.email ?? null,
+            photoURL: user?.photoURL ?? null,
+            displayName: user?.displayName ?? null
+        }}>
             {children}
         </AuthContext.Provider>
     );

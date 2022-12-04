@@ -18,7 +18,7 @@ const collections = {
 
 export type DBPart = Omit<PartOrder, 'file'> & { fileName: string };
 
-export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
+export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[], userId: string | null };
 
 export const getDB = () => ({
     orders: typedCollection<DBOrder>(fireStore, collections.orders),
