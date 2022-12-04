@@ -13,10 +13,14 @@ interface Props {
 
 const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick }) => {
     const handleNotesChange = (notes: string) => {
-
+        const { notes: _, ...rest } = part;
+        onChange({ ...rest, notes });
     }
-    const handleQuantityChange = (quantity: number) => {
-
+    const handleQuantityChange = (newQuantityValue: string) => {
+        const quantity = Number.parseInt(newQuantityValue);
+        if (Number.isNaN(quantity)) return;
+        const { quantity: _, ...rest } = part;
+        onChange({ ...rest, quantity });
     }
     return (
         <TableRow
@@ -34,7 +38,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick }) => {
             </TableCell>
             <TableCell align="left">
                 <TextField
-                    // value={part.notes}
+                    value={part.notes}
                     onChange={e => handleNotesChange(e.target.value)}
                     multiline
                     rows={4} />
@@ -44,7 +48,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick }) => {
                 <TextField
                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     value={part.quantity}
-                    onChange={e => handleQuantityChange(+e.target.value)} />
+                    onChange={e => handleQuantityChange(e.target.value)} />
             </TableCell>
         </TableRow>
     )

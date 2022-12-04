@@ -12,7 +12,6 @@ interface Props {
 
 
 const NormalizedModel: FC<Props> = ({ geometry, color }) => {
-    console.log(geometry)
     const [hovered, setHovered] = useState(false);
     const centerVector = useMemo(() => new Vector3(), []);
     const size = useMemo(() => new Vector3(), []);
@@ -22,9 +21,7 @@ const NormalizedModel: FC<Props> = ({ geometry, color }) => {
     const bb = geometry.boundingBox;
     bb?.getCenter(centerVector);
     bb?.getSize(size);
-    console.log(centerVector);
 
-    console.log(size);
     geometry.computeBoundingBox();
 
     setSize(size.x, size.y, size.z);

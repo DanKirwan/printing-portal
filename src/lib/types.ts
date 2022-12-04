@@ -1,22 +1,40 @@
 export type Order = {
+    address: Address,
+    completed: boolean,
+    processing: boolean,
     email: string,
     desc: string,
     parts: PartOrder[],
     ordered: Date,
-    lead: number
+    lead: number,
+    settings: OrderSettings,
 }
 
 export type PartOrder = {
     file: File,
     quantity: number,
     notes: string,
-    settings: PartSettings
+    settings: PartSettings,
 }
 
-export type PartSettings = {
+export type OrderSettings = {
     material: string,
+}
+
+
+export type PartSettings = {
+    color: string,
     resolution: number, // layer height in um
     infill: number, // a number between 0 and 1 representing decimal infil
-    color: string,
 
+}
+
+
+export type Address = {
+    city: string,
+    country: string,
+    line1: string,
+    line2: string,
+    postCode: string,
+    county: string,
 }

@@ -17,12 +17,18 @@ const columns: GridColDef[] = [
 ]
 
 interface Props {
-    parts: PartOrder[]
-    onClick: (part: PartOrder) => void
+    parts: PartOrder[];
+    onChange: (parts: PartOrder[]) => void;
+    onClick: (part: PartOrder) => void;
 }
 
 
-const DetailedPartOrder: FC<Props> = ({ parts, onClick }) => {
+const DetailedPartOrder: FC<Props> = ({ parts, onClick, onChange }) => {
+    const handleChange = (part: PartOrder, index: number) => {
+        const newParts = [...parts];
+        newParts[index] = part;
+        onChange(newParts);
+    }
     return <Table stickyHeader>
         <TableHead >
             <TableRow>
@@ -34,7 +40,7 @@ const DetailedPartOrder: FC<Props> = ({ parts, onClick }) => {
         </TableHead>
         <TableBody>
             {parts.map((part, i) => (
-                <DetailedPartRowEditor key={i} part={part} onChange={(_) => { }} onClick={() => onClick(part)} />
+                <DetailedPartRowEditor key={i} part={part} onChange={newPart => handleChange(newPart, i)} onClick={() => onClick(part)} />
             ))}
         </TableBody>
     </Table>

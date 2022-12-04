@@ -2,7 +2,7 @@ import { Container, Stack } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 import DetailedPartOrder from '../components/DetailedPartOrder';
 import { useDropzone } from 'react-dropzone'
-import OrderSummaryPC from './OrderSummary.pc';
+import NewOrderSummaryPC from './NewOrderSummary.pc';
 import { Order } from '../lib/types';
 
 const UploadFilesPC: FC = () => {
@@ -28,26 +28,9 @@ const UploadFilesPC: FC = () => {
         </Stack>
     )
 
-    const order: Order = {
-        email: "Test",
-        desc: "Test Desc",
-        lead: 2,
-        ordered: new Date(),
-        parts: files.map((file, i) => ({
-            file,
-            notes: "Great file",
-            quantity: i + 1,
-            settings: {
-                color: 'red',
-                infill: 0.4,
-                material: 'PLA',
-                resolution: 200
-            }
-        }))
-    };
 
     return (
-        <OrderSummaryPC order={order} />
+        <NewOrderSummaryPC files={files} />
     )
 }
 

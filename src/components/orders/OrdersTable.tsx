@@ -21,11 +21,12 @@ export const OrdersTable: FC<Props> = ({ orders }) => {
         <Table stickyHeader>
             <TableHead >
                 <TableRow>
+
                     <TableCell align="left" >Description</TableCell>
-                    <TableCell align="left" >Email</TableCell>
-                    <TableCell align="left">Date</TableCell>
-                    <TableCell align="center">Parts Count</TableCell>
-                    <TableCell align="center">Total Parts</TableCell>
+                    <TableCell align='right' >Email</TableCell>
+                    <TableCell align='right'>Date</TableCell>
+                    <TableCell align='right'>Material</TableCell>
+                    <TableCell align='center'>Size</TableCell>
                 </TableRow>
             </TableHead>
 

@@ -16,26 +16,41 @@ interface Props {
 // Count
 // Total Count
 export const OrderSummaryRow: FC<Props> = ({ order, onClick }) => {
+    console.log(order.ordered);
+
     return (
         <TableRow
             sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
             onClick={onClick}
 
         >
-            <TableCell align="right" width="20px">
+            <TableCell width="20px" align='left'>
                 {order.desc}
             </TableCell>
-            <TableCell>
+            <TableCell align='right'>
                 {order.email}
             </TableCell>
-            <TableCell align="left" valign='bottom'>
+            <TableCell valign='bottom' align='right'>
                 {/* {order.ordered?.toLocaleDateString()} */}
             </TableCell>
-            <TableCell align="left">
-                Part Count: {order.parts.length}
+
+            <TableCell width='140px' align='right'>
+                <Stack>
+
+                    <Typography>{order.settings.material}</Typography>
+
+                </Stack>
+
             </TableCell>
-            <TableCell>
-                Total Parts: {sum(order.parts.map(p => p.quantity))}
+
+            <TableCell width='140px' align='center'>
+                <Stack>
+
+                    <Typography>Parts: {order.parts.length}</Typography>
+
+                    <Typography variant='body2'>Units: {sum(order.parts.map(p => p.quantity))}</Typography>
+                </Stack>
+
             </TableCell>
         </TableRow>
     )

@@ -6,7 +6,6 @@ export const stlToGeom = async (file: File) => {
     const fileUrl = URL.createObjectURL(file);
 
     const bufferGeom = await new STLLoader().loadAsync(fileUrl)
-    console.log(bufferGeom);
     return bufferGeom;
 }
 
