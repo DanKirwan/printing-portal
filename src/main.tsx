@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import ReactDOM, { createRoot } from 'react-dom/client'
 import App from './App'
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
@@ -22,9 +22,9 @@ export const auth = getAuth(app);
 export const fireStore = getFirestore(app);
 
 
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-)
+let createdRoot = false;
+document.addEventListener('DOMContentLoaded', () => {
+  if (createdRoot) return;
+  createRoot(document.getElementById('root')!).render(<App />);
+  createdRoot = true;
+});

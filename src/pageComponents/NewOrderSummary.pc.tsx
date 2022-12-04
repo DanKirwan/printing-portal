@@ -10,6 +10,7 @@ import PartDetailsModal from '../components/parts/PartDetailsModal';
 import { Order, PartOrder } from '../lib/types';
 import { Timestamp } from 'firebase/firestore'
 import { useAuth } from '@src/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 interface Props {
     files: File[]
 }
@@ -55,21 +56,22 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
     const [order, setOrder] = useState<Order>(genDefaultOrder(files));
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const { uid } = useAuth();
+
+    const { uid, email } = useAuth();
+    const navigate = useNavigate();
 
     const handleUpload = async () => {
         setLoading(true);
         console.log(order);
-        const orderId = await handleOrderUpload(order, uid);
+        const authOrder = email ? { ...order, email } : order;
+        const orderId = await handleOrderUpload(authOrder, uid);
         console.log("Uploaded");
         setLoading(false);
         setDialogOpen(false);
-    }
+        if (!uid) return;
+        navigate(`/${orderId}`);
 
-    const fakeUpload = () => {
-        setLoading(loading => !loading);
     }
-
 
     return (
         <Stack>
