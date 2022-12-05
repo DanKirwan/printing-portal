@@ -16,7 +16,7 @@ const MainRenderer: FC<Props> = ({ geometry }) => {
     const ContextBridge = useContextBridge(ModelContext);
 
     return (
-        <Canvas flat dpr={window.devicePixelRatio} camera={{ position: [2, 2, 0], fov: 75, near: 0.01, far: 2000, up: [0, 0, -1] }} style={{ height: '100%' }}>
+        <Canvas flat dpr={window.devicePixelRatio} camera={{ position: [2, 2, 0], fov: 75, near: 0.01, far: 2000 }} style={{ height: '100%' }}>
             <ContextBridge>
 
                 <color attach="background" args={[0x7799aa]} />
