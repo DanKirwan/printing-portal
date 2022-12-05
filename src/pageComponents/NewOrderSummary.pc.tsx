@@ -1,16 +1,13 @@
-import { Modal, Stack, Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
+import { Stack } from '@mui/material';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
-import { ShippingInput } from '@src/components/upload/ShippingInput';
 import { UploadDialog } from '@src/components/upload/UploadDialog';
-import { getOrder, handleOrderUpload } from '@src/lib/uploadUtils';
-import { FC, useState } from 'react';
-import DetailedPartOrder from '../components/DetailedPartOrder';
-import PartDetailsModal from '../components/parts/PartDetailsModal';
-import { Order, OrderStatus, PartOrder } from '../lib/types';
-import { Timestamp } from 'firebase/firestore'
 import { useAuth } from '@src/contexts/AuthContext';
+import { handleOrderUpload } from '@src/lib/uploadUtils';
+import { Timestamp } from 'firebase/firestore';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Order, OrderStatus } from '../lib/types';
 interface Props {
     files: File[]
 }
@@ -65,7 +62,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
         try {
 
             const orderId = await handleOrderUpload(authOrder, uid);
-            navigate(uid ? `/${orderId}` : '/ordercomplete');
+            navigate(uid ? `/orders/${orderId}` : '/ordercomplete');
         } catch (e: any) {
             alert("Failed to upload model, the error has been logged");
             console.log(e);

@@ -74,6 +74,7 @@ export const useDocument = <T>(document: DocumentReference<T> | null, deps: Depe
     return docData;
 }
 
+
 /** Live updates to a query - returns isLoading false if passed null */
 export const useQuery = <T>(query: Query<T> | null, deps: DependencyList = []): [QueryDocumentSnapshot<T>[], boolean] => {
     const [elements, setElements] = useState<QueryDocumentSnapshot<T>[]>();

@@ -4,7 +4,6 @@ import { DBOrder } from '@src/lib/firebaseUtils';
 import { updateOrder } from '@src/lib/uploadUtils';
 import { WithId } from '@src/lib/utils';
 import { FC, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { OrderSummaryRow } from './OrderSummaryRow';
 
 

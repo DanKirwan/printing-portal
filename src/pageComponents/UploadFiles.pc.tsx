@@ -16,7 +16,7 @@ const UploadFilesPC: FC = () => {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'model/stl': ['.stl'] } })
 
     if (files.length == 0) return (
-        <Stack width='100vw' height='100vh' alignItems='center' justifyContent='center'>
+        <Stack width='100vw' height='90vh' alignItems='center' justifyContent='center'>
             <Stack sx={{ border: 'solid grey 2px', cursor: 'pointer', borderRadius: 5 }} {...getRootProps()} padding={5}>
                 <input {...getInputProps()} />
                 {
