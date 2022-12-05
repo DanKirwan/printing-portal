@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 import { FC, Suspense } from 'react';
 import NormalizedModel from '../NormalizedModel';
-import cubeUrl from '@src/assets/cube.stl';
+import cubeUrl from '@src/assets/cube.stl?url';
 import { stlToGeom } from '@src/lib/stlUtils';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { Loader } from '@react-three/drei';
