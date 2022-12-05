@@ -1,25 +1,21 @@
-import { Stack, TableCell, TableRow, Typography } from '@mui/material';
+import { Button, Checkbox, Stack, TableCell, TableRow, Typography } from '@mui/material';
 import { DBOrder } from '@src/lib/firebaseUtils';
-import { FC } from 'react';
+import { ChangeEvent, FC, ReactNode } from 'react';
 import ModelPreview from '../ModelPreview';
 import PartSummary from '../parts/PartSettingsSummary';
 import { sum } from 'lodash';
 
 interface Props {
     order: DBOrder;
-    onClick: () => void;
+
+    actions: ReactNode;
 }
 
-// Desc
-// Email
-// Date
-// Count
-// Total Count
-export const OrderSummaryRow: FC<Props> = ({ order, onClick }) => {
+export const OrderSummaryRow: FC<Props> = ({ order, actions }) => {
+
     return (
         <TableRow
-            sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-            onClick={onClick}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 
         >
             <TableCell >
@@ -50,6 +46,10 @@ export const OrderSummaryRow: FC<Props> = ({ order, onClick }) => {
             </TableCell>
             <TableCell align='right'>
                 {order.desc}
+            </TableCell>
+
+            <TableCell align='right'>
+                {actions}
             </TableCell>
         </TableRow>
     )

@@ -7,7 +7,7 @@ import { getOrder, handleOrderUpload } from '@src/lib/uploadUtils';
 import { FC, useState } from 'react';
 import DetailedPartOrder from '../components/DetailedPartOrder';
 import PartDetailsModal from '../components/parts/PartDetailsModal';
-import { Order, PartOrder } from '../lib/types';
+import { Order, OrderStatus, PartOrder } from '../lib/types';
 import { Timestamp } from 'firebase/firestore'
 import { useAuth } from '@src/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -42,8 +42,7 @@ const genDefaultOrder = (files: File[]): Order => {
             postCode: '',
             county: ''
         },
-        completed: false,
-        processing: false,
+        status: OrderStatus.Incoming,
         settings: {
             material: 'PLA',
         }

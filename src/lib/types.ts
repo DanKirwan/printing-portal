@@ -1,9 +1,15 @@
 import { Timestamp } from "firebase/firestore"
 
+
+export enum OrderStatus {
+    Incoming,
+    Processing,
+    Deleted,
+    Completed
+}
 export type Order = {
     address: Address,
-    completed: boolean,
-    processing: boolean,
+    status: OrderStatus,
     email: string,
     desc: string,
     parts: PartOrder[],

@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { DBOrder, DBPart, getDB } from "./firebaseUtils";
 import { Order, PartOrder } from "./types";
 import { v4 as uuidv4 } from 'uuid';
@@ -25,6 +25,21 @@ export const getOrder = async (uuid: string): Promise<Order> => {
     const orderData = order.data();
     if (!orderData) throw `Could not find order with UUID: ${uuid}`;
     return convertOrder(orderData, uuid);
+}
+
+export const updateOrder = async (uuid: string, newOrder: Omit<Order, 'parts'>): Promise<void> => {
+    const order = await getDoc(doc(getDB().orders, uuid));
+    const orderData = order.data();
+    if (!orderData) throw `Could not find order with UUID: ${uuid}`;
+    const { parts, userId } = orderData;
+
+    const newDBOrder: DBOrder = { ...newOrder, parts, userId };
+    await updateDoc(doc(getDB().orders, uuid), Object.assign({}, newDBOrder));
+
+}
+
+export const deleteOrder = async (uuid: string): Promise<void> => {
+    await deleteDoc(doc(getDB().orders, uuid));
 }
 
 const getUploadPath = (uuid: string, fileName: string, userId: string | null) => `${userId ?? "anonymous"}/${uuid}/${fileName}`;

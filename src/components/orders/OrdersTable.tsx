@@ -1,22 +1,23 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { useAuth } from '@src/contexts/AuthContext';
 import { DBOrder } from '@src/lib/firebaseUtils';
+import { updateOrder } from '@src/lib/uploadUtils';
 import { WithId } from '@src/lib/utils';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OrderSummaryRow } from './OrderSummaryRow';
 
 
 interface Props {
     orders: WithId<DBOrder>[];
+    getRowActions: (index: number) => ReactNode;
 }
 
-export const OrdersTable: FC<Props> = ({ orders }) => {
+export const OrdersTable: FC<Props> = ({ orders, getRowActions }) => {
 
-    const navigate = useNavigate();
 
-    const handleClick = (orderId: string) => {
-        navigate(`/${orderId}`);
-    }
+
+
     return (
         <Table stickyHeader>
             <TableHead >
@@ -27,15 +28,20 @@ export const OrdersTable: FC<Props> = ({ orders }) => {
                     <TableCell >Material</TableCell>
                     <TableCell >Size</TableCell>
                     <TableCell align="right" >Description</TableCell>
+                    <TableCell align='right'>Actions</TableCell>
                 </TableRow>
             </TableHead>
 
             <TableBody>
                 {orders.map((order, i) => (
-                    <OrderSummaryRow key={i} order={order} onClick={() => handleClick(order.id)} />
+                    <OrderSummaryRow
+                        key={i}
+                        order={order}
+                        actions={getRowActions(i)}
+                    />
                 ))}
             </TableBody>
 
-        </Table>
+        </Table >
     )
 }
