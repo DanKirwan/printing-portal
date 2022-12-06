@@ -23,7 +23,7 @@ export const AboutPC: FC = () => {
                             <CountUp end={72879} formattingFn={n => n.toLocaleString('en-GB')} duration={4} useEasing={true} />
                             {' Parts Printed'}
                         </Typography>
-                        <Typography>Delivered to 19 differnt countries</Typography>
+                        <Typography>Delivered to 19 different countries</Typography>
                     </Stack>
                 </Card>
             </Container>
