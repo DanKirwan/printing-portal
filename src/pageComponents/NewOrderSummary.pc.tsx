@@ -1,4 +1,5 @@
 import { Stack } from '@mui/material';
+import { FileLoadButton } from '@src/components/FileLoadButton';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
 import { UploadDialog } from '@src/components/upload/UploadDialog';
@@ -7,10 +8,22 @@ import { handleOrderUpload } from '@src/lib/uploadUtils';
 import { Timestamp } from 'firebase/firestore';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Order, OrderStatus } from '../lib/types';
+import { Order, OrderStatus, PartOrder } from '../lib/types';
+import { uniqBy } from 'lodash';
 interface Props {
     files: File[]
 }
+
+const genDefaultParts = (files: File[]): PartOrder[] => files.map((file, i) => ({
+    file,
+    notes: "",
+    quantity: 1,
+    settings: {
+        color: 'Any',
+        infill: 0.4,
+        resolution: 200
+    }
+}));
 
 const genDefaultOrder = (files: File[]): Order => {
 
@@ -19,16 +32,7 @@ const genDefaultOrder = (files: File[]): Order => {
         desc: "",
         lead: 2,
         ordered: Timestamp.fromDate(new Date()),
-        parts: files.map((file, i) => ({
-            file,
-            notes: "",
-            quantity: 1,
-            settings: {
-                color: 'Any',
-                infill: 0.4,
-                resolution: 200
-            }
-        })),
+        parts: genDefaultParts(files),
         address: {
             firstName: '',
             lastName: '',
@@ -75,10 +79,17 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
     }
 
+    const handleAddFiles = (files: File[]) => {
+        const { parts, ...rest } = order;
+        const newParts = uniqBy(parts.concat(genDefaultParts(files)), p => p.file.name);
+        setOrder({ ...rest, parts: newParts });
+    }
+
     return (
         <Stack>
             <OrderEditor order={order} onChange={setOrder} />
             <LoadingButton loading={loading} onClick={() => setDialogOpen(true)} >Upload</LoadingButton>
+            <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' />
             <UploadDialog
                 uploading={loading}
                 order={order}

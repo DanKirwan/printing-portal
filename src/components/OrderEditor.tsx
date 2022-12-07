@@ -18,6 +18,12 @@ export const OrderEditor: FC<Props> = ({ order, onChange }) => {
         onChange(newOrder);
     }
 
+    const handleDeletePart = (index: number) => {
+        const { parts, ...rest } = order;
+        const newOrder: Order = { ...rest, parts: parts.filter((_, i) => i != index) };
+        onChange(newOrder);
+    }
+
     const handleOpenPartChange = (newPart: PartOrder) => {
 
         if (openPartIndex === null) return;
@@ -29,7 +35,11 @@ export const OrderEditor: FC<Props> = ({ order, onChange }) => {
 
     return (
         <Stack>
-            <DetailedPartOrder onChange={parts => handlePartsChange(parts)} parts={order.parts} onClick={part => setOpenPartIndex(part)} />
+            <DetailedPartOrder
+                onChange={parts => handlePartsChange(parts)}
+                parts={order.parts} onClick={part => setOpenPartIndex(part)}
+                onDelete={i => handleDeletePart(i)} />
+
             {openPartIndex !== null && <Dialog
                 open={openPartIndex !== null}
                 onClose={() => setOpenPartIndex(null)}

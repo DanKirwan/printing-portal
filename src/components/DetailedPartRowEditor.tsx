@@ -1,17 +1,19 @@
-import { TableCell, Stack, Typography, TextField } from '@mui/material';
+import { TableCell, Stack, Typography, TextField, IconButton } from '@mui/material';
 import TableRow from '@mui/material/TableRow';
 import { FC } from 'react';
 import { PartOrder } from '../lib/types';
 import ModelPreview from './ModelPreview';
 import PartSummary from './parts/PartSettingsSummary';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
     part: PartOrder;
     onChange: (part: PartOrder) => void;
     onClick: () => void;
+    onDelete: () => void;
 }
 
-const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick }) => {
+const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick, onDelete }) => {
     const handleNotesChange = (notes: string) => {
         const { notes: _, ...rest } = part;
         onChange({ ...rest, notes });
@@ -49,6 +51,11 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick }) => {
                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     value={part.quantity}
                     onChange={e => handleQuantityChange(e.target.value)} />
+            </TableCell>
+            <TableCell align='right'>
+                <IconButton onClick={onDelete}>
+                    <DeleteIcon />
+                </IconButton>
             </TableCell>
         </TableRow>
     )
