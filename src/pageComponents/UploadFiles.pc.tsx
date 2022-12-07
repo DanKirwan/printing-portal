@@ -1,9 +1,7 @@
-import { Container, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
-import DetailedPartOrder from '../components/DetailedPartOrder';
-import { useDropzone } from 'react-dropzone'
+import { useDropzone } from 'react-dropzone';
 import NewOrderSummaryPC from './NewOrderSummary.pc';
-import { Order } from '../lib/types';
 
 const UploadFilesPC: FC = () => {
 

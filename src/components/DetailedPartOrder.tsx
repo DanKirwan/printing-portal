@@ -9,13 +9,6 @@ import ModelPreview from './ModelPreview';
 
 
 
-const columns: GridColDef[] = [
-    { field: 'image', headerName: "", width: 70 },
-    { field: 'summary', headerName: "Summary", width: 50 },
-    { field: 'notes', headerName: "Notes", width: 70 },
-    { field: 'quantity', headerName: "Quantity", width: 10 }
-]
-
 interface Props {
     parts: PartOrder[];
     onChange: (parts: PartOrder[]) => void;

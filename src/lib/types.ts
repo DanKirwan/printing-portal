@@ -16,6 +16,7 @@ export type Order = {
     ordered: Timestamp,
     lead: number,
     settings: OrderSettings,
+    userId: string | null
 }
 
 export type PartOrder = {

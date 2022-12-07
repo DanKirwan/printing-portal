@@ -21,7 +21,7 @@ export default () => {
     const navigate = useNavigate();
 
     const handleClick = (orderId: string) => {
-        navigate(`/orders/${orderId}`);
+        navigate(`/admin/${orderId}`);
     }
 
 

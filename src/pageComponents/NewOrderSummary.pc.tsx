@@ -28,6 +28,7 @@ const genDefaultParts = (files: File[]): PartOrder[] => files.map((file, i) => (
 const genDefaultOrder = (files: File[]): Order => {
 
     const order: Order = {
+        userId: null,
         email: "",
         desc: "",
         lead: 2,

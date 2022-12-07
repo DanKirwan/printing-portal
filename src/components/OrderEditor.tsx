@@ -36,8 +36,9 @@ export const OrderEditor: FC<Props> = ({ order, onChange }) => {
     return (
         <Stack>
             <DetailedPartOrder
+                parts={order.parts}
                 onChange={parts => handlePartsChange(parts)}
-                parts={order.parts} onClick={part => setOpenPartIndex(part)}
+                onClick={part => setOpenPartIndex(part)}
                 onDelete={i => handleDeletePart(i)} />
 
             {openPartIndex !== null && <Dialog
