@@ -18,9 +18,11 @@ const ModelPreview: FC<Props> = ({ file, color }) => {
         <Suspense fallback={<Loading />}>
 
             <Canvas camera={{ position: [1, 1, 1] }}>
-                <color attach="background" args={[0x7799aa]} />
+                <color attach="background" args={['0x111111']} />
                 <ambientLight />
                 <pointLight position={[10, 5, -10]} />
+                <pointLight position={[-10, 5, 5]} />
+
                 <NormalizedModel geometry={geometry} color={color} />
             </Canvas >
         </Suspense>

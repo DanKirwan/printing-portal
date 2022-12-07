@@ -27,7 +27,6 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick, onDelete })
     return (
         <TableRow
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-
         >
             <TableCell align="right" width="20px">
                 <Stack width={200} alignItems='center' onClick={onClick} sx={{ cursor: 'pointer' }}>
