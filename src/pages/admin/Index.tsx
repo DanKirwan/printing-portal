@@ -32,10 +32,15 @@ export default () => {
             setTabIndex(1);
         }
 
+        const handleReject = async () => {
+            await updateOrder(order.id, { ...order, status: OrderStatus.Deleted });
+            setTabIndex(3);
+        }
+
 
         return (
             <Stack direction='row' justifyContent='right' spacing={1}>
-                <Button onClick={handleAccept} variant='contained' color='primary'>Reject</Button>
+                <Button onClick={handleReject} variant='contained' color='primary'>Reject</Button>
                 <Button onClick={handleAccept} variant='contained' color='info'>Accept </Button>
                 <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
             </Stack>
