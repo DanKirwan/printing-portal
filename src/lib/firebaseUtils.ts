@@ -2,6 +2,7 @@ import { User, AuthProvider, UserCredential, signInWithPopup, signInWithEmailAnd
 import { FirestoreDataConverter, QueryDocumentSnapshot, Firestore, collection } from "firebase/firestore";
 import { auth, fireStore } from "@src/main"
 import { Order, PartOrder } from "./types";
+import { Material } from "./materialUtils";
 
 
 const converter = <T>(): FirestoreDataConverter<T> => ({
@@ -12,7 +13,8 @@ const converter = <T>(): FirestoreDataConverter<T> => ({
 const typedCollection = <T>(db: Firestore, path: string, ...collectionPath: string[]) => collection(db, path, ...collectionPath).withConverter(converter<T>());
 
 const collections = {
-    orders: 'orders'
+    orders: 'orders',
+    materials: 'materials'
 };
 
 
@@ -22,6 +24,7 @@ export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
 
 export const getDB = () => ({
     orders: typedCollection<DBOrder>(fireStore, collections.orders),
+    materials: typedCollection<Material>(fireStore, collections.materials),
 
 });
 
