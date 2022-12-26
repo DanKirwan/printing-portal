@@ -1,4 +1,5 @@
-import { BufferGeometry, Vector3 } from "three";
+import _, { intersection } from "lodash";
+import { BufferGeometry, DoubleSide, Mesh, MeshStandardMaterial, Raycaster, Vector3 } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 
 
@@ -9,6 +10,65 @@ export const stlToGeom = async (file: File) => {
     return bufferGeom;
 }
 
+
+/// Returns the internal volume and support material volume for an object
+export const estimateVolume = (geometry: BufferGeometry, samples: number = 10, cutoffAngle: number = 1.04): [number, number] => {
+
+    geometry.computeBoundingBox();
+
+    if (!geometry.boundingBox) throw "Could not compute geometry's bounding box";
+
+    const { min, max } = geometry.boundingBox;
+    const xRange = max.x - min.x;
+    const yRange = max.y - min.y;
+
+    const ray = new Raycaster();
+    const material = new MeshStandardMaterial();
+
+    material.side = DoubleSide;
+
+    const mesh = new Mesh(geometry, material);
+
+    const origin = new Vector3();
+    const up = new Vector3(0, 0, 1);
+    const down = new Vector3(0, 0, -1);
+
+
+    let support = 0;
+    let internal = 0;
+
+    for (let i = 0; i < samples; i++) {
+        for (let j = 0; j < samples; j++) {
+            const x = min.x + (i / samples) * xRange;
+            const y = min.y + (j / samples) * yRange;
+            origin.set(x, y, min.z);
+            ray.set(origin, up);
+
+            let prevHeight = 0;
+
+
+            const intersections = _.uniqBy(ray.intersectObject(mesh), x => x.distance);
+
+            for (let pair = 0; pair < intersections.length / 2; pair++) {
+                const enterIntersection = intersections[pair * 2];
+                const leaveIntersection = intersections[pair * 2 + 1];
+
+                internal += (leaveIntersection.distance - enterIntersection.distance);
+                const intersectionAngle = enterIntersection.face!.normal.angleTo(down);
+                if (intersectionAngle < cutoffAngle) {
+                    support += (enterIntersection.distance - prevHeight);
+                }
+
+                prevHeight = leaveIntersection.distance;
+            }
+            57
+        }
+    }
+
+    const sampleSurfaceArea = (xRange / samples) * (yRange / samples);
+
+    return [internal * sampleSurfaceArea, support * sampleSurfaceArea];
+}
 
 export const getVolume = (geometry: BufferGeometry) => {
     if (!geometry.isBufferGeometry) {

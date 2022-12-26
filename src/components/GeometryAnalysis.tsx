@@ -2,7 +2,7 @@ import { Stack, Typography } from '@mui/material';
 import { FC, useMemo } from 'react';
 import { BufferGeometry, Vector3 } from 'three';
 import { useModel } from '../contexts/ModelContext';
-import { getVolume } from '../lib/stlUtils';
+import { estimateVolume, getVolume } from '../lib/stlUtils';
 
 interface Props {
     geometry: BufferGeometry
@@ -17,11 +17,14 @@ const GeometryAnalysis: FC<Props> = ({ geometry }) => {
     const volume = getVolume(geometry);
     const volInCm = volume / 1000;
 
+    const x = estimateVolume(geometry);
+    console.log(x);
 
     return (
         <Stack>
             <Typography>Dimensions: {size.x.toFixed(2)}×{size.y.toFixed(2)}×{size.z.toFixed(2)}mm</Typography>
             <Typography>Bounding Volume: {(size.x * size.y * size.z / 1000).toFixed(4)}cm<sup>3</sup></Typography>
+            <Typography>Volume: {volInCm}cm<sup>3</sup></Typography>
             <Typography>...</Typography>
         </Stack>
     )

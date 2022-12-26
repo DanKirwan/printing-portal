@@ -7,9 +7,10 @@ import PartDetailsModal from './parts/PartDetailsModal';
 interface Props {
     order: Order;
     onChange: (order: Order) => void;
+    availableColors: string[];
 }
 
-export const OrderEditor: FC<Props> = ({ order, onChange }) => {
+export const OrderEditor: FC<Props> = ({ order, onChange, availableColors }) => {
     const [openPartIndex, setOpenPartIndex] = useState<number | null>(null);
 
     const handlePartsChange = (newParts: PartOrder[]) => {
@@ -50,7 +51,7 @@ export const OrderEditor: FC<Props> = ({ order, onChange }) => {
                 <DialogTitle>Part Settings</DialogTitle>
                 <DialogContent sx={{ height: '70vh' }}>
 
-                    <PartDetailsModal editing={true} onChange={part => handleOpenPartChange(part)} part={order.parts[openPartIndex]} />
+                    <PartDetailsModal availableColors={availableColors} editing={true} onChange={part => handleOpenPartChange(part)} part={order.parts[openPartIndex]} />
                 </DialogContent>
 
             </Dialog>}

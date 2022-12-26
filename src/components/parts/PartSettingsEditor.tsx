@@ -5,12 +5,12 @@ import { PartOrder } from '../../lib/types';
 interface Props {
     part: PartOrder;
     onChange: (part: PartOrder) => void;
+    validColors: string[];
 }
 
 const validResolutions = [100, 200, 300];
-const validColours = ['Red', 'Green', 'Blue', 'White', 'Black', 'Any']
 
-export const PartSettingsEditor: FC<Props> = ({ part, onChange }) => {
+export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) => {
     const { settings, ...restOfPart } = part;
     const { color, infill, resolution } = settings;
     console.log(color);
@@ -41,12 +41,12 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange }) => {
                     value={color}
                     onChange={e => setColor(e.target.value as string)}
                 >
-                    {validColours.map((v, idx) => (
+                    {validColors.map((v, idx) => (
                         <MenuItem key={idx} value={v}>{v}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
-            <TextField variant='standard' value={infill * 100} onChange={e => setInfill(e.target.value)} label='Infill %' />
+            <TextField variant='standard' value={Math.trunc(infill * 100)} onChange={e => setInfill(e.target.value)} label='Infill %' />
 
             <FormControl variant='standard'>
                 <InputLabel>Resolution (μm)</InputLabel>

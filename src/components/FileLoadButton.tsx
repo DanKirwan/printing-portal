@@ -1,18 +1,14 @@
-import { Box, Button, ButtonProps, Stack, SxProps, Typography } from '@mui/material';
-import { ChangeEvent, FC, Suspense, useState } from 'react';
-import { BufferGeometry } from 'three';
-import { stlToGeom } from '../lib/stlUtils';
-import Loading from './Loading';
-import ModelPreview from './ModelPreview';
+import { Button, ButtonProps } from '@mui/material';
+import { ChangeEvent, FC } from 'react';
 
 interface Props {
     onFilesLoad: (files: File[]) => void;
     title: string;
-
+    extension?: string;
 }
 
 
-export const FileLoadButton: FC<Props & Pick<ButtonProps, 'variant' | 'style'>> = ({ onFilesLoad, title, ...buttonProps }) => {
+export const FileLoadButton: FC<Props & Pick<ButtonProps, 'variant' | 'style'>> = ({ onFilesLoad, title, extension = '*', ...buttonProps }) => {
 
 
     const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +28,7 @@ export const FileLoadButton: FC<Props & Pick<ButtonProps, 'variant' | 'style'>> 
             {title}
             <input
                 type="file"
-                accept='.stl'
+                accept={extension}
                 multiple
                 onChange={handleFileUpload}
                 hidden

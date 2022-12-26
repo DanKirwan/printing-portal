@@ -13,10 +13,11 @@ interface Props {
     part: PartOrder
     onChange: (part: PartOrder) => void;
     editing?: boolean;
+    availableColors: string[];
 }
 
 
-const PartDetailsModal: FC<Props> = ({ part, onChange, editing = false }) => {
+const PartDetailsModal: FC<Props> = ({ part, onChange, availableColors, editing = false }) => {
     const geometry = suspend(() => stlToGeom(part.file), [part.file]);
 
     return (
@@ -30,7 +31,7 @@ const PartDetailsModal: FC<Props> = ({ part, onChange, editing = false }) => {
                         <AccordionDetails>
                             {editing
                                 ?
-                                <PartSettingsEditor part={part} onChange={onChange} />
+                                <PartSettingsEditor validColors={availableColors} part={part} onChange={onChange} />
                                 :
                                 <PartSummary part={part} />
                             }
