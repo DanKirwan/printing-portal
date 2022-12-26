@@ -10,10 +10,11 @@ export default () => {
     const { orderId } = useParams<{ orderId: string }>();
     if (!orderId) throw "No id provided to load order";
     const order = suspend(() => getOrder(orderId), [orderId]);
+    // TODO (Convert to not using order editor but order viewer)
     return (
         <Suspense fallback={<Loading />}>
 
-            <OrderEditor order={order} onChange={() => null} />
+            <OrderEditor availableColors={[]} order={order} onChange={() => null} />
         </Suspense>
     )
 }

@@ -2,7 +2,6 @@ import { Button, Stack } from '@mui/material';
 import { OrderEditor } from '@src/components/OrderEditor';
 import { useAuth } from '@src/contexts/AuthContext';
 import { Order } from '@src/lib/types';
-import { getOrderFolderUrl } from '@src/lib/uploadUtils';
 import { WithId } from '@src/lib/utils';
 import saveAs from 'file-saver';
 import JSZip from 'jszip';
@@ -22,9 +21,10 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
         const zip = await zipper.generateAsync({ type: 'blob' });
         saveAs(zip, `order (${order.id}).zip`);
     }
+    // TODO Convert to using order viewer
     return (
         <Stack>
-            <OrderEditor order={order} onChange={() => null} />
+            <OrderEditor availableColors={[]} order={order} onChange={() => null} />
             <Button onClick={() => handleOrderDownload()} variant='contained'>Download Files</Button>
         </Stack>
     )
