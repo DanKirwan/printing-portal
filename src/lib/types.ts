@@ -1,4 +1,5 @@
-import { Timestamp } from "firebase/firestore"
+import { collection, CollectionReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, Timestamp } from "firebase/firestore"
+import { Material } from "./materialUtils"
 
 
 export enum OrderStatus {
@@ -16,7 +17,10 @@ export type Order = {
     ordered: Timestamp,
     lead: number,
     settings: OrderSettings,
-    userId: string | null
+    userId: string | null,
+    // Private Settings
+    price: number,
+    expectedShipping: Timestamp
 }
 
 export type PartOrder = {
@@ -50,3 +54,35 @@ export type Address = {
     postCode: string,
     county: string,
 }
+
+export type DBPart = Omit<PartOrder, 'file'> & { fileName: string };
+
+export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
+
+export type DBCollections = {
+    orders: CollectionReference<DBOrder>;
+    materials: CollectionReference<Material>;
+}
+
+
+// Firebase type handling
+const converter = <T>(): FirestoreDataConverter<T> => ({
+    toFirestore: ((data: T) => data) as any, //TODO Fix?
+    fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as T,
+});
+
+
+
+
+const typedCollection = <T>(db: Firestore, path: string, ...collectionPath: string[]) => collection(db, path, ...collectionPath).withConverter(converter<T>());
+
+const collections = {
+    orders: 'orders',
+    materials: 'materials'
+};
+
+export const getTypedFirestore = (fs: Firestore) => ({
+    orders: typedCollection<DBOrder>(fs, collections.orders),
+    materials: typedCollection<Material>(fs, collections.materials),
+
+})

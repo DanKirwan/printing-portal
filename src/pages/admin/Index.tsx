@@ -4,7 +4,7 @@ import { OrdersTable } from "@src/components/orders/OrdersTable"
 import { getDB } from "@src/lib/firebaseUtils";
 import { useCollectionWithIds, useSnapshot } from "@src/lib/hooks"
 import { OrderStatus } from "@src/lib/types";
-import { updateOrder } from "@src/lib/uploadUtils";
+import { handleOrderUpdate } from "@src/lib/appUtils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -28,12 +28,12 @@ export default () => {
     const getIncomingActions = (index: number) => {
         const order = incoming[index];
         const handleAccept = async () => {
-            await updateOrder(order.id, { ...order, status: OrderStatus.Processing });
+            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Processing });
             setTabIndex(1);
         }
 
         const handleReject = async () => {
-            await updateOrder(order.id, { ...order, status: OrderStatus.Deleted });
+            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted });
             setTabIndex(3);
         }
 
@@ -51,7 +51,7 @@ export default () => {
     const getProcessingActions = (index: number) => {
         const order = processing[index];
         const handleComplete = async () => {
-            await updateOrder(order.id, { ...order, status: OrderStatus.Completed });
+            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Completed });
             setTabIndex(2);
         }
         return (
@@ -59,7 +59,7 @@ export default () => {
                 <ConfirmButton
                     description='This order has alreay been accepted, are you sure you want to reject?'
                     title='Confirm Order Rejection'
-                    onConfirm={() => updateOrder(order.id, { ...order, status: OrderStatus.Deleted })}
+                    onConfirm={() => handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted })}
                 >
                     Delete Order
                 </ConfirmButton>
@@ -82,7 +82,7 @@ export default () => {
     const getDeletedActions = (index: number) => {
         const order = deleted[index];
         const handleRecover = async () => {
-            await updateOrder(order.id, { ...order, status: OrderStatus.Incoming });
+            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Incoming });
             setTabIndex(0);
         }
         return (

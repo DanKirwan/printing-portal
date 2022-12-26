@@ -1,7 +1,7 @@
 import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { useAuth } from '@src/contexts/AuthContext';
-import { DBOrder } from '@src/lib/firebaseUtils';
-import { updateOrder } from '@src/lib/uploadUtils';
+import { DBOrder } from '@src/lib/types';
+
 import { WithId } from '@src/lib/utils';
 import { FC, ReactNode } from 'react';
 import { OrderSummaryRow } from './OrderSummaryRow';

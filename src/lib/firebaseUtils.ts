@@ -1,32 +1,14 @@
 import { User, AuthProvider, UserCredential, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider } from "firebase/auth";
 import { FirestoreDataConverter, QueryDocumentSnapshot, Firestore, collection } from "firebase/firestore";
 import { auth, fireStore } from "@src/main"
-import { Order, PartOrder } from "./types";
+import { DBOrder, getTypedFirestore, Order, PartOrder } from "./types";
 import { Material } from "./materialUtils";
 
 
-const converter = <T>(): FirestoreDataConverter<T> => ({
-    toFirestore: ((data: T) => data) as any, //TODO Fix?
-    fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as T,
-});
-
-const typedCollection = <T>(db: Firestore, path: string, ...collectionPath: string[]) => collection(db, path, ...collectionPath).withConverter(converter<T>());
-
-const collections = {
-    orders: 'orders',
-    materials: 'materials'
-};
 
 
-export type DBPart = Omit<PartOrder, 'file'> & { fileName: string };
 
-export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
-
-export const getDB = () => ({
-    orders: typedCollection<DBOrder>(fireStore, collections.orders),
-    materials: typedCollection<Material>(fireStore, collections.materials),
-
-});
+export const getDB = () => getTypedFirestore(fireStore);
 
 
 export const SignInWithSocialMedia = (provider: AuthProvider) =>
@@ -51,3 +33,5 @@ export const SignOut = () => { signOut(auth).catch((error) => { alert("Error Sig
 export const Providers = {
     google: new GoogleAuthProvider(),
 };
+
+

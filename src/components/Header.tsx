@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, IconButton, Typography, Button, Box, Avatar, Menu, MenuItem, Tooltip, Stack, Tab } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Button, Avatar, Menu, MenuItem, Tooltip, Stack, Tab } from '@mui/material';
 import { useAuth } from '@src/contexts/AuthContext';
 import { signOut } from 'firebase/auth';
 import { FC, useState, MouseEvent } from 'react';

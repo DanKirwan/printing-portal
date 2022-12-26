@@ -30,7 +30,8 @@
     "src",
     "**/*.ts",
     "**/*.tsx",
-    "node_modules/**/*.d.ts"
+    "node_modules/**/*.d.ts",
+    "tests"
   ],
   "references": [
     {

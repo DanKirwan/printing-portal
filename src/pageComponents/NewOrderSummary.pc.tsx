@@ -4,7 +4,6 @@ import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
 import { UploadDialog } from '@src/components/upload/UploadDialog';
 import { useAuth } from '@src/contexts/AuthContext';
-import { handleOrderUpload } from '@src/lib/uploadUtils';
 import { Timestamp } from 'firebase/firestore';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,48 +12,13 @@ import { uniqBy } from 'lodash';
 import { useCollection } from '@src/lib/hooks';
 import { getDB } from '@src/lib/firebaseUtils';
 import { ShippingInput } from '@src/components/upload/ShippingInput';
+import { genDefaultOrder, genDefaultParts } from '@src/lib/orderUtils';
+import { handleOrderUpload } from '@src/lib/appUtils';
 interface Props {
     files: File[]
 }
 
-const genDefaultParts = (files: File[]): PartOrder[] => files.map((file, i) => ({
-    file,
-    notes: "",
-    quantity: 1,
-    settings: {
-        color: 'Any',
-        infill: 0.4,
-        resolution: 200
-    }
-}));
 
-const genDefaultOrder = (files: File[]): Order => {
-
-    const order: Order = {
-        userId: null,
-        email: "",
-        desc: "",
-        lead: 2,
-        ordered: Timestamp.fromDate(new Date()),
-        parts: genDefaultParts(files),
-        address: {
-            firstName: '',
-            lastName: '',
-            city: '',
-            countryCode: 'GB',
-            line1: '',
-            line2: '',
-            postCode: '',
-            county: ''
-        },
-        status: OrderStatus.Incoming,
-        settings: {
-            material: 'PLA',
-        }
-    };
-
-    return order;
-}
 const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
     const [order, setOrder] = useState<Order>(genDefaultOrder(files));

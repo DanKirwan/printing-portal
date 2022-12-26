@@ -3,7 +3,7 @@ import { AppRoutes } from './AppRoutes';
 import { ModelProvider } from './contexts/ModelContext';
 import MainViewerPC from './pageComponents/MainViewer.pc'
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material";
 
 import { theme } from './theme';
 import { CssBaseline } from '@mui/material';

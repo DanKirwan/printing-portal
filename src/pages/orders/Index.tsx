@@ -1,8 +1,9 @@
 import { Stack, Button, Typography } from "@mui/material";
 import { OrdersTable } from "@src/components/orders/OrdersTable"
 import { useAuth } from "@src/contexts/AuthContext";
-import { DBOrder, SignInWithSocialMedia, Providers, getDB } from "@src/lib/firebaseUtils";
+import { SignInWithSocialMedia, Providers, getDB } from "@src/lib/firebaseUtils";
 import { useQuery } from "@src/lib/hooks";
+import { DBOrder } from "@src/lib/types";
 import { WithId } from "@src/lib/utils";
 import { query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";

@@ -1,5 +1,5 @@
 import { Button, Checkbox, Stack, TableCell, TableRow, Typography } from '@mui/material';
-import { DBOrder } from '@src/lib/firebaseUtils';
+import { DBOrder } from '@src/lib/types';
 import { ChangeEvent, FC, ReactNode } from 'react';
 import ModelPreview from '../ModelPreview';
 import PartSummary from '../parts/PartSettingsSummary';

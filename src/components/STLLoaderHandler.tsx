@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { ChangeEvent, FC, Suspense, useState } from 'react';
 import { BufferGeometry } from 'three';
 import { stlToGeom } from '../lib/stlUtils';

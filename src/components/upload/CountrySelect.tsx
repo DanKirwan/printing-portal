@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import { Stack } from '@mui/material';
 
 interface Props {
     countryCode: string;
@@ -19,7 +19,7 @@ export const CountrySelect: FC<Props> = ({ countryCode, onChange }) => {
             autoHighlight
             getOptionLabel={(option) => option.label}
             renderOption={(props, option) => (
-                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                <Stack component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                     <img
                         loading="lazy"
                         width="20"
@@ -28,7 +28,7 @@ export const CountrySelect: FC<Props> = ({ countryCode, onChange }) => {
                         alt=""
                     />
                     {option.label} ({option.code})
-                </Box>
+                </Stack>
             )}
             renderInput={(params) => (
                 <TextField
