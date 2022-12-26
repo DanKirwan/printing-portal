@@ -17,14 +17,14 @@ const GeometryAnalysis: FC<Props> = ({ geometry }) => {
     const volume = getVolume(geometry);
     const volInCm = volume / 1000;
 
-    const x = estimateVolume(geometry);
-    console.log(x);
+    const [printVolume, supportVolume] = estimateVolume(geometry);
 
     return (
         <Stack>
             <Typography>Dimensions: {size.x.toFixed(2)}×{size.y.toFixed(2)}×{size.z.toFixed(2)}mm</Typography>
             <Typography>Bounding Volume: {(size.x * size.y * size.z / 1000).toFixed(4)}cm<sup>3</sup></Typography>
-            <Typography>Volume: {volInCm}cm<sup>3</sup></Typography>
+            <Typography>Volume: {printVolume / 1000}cm<sup>3</sup></Typography>
+            <Typography>Support Material Volume: {supportVolume / 1000}cm<sup>3</sup></Typography>
             <Typography>...</Typography>
         </Stack>
     )

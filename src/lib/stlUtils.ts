@@ -12,7 +12,7 @@ export const stlToGeom = async (file: File) => {
 
 
 /// Returns the internal volume and support material volume for an object
-export const estimateVolume = (geometry: BufferGeometry, samples: number = 10, cutoffAngle: number = 1.04): [number, number] => {
+export const estimateVolume = (geometry: BufferGeometry, samples: number = 10, cutoffAngle: number = 1.04, filteringDecimalPlaces = 5): [number, number] => {
 
     geometry.computeBoundingBox();
 
@@ -47,7 +47,7 @@ export const estimateVolume = (geometry: BufferGeometry, samples: number = 10, c
             let prevHeight = 0;
 
 
-            const intersections = _.uniqBy(ray.intersectObject(mesh), x => x.distance);
+            const intersections = _.uniqBy(ray.intersectObject(mesh), x => x.distance.toFixed(filteringDecimalPlaces));
 
             for (let pair = 0; pair < intersections.length / 2; pair++) {
                 const enterIntersection = intersections[pair * 2];
