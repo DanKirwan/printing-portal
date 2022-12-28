@@ -23,19 +23,19 @@ let testEnv = await initializeTestEnvironment({
 
 
 
-test("Can Add Order", async () => {
-    const rouge = testEnv.unauthenticatedContext();
-    const firestore = rouge.firestore();
-    console.log(fs);
-    if (!firestore) throw "No firestore running";
-    const typedFirestore = getTypedFirestore(firestore);
-    const storage = rouge.storage();
+// test("Can Add Order", async () => {
+//     const rouge = testEnv.unauthenticatedContext();
+//     const firestore = rouge.firestore();
+//     console.log(fs);
+//     if (!firestore) throw "No firestore running";
+//     const typedFirestore = getTypedFirestore(firestore);
+//     const storage = rouge.storage();
 
-    if (!firestore || !storage) throw "Emulators not set up";
+//     if (!firestore || !storage) throw "Emulators not set up";
 
-    const defaultOrder = genDefaultOrder([]);
-    const orderId = await uploadOrder(defaultOrder, null, typedFirestore, storage);
-    const fromDB = await getOrder(orderId, typedFirestore, storage);
+//     const defaultOrder = genDefaultOrder([]);
+//     const orderId = await uploadOrder(defaultOrder, null, typedFirestore, storage);
+//     const fromDB = await getOrder(orderId, typedFirestore, storage);
 
-    assert.deepEqual(defaultOrder, fromDB);
-})
+//     assert.deepEqual(defaultOrder, fromDB);
+// })
