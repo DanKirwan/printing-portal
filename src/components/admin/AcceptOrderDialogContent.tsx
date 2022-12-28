@@ -86,7 +86,11 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
                 />
 
                 {estimatedCost == null ?
-                    <Typography>Calculating Estimated Price...</Typography> :
+                    <Stack>
+
+                        <Typography>Calculating Estimated Price...</Typography>
+                        <Loading />
+                    </Stack> :
                     <Typography>Estimated Cost: £{estimatedCost}</Typography>
                 }
 

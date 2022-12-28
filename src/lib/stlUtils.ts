@@ -50,7 +50,7 @@ export const estimateOrderPrice = async (
     order: Order, materials: Material[],
     cutoffAngle: number = 0.959931, //55Deg
     wallThickness: number = 1.2,
-    samples: number = 10,
+    samples: number = 40,
     supportInfill: number = 0.15,
 ) => {
     let totalSum = 0;

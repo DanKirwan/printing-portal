@@ -44,6 +44,12 @@ export const OrderSummaryRow: FC<Props> = ({ order, actions }) => {
                 </Stack>
 
             </TableCell>
+            <TableCell>
+                {order.price ?? "No Quote Yet"}
+            </TableCell>
+            <TableCell>
+                {order.expectedShipping?.toDate().toLocaleDateString('en-GB') ?? "No Shipping Date Yet"}
+            </TableCell>
             <TableCell align='right'>
                 {order.desc}
             </TableCell>

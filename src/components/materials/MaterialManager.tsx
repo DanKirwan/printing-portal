@@ -37,6 +37,7 @@ export const MaterialManager: FC<Props> = ({ material, onDelete, onChange }) => 
 
 
     }
+
     return (
         <Accordion sx={{ width: '100%' }}>
             <AccordionSummary>
@@ -49,6 +50,8 @@ export const MaterialManager: FC<Props> = ({ material, onDelete, onChange }) => 
             </AccordionSummary>
             <AccordionDetails>
                 <Stack>
+                    <TextField type='number' value={material.density.toString()} onChange={e => onChange({ ...material, density: +e.target.value })} label='Density' />
+                    <TextField type='number' value={material.pricePerKg.toString()} onChange={e => onChange({ ...material, pricePerKg: +e.target.value })} label='Price Per Kilogram' />
 
                     <Typography >Description: {material.description}</Typography>
                     <List>
