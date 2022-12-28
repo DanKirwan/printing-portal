@@ -6,6 +6,8 @@ export type Material = {
     name: string,
     description: string,
     colors: Color[],
+    pricePerKg: number,
+    density: number, // In kg/m3
 };
 
 

@@ -4,6 +4,11 @@ service cloud.firestore {
     function isAdmin() {
       return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
+
+        match /materials/{material} {
+    	allow read: if true;
+      allow write: if isAdmin();
+    }
     
 		match /orders/{order} {
     	allow read, write: if isAdmin() || resource.data.userId == request.auth.uid;

@@ -15,6 +15,7 @@ export default () => {
     const [density, setDensity] = useState(1240);
     const [wallThickness, setWallThickness] = useState(1.2); // In mm
     const cutoffAngle = cutoffAngleInDeg * Math.PI / 180;
+    const [profitMultiplier, setProfitMultiplier] = useState(10);
 
     const tryEstimate = (model: BufferGeometry) => {
         try {
@@ -40,7 +41,8 @@ export default () => {
                 Support Volume: {supportVol / 1000}cm <sup>3</sup> -
                 Surface Area: {surfaceArea / 100}cm<sup>3</sup>
             </Typography>
-            <Typography>Estimated Price: £{price} </Typography>
+            <Typography>Estimated Cost: £{price} </Typography>
+            <Typography>Estimated Price: £{profitMultiplier * price} </Typography>
             <Typography>Estimated Full Volume: {volume / 1000}cm<sup>3</sup></Typography>
             <Typography>Samples: {samples}x{samples} - {`(${samples * samples})`}</Typography>
             <Slider value={samples} onChange={(_, value) => setSamples(value as number)} min={3} max={50} />
@@ -53,6 +55,7 @@ export default () => {
             <TextField type='number' value={pricePerKg.toString()} onChange={e => setPricePerKg(+e.target.value)} label='Price Per KG' />
             <TextField type='number' value={density.toString()} onChange={e => setDensity(+e.target.value)} label='Density (kg/m3)' />
             <TextField type='number' value={wallThickness.toString()} onChange={e => setWallThickness(+e.target.value)} label='Wall Thickness (mm)' />
+            <TextField type='number' value={profitMultiplier.toString()} onChange={e => setProfitMultiplier(+e.target.value)} label='Profit Multiplier' />
         </Stack>
     )
 }

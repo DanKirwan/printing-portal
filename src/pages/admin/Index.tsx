@@ -3,13 +3,16 @@ import { ConfirmButton } from "@src/components/generic/ConfirmButton";
 import { OrdersTable } from "@src/components/orders/OrdersTable"
 import { getDB } from "@src/lib/firebaseUtils";
 import { useCollectionWithIds, useSnapshot } from "@src/lib/hooks"
-import { OrderStatus } from "@src/lib/types";
+import { Order, OrderStatus } from "@src/lib/types";
 import { handleOrderUpdate } from "@src/lib/appUtils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AcceptOrderDialog } from "@src/components/admin/AcceptOrderDialog";
+import { WithId } from "@src/lib/utils";
 
 export default () => {
     const [orders, loading] = useCollectionWithIds(getDB().orders);
+    const [acceptingOrderIndex, setAcceptingOrderIndex] = useState<number | null>(null);
 
     const [tabIndex, setTabIndex] = useState(0);
     const incoming = orders.filter(order => order.status == OrderStatus.Incoming);
@@ -24,13 +27,17 @@ export default () => {
         navigate(`/admin/${orderId}`);
     }
 
+    const handleOrderAccept = async (order: Order) => {
+        if (!acceptingOrderIndex) throw "cannot accept without an order";
+        const { id } = incoming[acceptingOrderIndex];
+
+        await handleOrderUpdate(id, { ...order, status: OrderStatus.Processing });
+
+    }
+
 
     const getIncomingActions = (index: number) => {
         const order = incoming[index];
-        const handleAccept = async () => {
-            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Processing });
-            setTabIndex(1);
-        }
 
         const handleReject = async () => {
             await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted });
@@ -41,7 +48,7 @@ export default () => {
         return (
             <Stack direction='row' justifyContent='right' spacing={1}>
                 <Button onClick={handleReject} variant='contained' color='primary'>Reject</Button>
-                <Button onClick={handleAccept} variant='contained' color='info'>Accept </Button>
+                <Button onClick={() => setAcceptingOrderIndex(index)} variant='contained' color='info'>Accept </Button>
                 <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
             </Stack>
         )
@@ -111,6 +118,14 @@ export default () => {
             {tabIndex == 2 && <OrdersTable orders={completed} getRowActions={getCompletedActions} />}
 
             {tabIndex == 3 && <OrdersTable orders={deleted} getRowActions={getDeletedActions} />}
+            {acceptingOrderIndex != null &&
+                <AcceptOrderDialog
+                    open={acceptingOrderIndex != null}
+                    onClose={() => setAcceptingOrderIndex(null)}
+                    orderId={incoming[acceptingOrderIndex].id}
+                    onAccept={handleOrderAccept}
+                />
+            }
         </Stack>
 
     )

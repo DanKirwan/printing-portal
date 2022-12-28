@@ -1,6 +1,8 @@
 import _, { intersection } from "lodash";
 import { BufferGeometry, DoubleSide, Mesh, MeshStandardMaterial, Raycaster, Vector3 } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
+import { Material } from "./materialUtils";
+import { Order } from "./types";
 
 
 export const stlToGeom = async (file: File) => {
@@ -44,6 +46,32 @@ export const getSurfaceArea = (geometry: BufferGeometry) => {
     return sum;
 }
 
+export const estimateOrderPrice = async (
+    order: Order, materials: Material[],
+    cutoffAngle: number = 0.959931, //55Deg
+    wallThickness: number = 1.2,
+    samples: number = 10,
+    supportInfill: number = 0.15,
+) => {
+    let totalSum = 0;
+    const material = materials.find(m => m.name == order.settings.material);
+    if (!material) throw "Cannot find required material from list of materials";
+    const { pricePerKg, density } = material;
+    for (const part of order.parts) {
+        const { file, quantity, settings } = part;
+        const { infill } = settings;
+
+        const geom = await stlToGeom(file);
+        const unitPrice = estimatePrice(
+            geom, samples,
+            pricePerKg, density,
+            infill, supportInfill, wallThickness, cutoffAngle);
+        totalSum += unitPrice * quantity;
+    }
+
+    return totalSum;
+}
+
 export const estimatePrice = (
     geometry: BufferGeometry, samples: number = 10,
     pricePerKg: number, density: number,
@@ -51,6 +79,7 @@ export const estimatePrice = (
     cutoffAngle: number = 1.04, filteringDecimalPlaces: number = 5,
 ) => {
     const [volume, supportVolume, surfaceArea] = computeGeometryMetrics(geometry, samples, cutoffAngle, filteringDecimalPlaces);
+    console.log(volume, supportVolume, surfaceArea)
     return computePrice(
         volume, supportVolume, surfaceArea,
         pricePerKg, density, infill, supportInfill, wallThickness);
