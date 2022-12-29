@@ -8,7 +8,7 @@ export const genDefaultParts = (files: File[]): PartOrder[] => files.map((file, 
     notes: "",
     quantity: 1,
     settings: {
-        color: 'Not Chosen',
+        color: '',
         infill: 0.4,
         resolution: 200
     }
@@ -17,12 +17,13 @@ export const genDefaultParts = (files: File[]): PartOrder[] => files.map((file, 
 export const getOrderProblems = (order: Order, currentMaterial: Material): string[] => {
 
     const partProblems = order.parts.flatMap(p => getPartProblems(p, currentMaterial));
+    if (order.parts.length == 0) partProblems.push("An order must contain at least 1 part");
     if (!isEmail(order.email)) {
-        partProblems.push("must have a valid email")
+        partProblems.push("Must have a valid email")
     }
 
-    if (!isAddressFilled) {
-        partProblems.push("address has missing fields")
+    if (!isAddressFilled(order.address)) {
+        partProblems.push("Address has missing fields")
     }
 
     return partProblems;
@@ -42,7 +43,7 @@ const getPartProblems = (part: PartOrder, currentMaterial: Material): string[] =
     const { infill, color } = settings;
     const problems = [];
     if (infill < 0 || infill > 1) {
-        problems.push(`${name} has invalid infill: ${infill * 100}% - must be between 0 and 100`);
+        problems.push(`Part ${name} has invalid infill: ${infill * 100}% - must be between 0 and 100`);
     }
 
     const { colors, name: materialName } = currentMaterial;
@@ -52,14 +53,14 @@ const getPartProblems = (part: PartOrder, currentMaterial: Material): string[] =
             .map(c => c.name)
             .join(', ');
         problems.push(
-            `${name} has invalid colour: ${color} is unavailable for ${materialName}. `
-            + `Valid colours: ${validColours}`
+            `Part ${name} has invalid colour: ${color} is unavailable for ${materialName}.`
+            + `(Valid colours: ${validColours})`
         )
     }
 
     if (quantity <= 0 || !Number.isInteger(quantity)) {
         problems.push(
-            `${name} has invalid quantity: ${quantity} must be an integer greater than 0`
+            `$Part {name} has invalid quantity: ${quantity} must be an integer greater than 0`
         );
     }
 

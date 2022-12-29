@@ -69,8 +69,8 @@ export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClo
                                 <AccordionSummary>Problems With Order</AccordionSummary>
                                 <AccordionDetails>
                                     <List>
-                                        {orderProblems.map(problem => (
-                                            <ListItem dense>
+                                        {orderProblems.map((problem, i) => (
+                                            <ListItem dense key={`problem${i}`}>
                                                 <Typography variant='caption'>{problem}</Typography>
 
                                             </ListItem>

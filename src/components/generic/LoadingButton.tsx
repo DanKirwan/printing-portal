@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Stack } from '@mui/material';
+import { Button, ButtonProps, CircularProgress, Stack } from '@mui/material';
 import { FCC } from '@src/lib/utils';
 import { FC } from 'react';
 
@@ -9,9 +9,9 @@ interface Props {
 
 }
 
-export const LoadingButton: FCC<Props> = ({ loading, onClick, children }) => {
+export const LoadingButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style'>> = ({ loading, onClick, children, ...buttonProps }) => {
     return (
-        <Button onClick={onClick} >
+        <Button onClick={onClick} {...buttonProps} >
             <Stack alignItems='center' sx={{ display: 'grid' }}>
                 <Stack sx={{ opacity: loading ? 0 : 1, gridRow: 1, gridColumn: 1 }}>
 

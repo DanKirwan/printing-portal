@@ -2,6 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@m
 import { FileLoadButton } from '@src/components/FileLoadButton';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
+import { PriceEstimation } from '@src/components/upload/PriceEstimation';
 import { UploadDialog } from '@src/components/upload/UploadDialog';
 import { useAuth } from '@src/contexts/AuthContext';
 import { handleOrderUpload } from '@src/lib/appUtils';
@@ -73,16 +74,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
             <Stack width='80vw' spacing={2} padding={1}>
                 <Typography variant='h4'>Parts</Typography>
                 <OrderEditor availableColors={availableColors} order={order} onChange={setOrder} />
-                <LoadingButton loading={loading} onClick={() => setDialogOpen(true)} >Upload</LoadingButton>
-                <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
-                <UploadDialog
-                    orderProblems={orderProblems}
-                    uploading={loading}
-                    order={order}
-                    open={dialogOpen}
-                    onClose={() => setDialogOpen(false)}
-                    onSubmit={() => handleUpload()}
-                    onChange={setOrder} />
+
             </Stack >
 
 
@@ -99,6 +91,18 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                         ))}
                     </Select>
                 </FormControl>
+                <LoadingButton loading={loading} onClick={() => setDialogOpen(true)} variant='contained' >Upload</LoadingButton>
+                <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
+                <UploadDialog
+                    orderProblems={orderProblems}
+                    uploading={loading}
+                    order={order}
+                    open={dialogOpen}
+                    onClose={() => setDialogOpen(false)}
+                    onSubmit={() => handleUpload()}
+                    onChange={setOrder} />
+
+                <PriceEstimation order={authOrder} materials={materials} />
             </Stack>
         </Stack >
     )
