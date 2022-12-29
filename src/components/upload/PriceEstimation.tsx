@@ -1,13 +1,11 @@
 import { Typography } from '@mui/material';
 import { Material } from '@src/lib/materialUtils';
-import { estimateOrderPrice } from '@src/lib/stlUtils';
 import { Order } from '@src/lib/types';
 import _ from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { EllipseLoadingText } from '../generic/EllipseLoadingText';
 
-import workerUrl from '@src/workers/priceEstimator?url'
-
+import Estimator from '@src/workers/priceEstimator?worker';
 interface Props {
     order: Order;
     materials: Material[];
@@ -27,9 +25,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials }) => {
     const ranges = [0, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
 
     const estimator: Worker = useMemo(
-        () => new Worker(workerUrl, {
-            type: 'module',
-        }),
+        () => new Estimator(),
         []
     );
 
