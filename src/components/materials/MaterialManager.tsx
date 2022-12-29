@@ -52,6 +52,7 @@ export const MaterialManager: FC<Props> = ({ material, onDelete, onChange }) => 
                 <Stack>
                     <TextField type='number' value={material.density.toString()} onChange={e => onChange({ ...material, density: +e.target.value })} label='Density' />
                     <TextField type='number' value={material.pricePerKg.toString()} onChange={e => onChange({ ...material, pricePerKg: +e.target.value })} label='Price Per Kilogram' />
+                    <TextField type='number' value={material.priority?.toString() ?? 0} onChange={e => onChange({ ...material, priority: +e.target.value })} label='Viewing Priority' />
 
                     <Typography >Description: {material.description}</Typography>
                     <List>

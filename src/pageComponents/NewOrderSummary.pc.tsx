@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, Tooltip, Typography } from '@mui/material';
 import { FileLoadButton } from '@src/components/FileLoadButton';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
@@ -8,21 +8,25 @@ import { useAuth } from '@src/contexts/AuthContext';
 import { handleOrderUpload } from '@src/lib/appUtils';
 import { getDB } from '@src/lib/firebaseUtils';
 import { useCollection } from '@src/lib/hooks';
-import { genDefaultOrder, genDefaultParts, getOrderProblems } from '@src/lib/orderUtils';
+import { genDefaultOrder, genDefaultParts, getOrderProblems, getShippingDetails } from '@src/lib/orderUtils';
+import { getEnumValues } from '@src/lib/utils';
+import _ from 'lodash';
 import { uniqBy } from 'lodash';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Order, OrderSettings } from '../lib/types';
+import { Order, OrderSettings, ShippingType } from '../lib/types';
 interface Props {
     files: File[]
 }
 
+const minOrderPrice = 30;
 
 const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
     const [order, setOrder] = useState<Order>(genDefaultOrder(files));
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [expectedPrice, setExpectedPrice] = useState<number | null>(null);
 
     const { uid, email } = useAuth();
     const navigate = useNavigate();
@@ -66,8 +70,11 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
     const orderProblems = currentMaterial ?
         getOrderProblems(authOrder, currentMaterial) :
-        ["No material selected"]
+        ["No material selected"];
 
+    const [, shippingPrice] = getShippingDetails(order.shippingType);
+    const orderPrice = (expectedPrice ?? 0) + shippingPrice;
+    const belowMinOrder = orderPrice != null && orderPrice < minOrderPrice;
     return (
         <Stack direction='row' spacing={4} padding={4} height='100%' flexGrow={1}>
 
@@ -86,12 +93,26 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                         value={order.settings.material}
                         onChange={e => handleChangeSettings({ material: e.target.value })}
                     >
-                        {materials.map((v, idx) => (
-                            <MenuItem key={idx} value={v.name}>{v.name}</MenuItem>
-                        ))}
+                        {_.orderBy(materials, x => -(x.priority ?? 0))
+                            .map((v, idx) => (
+                                <MenuItem key={idx} value={v.name}>{v.name}</MenuItem>
+                            ))}
                     </Select>
                 </FormControl>
-                <LoadingButton loading={loading} onClick={() => setDialogOpen(true)} variant='contained' >Upload</LoadingButton>
+
+                <Tooltip title={belowMinOrder ? 'Minimum order price is £30' : ''}>
+                    <span >
+                        <LoadingButton
+                            sx={{ width: '100%' }}
+                            loading={loading}
+                            onClick={() => setDialogOpen(true)}
+                            variant='contained'
+                            disabled={belowMinOrder}
+                        >
+                            Upload
+                        </LoadingButton>
+                    </span>
+                </Tooltip>
                 <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
                 <UploadDialog
                     orderProblems={orderProblems}
@@ -102,7 +123,26 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     onSubmit={() => handleUpload()}
                     onChange={setOrder} />
 
-                <PriceEstimation order={authOrder} materials={materials} />
+                <FormControl variant='standard'>
+                    <InputLabel>Shipping Options</InputLabel>
+                    <Select
+                        value={order.shippingType}
+                        onChange={e => setOrder({ ...order, shippingType: e.target.value as ShippingType })}
+                    >
+                        {Object.values(ShippingType).map((v, idx) => {
+                            const [text, price] = getShippingDetails(v);
+                            return (
+                                <MenuItem key={idx} value={v}>{text} - £{price}</MenuItem>
+                            )
+                        })
+                        }
+                    </Select>
+                    <FormHelperText>Subject to change for order totalling over 2kg</FormHelperText>
+                </FormControl>
+                <PriceEstimation
+                    order={authOrder}
+                    materials={materials}
+                    onCalculated={setExpectedPrice} />
             </Stack>
         </Stack >
     )

@@ -9,7 +9,7 @@ interface Props {
 
 }
 
-export const LoadingButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style'>> = ({ loading, onClick, children, ...buttonProps }) => {
+export const LoadingButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style' | 'disabled' | 'sx'>> = ({ loading, onClick, children, ...buttonProps }) => {
     return (
         <Button onClick={onClick} {...buttonProps} >
             <Stack alignItems='center' sx={{ display: 'grid' }}>

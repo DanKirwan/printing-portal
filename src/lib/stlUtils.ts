@@ -46,6 +46,17 @@ export const getSurfaceArea = (geometry: BufferGeometry) => {
     return sum;
 }
 
+const getResolutionMultiplier = (resolution: number) => {
+    switch (resolution) {
+        case 100:
+            return 1.15
+        case 300:
+            return 0.9;
+    }
+
+    return 1;
+}
+
 export const estimateOrderPrice = async (
     order: Order, materials: Material[],
     cutoffAngle: number = 0.959931, //55Deg
@@ -59,14 +70,17 @@ export const estimateOrderPrice = async (
     const { pricePerKg, density } = material;
     for (const part of order.parts) {
         const { file, quantity, settings } = part;
-        const { infill } = settings;
+        const { infill, resolution } = settings;
+
+        const resolutionFactor = getResolutionMultiplier(resolution);
+
 
         const geom = await stlToGeom(file);
         const unitPrice = estimatePrice(
             geom, samples,
             pricePerKg, density,
             infill, supportInfill, wallThickness, cutoffAngle);
-        totalSum += unitPrice * quantity;
+        totalSum += unitPrice * quantity * resolutionFactor;
     }
 
     return totalSum;

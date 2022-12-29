@@ -56,7 +56,7 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
     const handleProfitMultChange = (value: number) => {
         setPriceMult(value);
         if (!estimatedCost) return;
-        setPrice(estimatedCost * value);
+        setPrice(+(estimatedCost * value).toFixed(2));
     }
 
 

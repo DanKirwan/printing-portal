@@ -10,4 +10,9 @@ export const getFileFromUrl = async (url: string, name: string, defaultType = 'i
     });
 }
 
+export const getEnumValues = <T extends object>(e: T): T[] => Object
+    .values(e)
+    .filter(v => isNaN(Number(v)));
+
+
 export type WithId<T> = T & { id: string };

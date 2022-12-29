@@ -1,18 +1,8 @@
 import { Timestamp } from "firebase/firestore";
 import { Material } from "./materialUtils";
-import { PartOrder, Order, OrderStatus, Address } from "./types";
+import { PartOrder, Order, OrderStatus, Address, ShippingType } from "./types";
 import isEmail from 'validator/lib/isEmail';
 
-export const genDefaultParts = (files: File[]): PartOrder[] => files.map((file, i) => ({
-    file,
-    notes: "",
-    quantity: 1,
-    settings: {
-        color: '',
-        infill: 0.4,
-        resolution: 200
-    }
-}));
 
 export const getOrderProblems = (order: Order, currentMaterial: Material): string[] => {
 
@@ -66,10 +56,33 @@ const getPartProblems = (part: PartOrder, currentMaterial: Material): string[] =
 
     return problems;
 }
+
+export const genDefaultParts = (files: File[]): PartOrder[] => files.map((file, i) => ({
+    file,
+    notes: "",
+    quantity: 1,
+    settings: {
+        color: '',
+        infill: 0.2,
+        resolution: 200
+    }
+}));
+
+export const getShippingDetails = (type: ShippingType): [string, number] => {
+    switch (type) {
+        case ShippingType.Standard:
+            return ["Standard 1-2 days", 5]
+        case ShippingType.Expedited:
+            return ["Guaranteed Next Day", 15]
+    }
+
+}
+
 export const genDefaultOrder = (files: File[]): Order => {
 
     const order: Order = {
         userId: null,
+        shippingType: ShippingType.Standard,
         email: "",
         desc: "",
         lead: 2,

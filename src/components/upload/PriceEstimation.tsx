@@ -9,6 +9,7 @@ import Estimator from '@src/workers/priceEstimator?worker';
 interface Props {
     order: Order;
     materials: Material[];
+    onCalculated?: (price: number) => void;
 }
 
 const getRangeString = (ranges: number[], upperIndex: number) => {
@@ -20,11 +21,11 @@ const getRangeString = (ranges: number[], upperIndex: number) => {
 
 const profitMultiplier = 10;
 
-export const PriceEstimation: FC<Props> = ({ order, materials }) => {
+export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = () => null }) => {
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState<number | null>(null);
     const requestId = useRef<null | string>(null);
-    const ranges = [0, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
+    const ranges = [0, 5, 10, 20, 30, 50, 100, 200, 500, 1000, 2000, 5000];
 
     const estimator: Worker = useMemo(
         () => new Estimator(),
@@ -55,6 +56,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials }) => {
             const { price, id } = e.data;
             if (id != requestId.current) return;
             setPrice(Number.isNaN(price) ? null : price * profitMultiplier);
+            onCalculated(price * profitMultiplier);
             setLoading(false);
 
         }

@@ -8,6 +8,7 @@ export type Material = {
     colors: Color[],
     pricePerKg: number,
     density: number, // In kg/m3
+    priority?: number, // This is the order in which materials will be shown
 };
 
 

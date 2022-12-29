@@ -8,8 +8,17 @@ export enum OrderStatus {
     Deleted,
     Completed
 }
+
+export enum ShippingType {
+    Standard = 'Standard',
+    Expedited = 'Expedited',
+}
+
+
+
 export type Order = {
     address: Address,
+    shippingType: ShippingType,
     status: OrderStatus,
     email: string,
     desc: string,

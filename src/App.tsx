@@ -10,6 +10,7 @@ import { CssBaseline } from '@mui/material';
 import Loading from "@src/components/Loading";
 import { AuthProvider } from './contexts/AuthContext';
 import { Header } from './components/Header';
+import { Layout } from './components/Layout';
 
 
 
@@ -24,8 +25,9 @@ function App() {
             <Suspense fallback={<Loading />}>
 
               <CssBaseline />
-              <Header />
-              <AppRoutes />
+              <Layout>
+                <AppRoutes />
+              </Layout>
             </Suspense>
           </BrowserRouter>
         </ModelProvider>
