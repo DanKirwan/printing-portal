@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import { useAuth } from '@src/contexts/AuthContext';
 import { SignInWithSocialMedia, Providers } from '@src/lib/firebaseUtils';
 import { Order } from '@src/lib/types';
@@ -13,11 +13,14 @@ interface Props {
     order: Order;
     onChange: (order: Order) => void;
     onSubmit: () => void;
+    orderProblems: string[];
 }
 
-export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClose, uploading }) => {
+export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClose, uploading, orderProblems }) => {
     const { desc, address, email } = order;
+
     const { email: userEmail } = useAuth();
+
 
     // Controls the dialog which handles anonymous submissions
     const [confirmAnonymousOpen, setConfirmAnonymousOpen] = useState(false);
@@ -49,9 +52,9 @@ export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClo
     </Dialog>
     return (
         <>
-            <Dialog open={open} onClose={onClose}>
+            <Dialog open={open} onClose={onClose} maxWidth='lg'>
                 <DialogTitle>Submit Order Request</DialogTitle>
-                <DialogContent>
+                <DialogContent sx={{ maxHeight: '70vh' }}>
                     <Stack spacing={3} padding={1}>
                         <TextField value={desc} onChange={e => onChange({ ...order, desc: e.target.value })} label='Order Notes' />
                         {userEmail ?
@@ -60,11 +63,45 @@ export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClo
                             <TextField value={email} onChange={e => onChange({ ...order, email: e.target.value })} label='Email Address' />
                         }
                         <ShippingInput address={address} onChange={address => onChange({ ...order, address })} />
+
+                        {orderProblems.length > 0 &&
+                            <Accordion>
+                                <AccordionSummary>Problems With Order</AccordionSummary>
+                                <AccordionDetails>
+                                    <List>
+                                        {orderProblems.map(problem => (
+                                            <ListItem dense>
+                                                <Typography variant='caption'>{problem}</Typography>
+
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </AccordionDetails>
+                            </Accordion>
+                        }
                     </Stack>
                 </DialogContent>
 
                 <DialogActions>
-                    <Button onClick={() => handleSubmit()} variant='contained'>Submit Order Request</Button>
+                    <Tooltip
+                        title={
+                            orderProblems.length > 0 ?
+                                'There are problems with your order! See Order Problems' :
+                                ''
+                        }
+                    >
+                        <span>
+                            {/* required for tooltip to be visible */}
+                            <Button
+
+                                onClick={() => handleSubmit()}
+                                variant='contained'
+                                disabled={orderProblems.length > 0}
+                            >
+                                Submit Order Request
+                            </Button>
+                        </span>
+                    </Tooltip>
                 </DialogActions>
             </Dialog>
 

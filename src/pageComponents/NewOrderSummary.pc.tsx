@@ -1,19 +1,17 @@
-import { Divider, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
 import { FileLoadButton } from '@src/components/FileLoadButton';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
 import { UploadDialog } from '@src/components/upload/UploadDialog';
 import { useAuth } from '@src/contexts/AuthContext';
-import { Timestamp } from 'firebase/firestore';
+import { handleOrderUpload } from '@src/lib/appUtils';
+import { getDB } from '@src/lib/firebaseUtils';
+import { useCollection } from '@src/lib/hooks';
+import { genDefaultOrder, genDefaultParts, getOrderProblems } from '@src/lib/orderUtils';
+import { uniqBy } from 'lodash';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Order, OrderSettings, OrderStatus, PartOrder } from '../lib/types';
-import { uniqBy } from 'lodash';
-import { useCollection } from '@src/lib/hooks';
-import { getDB } from '@src/lib/firebaseUtils';
-import { ShippingInput } from '@src/components/upload/ShippingInput';
-import { genDefaultOrder, genDefaultParts } from '@src/lib/orderUtils';
-import { handleOrderUpload } from '@src/lib/appUtils';
+import { Order, OrderSettings } from '../lib/types';
 interface Props {
     files: File[]
 }
@@ -29,10 +27,11 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
     const navigate = useNavigate();
 
     const [materials, loadingMaterials] = useCollection(getDB().materials);
+    // Order with added email from auth if user is logged in
+    const authOrder = email ? { ...order, email } : order;
 
     const handleUpload = async () => {
         setLoading(true);
-        const authOrder = email ? { ...order, email } : order;
         try {
 
             const orderId = await handleOrderUpload(authOrder, uid);
@@ -60,8 +59,13 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
         setOrder({ ...rest, parts: newParts });
     }
 
-    const materialColors = materials.find(material => material.name == order.settings.material)?.colors ?? [];
+    const currentMaterial = materials.find(material => material.name == order.settings.material);
+    const materialColors = currentMaterial?.colors ?? [];
     const availableColors = materialColors.filter(c => c.available).map(c => c.name);
+
+    const orderProblems = currentMaterial ?
+        getOrderProblems(authOrder, currentMaterial) :
+        ["No material selected"]
 
     return (
         <Stack direction='row' spacing={4} padding={4} height='100%' flexGrow={1}>
@@ -72,6 +76,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                 <LoadingButton loading={loading} onClick={() => setDialogOpen(true)} >Upload</LoadingButton>
                 <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
                 <UploadDialog
+                    orderProblems={orderProblems}
                     uploading={loading}
                     order={order}
                     open={dialogOpen}
