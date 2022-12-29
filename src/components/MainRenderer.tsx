@@ -22,8 +22,8 @@ const MainRenderer: FC<Props> = ({ geometry }) => {
                 <color attach="background" args={['white']} />
                 <CamControls boundary={false} />
                 <ambientLight />
-                <pointLight position={[10, 5, -10]} />
-                <pointLight position={[-10, 5, 5]} />
+                <pointLight position={[10, 5, 10]} />
+                <pointLight position={[-10, 5, 10]} />
 
                 <NormalizedModel geometry={geometry} color="grey" />
             </ContextBridge>
