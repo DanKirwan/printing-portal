@@ -18,6 +18,8 @@ const getRangeString = (ranges: number[], upperIndex: number) => {
     return `£${ranges[upperIndex - 1]} - £${ranges[upperIndex]}`;
 }
 
+const profitMultiplier = 10;
+
 export const PriceEstimation: FC<Props> = ({ order, materials }) => {
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState<number | null>(null);
@@ -39,7 +41,6 @@ export const PriceEstimation: FC<Props> = ({ order, materials }) => {
 
     const postMessageDebounced = useCallback(_.debounce(
         (message: { order: Order, materials: Material[], id: string }) => {
-            console.log("posting message");
             estimator.postMessage(message)
         },
         200), [estimator]);
@@ -53,7 +54,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials }) => {
         estimator.onmessage = (e: MessageEvent<{ price: number, id: string }>) => {
             const { price, id } = e.data;
             if (id != requestId.current) return;
-            setPrice(Number.isNaN(price) ? null : price);
+            setPrice(Number.isNaN(price) ? null : price * profitMultiplier);
             setLoading(false);
 
         }
