@@ -30,7 +30,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick, onDelete })
         >
             <TableCell align="right" width="20px">
                 <Stack width={200} alignItems='center' onClick={onClick} sx={{ cursor: 'pointer' }}>
-                    <ModelPreview file={part.file} color={'grey'} />
+                    <ModelPreview file={part.file} color={'lightGrey'} />
                     <Typography >{part.file.name}</Typography>
                 </Stack>
             </TableCell>

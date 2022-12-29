@@ -1,6 +1,7 @@
 import Loading from "@src/components/Loading";
 import { OrderEditor } from "@src/components/OrderEditor";
 import { handleOrderGet } from "@src/lib/appUtils";
+import { AdminOrderViewerPC } from "@src/pageComponents/AdminOrderViewer.pc";
 import NewOrderSummaryPC from "@src/pageComponents/NewOrderSummary.pc";
 import { Suspense } from "react";
 import { useParams } from "react-router-dom";
@@ -14,7 +15,7 @@ export default () => {
     return (
         <Suspense fallback={<Loading />}>
 
-            <OrderEditor availableColors={[]} order={order} onChange={() => null} />
+            <AdminOrderViewerPC order={{ ...order, id: orderId }} />
         </Suspense>
     )
 }

@@ -1,8 +1,8 @@
 import { Stack, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { Order, PartOrder } from '@src/lib/types';
 import { FC, useState } from 'react';
-import DetailedPartOrder from './DetailedPartOrder';
-import PartDetailsModal from './parts/PartDetailsModal';
+import DetailedPartOrderEditor from './DetailedPartOrderEditor';
+import PartDetailsEditorModal from './parts/PartDetailsModal';
 
 interface Props {
     order: Order;
@@ -35,7 +35,7 @@ export const OrderEditor: FC<Props> = ({ order, onChange, availableColors }) => 
 
     return (
         <Stack>
-            <DetailedPartOrder
+            <DetailedPartOrderEditor
                 parts={order.parts}
                 onChange={parts => handlePartsChange(parts)}
                 onClick={part => setOpenPartIndex(part)}
@@ -50,7 +50,7 @@ export const OrderEditor: FC<Props> = ({ order, onChange, availableColors }) => 
                 <DialogTitle>Part Settings</DialogTitle>
                 <DialogContent sx={{ height: '70vh' }}>
 
-                    <PartDetailsModal availableColors={availableColors} editing={true} onChange={part => handleOpenPartChange(part)} part={order.parts[openPartIndex]} />
+                    <PartDetailsEditorModal availableColors={availableColors} editing={true} onChange={part => handleOpenPartChange(part)} part={order.parts[openPartIndex]} />
                 </DialogContent>
 
             </Dialog>}

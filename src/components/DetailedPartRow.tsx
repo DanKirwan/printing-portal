@@ -20,7 +20,7 @@ const DetailedPartRow: FC<Props> = ({ part, onClick }) => {
         >
             <TableCell align="right" width="20px">
                 <Stack width={200} alignItems='center'>
-                    <ModelPreview file={part.file} color={'grey'} />
+                    <ModelPreview file={part.file} color={'lightGrey'} />
                     <Typography >{part.file.name}</Typography>
                 </Stack>
             </TableCell>

@@ -25,7 +25,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState<number | null>(null);
     const requestId = useRef<null | string>(null);
-    const ranges = [0, 5, 10, 20, 30, 50, 100, 200, 500, 1000, 2000, 5000];
+    const ranges = [0, 30, 50, 100, 200, 500, 1000, 2000, 5000];
 
     const estimator: Worker = useMemo(
         () => new Estimator(),

@@ -10,9 +10,10 @@ import { OrderSummaryRow } from './OrderSummaryRow';
 interface Props {
     orders: WithId<DBOrder>[];
     getRowActions: (index: number) => ReactNode;
+    showActions?: boolean;
 }
 
-export const OrdersTable: FC<Props> = ({ orders, getRowActions }) => {
+export const OrdersTable: FC<Props> = ({ orders, getRowActions, showActions = true }) => {
 
 
 
@@ -28,14 +29,16 @@ export const OrdersTable: FC<Props> = ({ orders, getRowActions }) => {
                     <TableCell>Size</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Estimated Shipping</TableCell>
+                    <TableCell>Status</TableCell>
                     <TableCell align="right" >Description</TableCell>
-                    <TableCell align='right'>Actions</TableCell>
+                    {showActions && <TableCell align='right'>Actions</TableCell>}
                 </TableRow>
             </TableHead>
 
             <TableBody>
                 {orders.map((order, i) => (
                     <OrderSummaryRow
+                        showActions={showActions}
                         key={i}
                         order={order}
                         actions={getRowActions(i)}

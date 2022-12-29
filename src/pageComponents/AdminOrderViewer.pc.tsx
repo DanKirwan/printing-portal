@@ -1,5 +1,6 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { OrderEditor } from '@src/components/OrderEditor';
+import { OrderViewer } from '@src/components/OrderViewer';
 import { AddressViewer } from '@src/components/shipping/AddressViewer';
 import { useAuth } from '@src/contexts/AuthContext';
 import { Order } from '@src/lib/types';
@@ -29,7 +30,7 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
 
             <Stack width='80vw' spacing={2} padding={1}>
                 <Typography variant='h4'>Parts</Typography>
-                <OrderEditor availableColors={[]} order={order} onChange={() => null} />
+                <OrderViewer order={order} />
             </Stack >
 
 

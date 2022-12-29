@@ -17,7 +17,7 @@ interface Props {
 }
 
 
-const DetailedPartOrder: FC<Props> = ({ parts, onClick, onChange, onDelete }) => {
+const DetailedPartOrderEditor: FC<Props> = ({ parts, onClick, onChange, onDelete }) => {
     const handleChange = (part: PartOrder, index: number) => {
         const newParts = [...parts];
         newParts[index] = part;
@@ -41,4 +41,4 @@ const DetailedPartOrder: FC<Props> = ({ parts, onClick, onChange, onDelete }) =>
     </Table>
 }
 
-export default DetailedPartOrder;
+export default DetailedPartOrderEditor;

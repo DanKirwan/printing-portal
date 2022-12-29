@@ -10,7 +10,7 @@ import { max } from 'lodash';
 
 interface Props {
     file: File;
-    color: Color;
+    color: string;
 }
 const renderer = new WebGLRenderer();
 const width = 600;
@@ -37,7 +37,7 @@ const ModelPreview: FC<Props> = ({ file, color }) => {
         const scale = max([size.x, size.y, size.z])!;
 
         scene.background = new Color('white');
-        const material = new MeshStandardMaterial({ color: 'lightGrey' });
+        const material = new MeshStandardMaterial({ color });
         const mesh = new Mesh(geometry, material);
 
         mesh.scale.set(1 / scale, 1 / scale, 1 / scale);

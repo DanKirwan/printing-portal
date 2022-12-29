@@ -1,5 +1,5 @@
 import { Button, Checkbox, Stack, TableCell, TableRow, Typography } from '@mui/material';
-import { DBOrder } from '@src/lib/types';
+import { DBOrder, OrderStatus } from '@src/lib/types';
 import { ChangeEvent, FC, ReactNode } from 'react';
 import ModelPreview from '../ModelPreview';
 import PartSummary from '../parts/PartSettingsSummary';
@@ -9,9 +9,10 @@ interface Props {
     order: DBOrder;
 
     actions: ReactNode;
+    showActions: boolean;
 }
 
-export const OrderSummaryRow: FC<Props> = ({ order, actions }) => {
+export const OrderSummaryRow: FC<Props> = ({ order, actions, showActions }) => {
 
     return (
         <TableRow
@@ -50,13 +51,18 @@ export const OrderSummaryRow: FC<Props> = ({ order, actions }) => {
             <TableCell>
                 {order.expectedShipping?.toDate().toLocaleDateString('en-GB') ?? "No Shipping Date Yet"}
             </TableCell>
+            <TableCell>
+                {OrderStatus[+order.status]}
+            </TableCell>
             <TableCell align='right'>
                 {order.desc}
             </TableCell>
 
-            <TableCell align='right'>
-                {actions}
-            </TableCell>
+            {showActions &&
+                <TableCell align='right'>
+                    {actions}
+                </TableCell>
+            }
         </TableRow>
     )
 }

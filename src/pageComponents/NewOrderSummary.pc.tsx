@@ -26,7 +26,6 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
     const [order, setOrder] = useState<Order>(genDefaultOrder(files));
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [expectedPrice, setExpectedPrice] = useState<number | null>(null);
 
     const { uid, email } = useAuth();
     const navigate = useNavigate();
@@ -72,9 +71,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
         getOrderProblems(authOrder, currentMaterial) :
         ["No material selected"];
 
-    const [, shippingPrice] = getShippingDetails(order.shippingType);
-    const orderPrice = (expectedPrice ?? 0) + shippingPrice;
-    const belowMinOrder = orderPrice != null && orderPrice < minOrderPrice;
+
     return (
         <Stack direction='row' spacing={4} padding={4} height='100%' flexGrow={1}>
 
@@ -100,19 +97,14 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     </Select>
                 </FormControl>
 
-                <Tooltip title={belowMinOrder ? 'Minimum order price is £30' : ''}>
-                    <span >
-                        <LoadingButton
-                            sx={{ width: '100%' }}
-                            loading={loading}
-                            onClick={() => setDialogOpen(true)}
-                            variant='contained'
-                            disabled={belowMinOrder}
-                        >
-                            Upload
-                        </LoadingButton>
-                    </span>
-                </Tooltip>
+                <LoadingButton
+                    sx={{ width: '100%' }}
+                    loading={loading}
+                    onClick={() => setDialogOpen(true)}
+                    variant='contained'
+                >
+                    Upload
+                </LoadingButton>
                 <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
                 <UploadDialog
                     orderProblems={orderProblems}
@@ -141,8 +133,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                 </FormControl>
                 <PriceEstimation
                     order={authOrder}
-                    materials={materials}
-                    onCalculated={setExpectedPrice} />
+                    materials={materials} />
             </Stack>
         </Stack >
     )
