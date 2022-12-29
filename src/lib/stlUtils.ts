@@ -1,5 +1,5 @@
 import _, { intersection } from "lodash";
-import { BufferGeometry, DoubleSide, Mesh, MeshStandardMaterial, Raycaster, Vector3 } from "three";
+import { BufferGeometry, DoubleSide, Intersection, Mesh, MeshStandardMaterial, Object3D, Raycaster, Vector3 } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { Material } from "./materialUtils";
 import { Order } from "./types";
@@ -90,7 +90,7 @@ export const estimatePrice = (
     geometry: BufferGeometry, samples: number = 10,
     pricePerKg: number, density: number,
     infill: number, supportInfill: number, wallThickness: number = 1.2,
-    cutoffAngle: number = 1.04, filteringDecimalPlaces: number = 5,
+    cutoffAngle: number = 1.04, filteringDecimalPlaces: number = 8,
 ) => {
     const [volume, supportVolume, surfaceArea] = computeGeometryMetrics(geometry, samples, cutoffAngle, filteringDecimalPlaces);
     return computePrice(
@@ -122,7 +122,7 @@ export const computeVolume = (
     return saComponent + volumeComponent;
 }
 /// Returns [internalVolume, supportVolume, surfaceArea]
-export const computeGeometryMetrics = (geometry: BufferGeometry, samples: number = 10, cutoffAngle: number = 1.04, filteringDecimalPlaces = 5): [number, number, number] => {
+export const computeGeometryMetrics = (geometry: BufferGeometry, samples: number = 10, cutoffAngle: number = 1.04, filteringDecimalPlaces = 8): [number, number, number] => {
 
     geometry.computeBoundingBox();
 
@@ -133,6 +133,7 @@ export const computeGeometryMetrics = (geometry: BufferGeometry, samples: number
     const yRange = max.y - min.y;
 
     const ray = new Raycaster();
+    ray.far = yRange + 1;
     const material = new MeshStandardMaterial();
 
     material.side = DoubleSide;
@@ -157,9 +158,20 @@ export const computeGeometryMetrics = (geometry: BufferGeometry, samples: number
             let prevHeight = 0;
 
 
-            const intersections = _.uniqBy(ray.intersectObject(mesh), x => x.distance.toFixed(filteringDecimalPlaces));
+            const rawIntersections = ray
+                .intersectObject(mesh)
+                .map<[Intersection, number, boolean]>(x => [x, +x.distance.toFixed(filteringDecimalPlaces), x.face!.normal.angleTo(down) > 1.5708]);
 
-            for (let pair = 0; pair < intersections.length / 2; pair++) {
+
+            // Make points unique based on both location and whether the point is incoming or outgoing 
+            // This means that even 0 thickness areas will be accounted for
+            const intersections = _.uniqWith(rawIntersections,
+                ([, aDist, aEnter], [, bDist, bEnter]) =>
+                    +aDist.toFixed(filteringDecimalPlaces) == +bDist.toFixed(filteringDecimalPlaces) &&
+                    aEnter == bEnter)
+                .map(([x]) => x);
+
+            for (let pair = 0; pair < Math.floor(intersections.length / 2); pair++) {
                 const enterIntersection = intersections[pair * 2];
                 const leaveIntersection = intersections[pair * 2 + 1];
 

@@ -43,7 +43,7 @@ const UploadFilesPC: FC = () => {
             <Stack width='80%'>
 
                 <Typography textAlign='center' variant='caption' color='red'>
-                    We aim to reply within 2 hours between 0800 - 2000.
+                    We aim to reply within 2 hours between 08:00 - 20:00.
                     Monday to Sunday. All requests are answered within 24 hours.
                     Please let us know if your request is particularly urgent and we will work with this.
                 </Typography>
