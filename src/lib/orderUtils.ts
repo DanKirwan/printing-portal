@@ -89,8 +89,8 @@ export const genDefaultOrder = (files: File[]): Order => {
         settings: {
             material: 'PLA',
         },
-        price: 0,
-        expectedShipping: Timestamp.fromDate(new Date()),
+        price: null,
+        expectedShipping: null,
     };
 
     return order;

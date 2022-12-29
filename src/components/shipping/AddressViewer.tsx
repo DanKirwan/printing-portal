@@ -20,6 +20,7 @@ export const AddressViewer: FC<Props> = ({ address }) => {
                     {lastName}
                 </Typography>
             </Stack>
+            <Typography>{postCode}</Typography>
             <Typography>
 
                 {line1}
@@ -33,6 +34,7 @@ export const AddressViewer: FC<Props> = ({ address }) => {
 
                 {city}
             </Typography>
+            <Typography>{county}</Typography>
         </Stack >
     )
 }

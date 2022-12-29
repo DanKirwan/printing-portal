@@ -11,7 +11,7 @@ import Loading from '../Loading';
 import { AcceptOrderDialogContent } from './AcceptOrderDialogContent';
 
 interface Props {
-    orderId: string;
+    orderId?: string;
     onAccept: (order: Order) => void;
     open: boolean;
     onClose: () => void;
@@ -20,8 +20,6 @@ interface Props {
 export const AcceptOrderDialog: FC<Props> = ({ orderId, onAccept, open, onClose }) => {
 
     const handleAccept = (order: Order) => {
-
-        onClose();
         onAccept(order);
     }
 
@@ -38,7 +36,9 @@ export const AcceptOrderDialog: FC<Props> = ({ orderId, onAccept, open, onClose 
                     </Stack>
 
                 }>
-                    <AcceptOrderDialogContent onAccept={handleAccept} orderId={orderId} onClose={onClose} />
+                    {orderId &&
+                        <AcceptOrderDialogContent onAccept={handleAccept} orderId={orderId} onClose={onClose} />
+                    }
                 </Suspense >
             </Dialog>
         </LocalizationProvider >

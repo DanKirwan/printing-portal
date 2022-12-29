@@ -25,6 +25,11 @@ export const ShippingInput: FC<Props> = ({ address, onChange }) => {
                     label='Last Name' />
             </Stack>
             <TextField
+                value={postCode}
+                onChange={e => onChange({ ...address, postCode: e.target.value })}
+                label='Post Code' />
+
+            <TextField
                 value={line1}
                 onChange={e => onChange({ ...address, line1: e.target.value })}
                 label='Address Line 1' />
@@ -37,6 +42,14 @@ export const ShippingInput: FC<Props> = ({ address, onChange }) => {
                 value={city}
                 onChange={e => onChange({ ...address, city: e.target.value })}
                 label='City' />
+
+            <TextField
+                value={county}
+                onChange={e => onChange({ ...address, county: e.target.value })}
+                label='County' />
+
+
+
 
 
             <CountrySelect countryCode={countryCode} onChange={countryCode => onChange({ ...address, countryCode })} />

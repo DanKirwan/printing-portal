@@ -28,10 +28,12 @@ export default () => {
     }
 
     const handleOrderAccept = async (order: Order) => {
-        if (!acceptingOrderIndex) throw "cannot accept without an order";
+        if (acceptingOrderIndex == null) throw "cannot accept without an order";
         const { id } = incoming[acceptingOrderIndex];
 
         await handleOrderUpdate(id, { ...order, status: OrderStatus.Processing });
+        setAcceptingOrderIndex(null);
+        setTabIndex(1);
 
     }
 
@@ -122,7 +124,7 @@ export default () => {
                 <AcceptOrderDialog
                     open={acceptingOrderIndex != null}
                     onClose={() => setAcceptingOrderIndex(null)}
-                    orderId={incoming[acceptingOrderIndex].id}
+                    orderId={incoming[acceptingOrderIndex]?.id}
                     onAccept={handleOrderAccept}
                 />
             }

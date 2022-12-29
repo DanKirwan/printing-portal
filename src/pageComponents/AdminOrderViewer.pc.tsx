@@ -38,7 +38,7 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
                 <Typography>Price: {order.price ?? 'No Price Assigned'}</Typography>
                 <Stack>
 
-                    <Typography variant='h6'>Shipping </Typography>
+                    <Typography variant='h6'>Shipping</Typography>
                     <AddressViewer address={order.address} />
                 </Stack>
             </Stack>

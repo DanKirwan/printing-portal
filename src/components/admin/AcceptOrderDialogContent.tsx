@@ -38,7 +38,7 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
                 const price = await estimateOrderPrice(order, materials);
                 if (unmounted) return;
                 setEstimatedCost(price);
-                setPrice(p => p == 0 ? price * priceMult : p);
+                setPrice(p => p == 0 ? +(price * priceMult).toFixed(2) : p);
             } catch (error) {
                 console.log(error);
                 alert("Failed to calculate estimated price: Check console for errors");
