@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import { FC } from 'react';
 import { PartOrder } from '../../lib/types';
 
@@ -13,7 +13,6 @@ const validResolutions = [100, 200, 300];
 export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) => {
     const { settings, ...restOfPart } = part;
     const { color, infill, resolution } = settings;
-    console.log(color);
 
     const setColor = (color: string) => {
         const newSettings = { ...settings, color };
@@ -32,12 +31,15 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
         const newSettings = { ...settings, resolution };
         onChange({ ...restOfPart, settings: newSettings })
     }
+    const invalidColor = !validColors.find(c => c == color);
     return (
         <Stack spacing={1.5}>
 
             <FormControl variant='standard'>
                 <InputLabel>Colour</InputLabel>
                 <Select
+                    error={invalidColor}
+
                     value={color}
                     onChange={e => setColor(e.target.value as string)}
                 >
@@ -45,6 +47,8 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
                         <MenuItem key={idx} value={v}>{v}</MenuItem>
                     ))}
                 </Select>
+                {invalidColor && <FormHelperText>select a valid colour for this material </FormHelperText>}
+
             </FormControl>
             <TextField variant='standard' value={Math.trunc(infill * 100)} onChange={e => setInfill(e.target.value)} label='Infill %' />
 

@@ -30,7 +30,6 @@ export const OrderEditor: FC<Props> = ({ order, onChange, availableColors }) => 
         if (openPartIndex === null) return;
         const newParts = [...order.parts];
         newParts[openPartIndex] = newPart;
-        console.log(newParts);
         handlePartsChange(newParts);
     }
 

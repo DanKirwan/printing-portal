@@ -43,6 +43,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials }) => {
 
     const postMessageDebounced = useCallback(_.debounce(
         (message: { order: Order, materials: Material[], id: string }) => {
+            console.log("posting message");
             estimator.postMessage(message)
         },
         200), [estimator]);
@@ -66,7 +67,11 @@ export const PriceEstimation: FC<Props> = ({ order, materials }) => {
 
     }, [estimator, order.parts, order.settings.material, materials])
 
-    return loading ?
-        <Typography>Calculating price<EllipseLoadingText /></Typography> :
-        <Typography>{rangeString ?? "No price estimate can be provided at this time."}</Typography>
+
+    if (loading) return <Typography>Calculating price<EllipseLoadingText /></Typography>;
+    return rangeString ?
+        <Typography>Price Estimate: {rangeString}</Typography> :
+        <Typography>No price estimate can be provided at this time.</Typography>
+
+
 }

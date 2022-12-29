@@ -19,7 +19,7 @@ const MainRenderer: FC<Props> = ({ geometry }) => {
         <Canvas flat dpr={window.devicePixelRatio} camera={{ position: [2, 2, 2], fov: 75, near: 0.01, far: 2000, up: [0, 0, 1] }} style={{ height: '100%' }}>
             <ContextBridge>
 
-                <color attach="background" args={['0x111111']} />
+                <color attach="background" args={['white']} />
                 <CamControls boundary={false} />
                 <ambientLight />
                 <pointLight position={[10, 5, -10]} />

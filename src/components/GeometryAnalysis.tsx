@@ -14,32 +14,12 @@ const GeometryAnalysis: FC<Props> = ({ geometry }) => {
 
     const bb = geometry.boundingBox;
     bb?.getSize(size);
-    const volume = getVolume(geometry);
-    const volInCm = volume / 1000;
-
-    const tryMetrics = () => {
-        try {
-            return computeGeometryMetrics(geometry);
-        } catch (error) {
-            console.log(error);
-            return [null, null];
-        }
-    }
-    const [printVolume, supportVolume] = tryMetrics();
 
 
     return (
         <Stack>
             <Typography>Dimensions: {size.x.toFixed(2)}×{size.y.toFixed(2)}×{size.z.toFixed(2)}mm</Typography>
             <Typography>Bounding Volume: {(size.x * size.y * size.z / 1000).toFixed(4)}cm<sup>3</sup></Typography>
-            {printVolume && supportVolume ?
-                <>
-                    <Typography>Volume: {printVolume / 1000}cm<sup>3</sup></Typography>
-                    <Typography>Support Material Volume: {supportVolume / 1000}cm<sup>3</sup></Typography>
-                </> :
-                <Typography>There was an error calculating volume for this model</Typography>
-            }
-            <Typography>...</Typography>
         </Stack>
     )
 }

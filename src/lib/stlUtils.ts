@@ -79,7 +79,6 @@ export const estimatePrice = (
     cutoffAngle: number = 1.04, filteringDecimalPlaces: number = 5,
 ) => {
     const [volume, supportVolume, surfaceArea] = computeGeometryMetrics(geometry, samples, cutoffAngle, filteringDecimalPlaces);
-    console.log(volume, supportVolume, surfaceArea)
     return computePrice(
         volume, supportVolume, surfaceArea,
         pricePerKg, density, infill, supportInfill, wallThickness);
