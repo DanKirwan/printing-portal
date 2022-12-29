@@ -3,6 +3,7 @@ import { OrderEditor } from '@src/components/OrderEditor';
 import { OrderViewer } from '@src/components/OrderViewer';
 import { AddressViewer } from '@src/components/shipping/AddressViewer';
 import { useAuth } from '@src/contexts/AuthContext';
+import { getShippingDetails } from '@src/lib/orderUtils';
 import { Order } from '@src/lib/types';
 import { WithId } from '@src/lib/utils';
 import saveAs from 'file-saver';
@@ -24,6 +25,8 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
         saveAs(zip, `order - ${order.email} - (${order.id}).zip`);
     }
 
+    const [, shippingPrice] = order.shippingType ? getShippingDetails(order.shippingType) : [null, null];
+
     // TODO Convert to using order viewer
     return (
         <Stack direction='row' spacing={4} padding={4} height='100%' flexGrow={1}>
@@ -37,7 +40,12 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
             <Stack width='20vw' minWidth='300px' spacing={2} padding={1}>
                 <Typography variant='h4'>Order Details</Typography>
                 <Button onClick={() => handleOrderDownload()} variant='contained'>Download Files</Button>
-                <Typography>Price: {order.price ?? 'No Price Assigned'}</Typography>
+                <Stack>
+                    <Typography variant='h6'>Pricing</Typography>
+                    <Typography>Price: {order.price ? `£${order.price}` : 'No Price Assigned'}</Typography>
+                    {shippingPrice && <Typography>Shipping Price: £{shippingPrice}</Typography>}
+                    {order.price && shippingPrice && <Typography>Total Price: £{order.price + shippingPrice} </Typography>}
+                </Stack>
                 <Stack>
 
                     <Typography variant='h6'>Shipping</Typography>
