@@ -22,6 +22,7 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
         const zip = await zipper.generateAsync({ type: 'blob' });
         saveAs(zip, `order - ${order.email} - (${order.id}).zip`);
     }
+
     // TODO Convert to using order viewer
     return (
         <Stack direction='row' spacing={4} padding={4} height='100%' flexGrow={1}>
@@ -39,6 +40,7 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
                 <Stack>
 
                     <Typography variant='h6'>Shipping</Typography>
+                    <Typography>Shipping Type: {order.shippingType}</Typography>
                     <AddressViewer address={order.address} />
                 </Stack>
             </Stack>
