@@ -1,5 +1,5 @@
-import { Stack, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import { Order, PartOrder } from '@src/lib/types';
+import { Stack, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Order, PartOrder, PartSettings } from '@src/lib/types';
 import { FC, useState } from 'react';
 import DetailedPartOrderEditor from './DetailedPartOrderEditor';
 import PartDetailsEditorModal from './parts/PartDetailsModal';
@@ -33,6 +33,14 @@ export const OrderEditor: FC<Props> = ({ order, onChange, availableColors }) => 
         handlePartsChange(newParts);
     }
 
+    const handleSetAllPartSettings = () => {
+        if (openPartIndex === null) return;
+        const { settings } = order.parts[openPartIndex];
+        const newParts = order.parts.map(part => ({ ...part, settings }));
+        handlePartsChange(newParts);
+        setOpenPartIndex(null);
+    }
+
     return (
         <Stack>
             <DetailedPartOrderEditor
@@ -52,6 +60,12 @@ export const OrderEditor: FC<Props> = ({ order, onChange, availableColors }) => 
 
                     <PartDetailsEditorModal availableColors={availableColors} editing={true} onChange={part => handleOpenPartChange(part)} part={order.parts[openPartIndex]} />
                 </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={() => handleSetAllPartSettings()} variant='contained'>Apply To All Parts</Button>
+                    <Button onClick={() => setOpenPartIndex(null)} variant='contained'>Ok</Button>
+                </DialogActions>
+
 
             </Dialog>}
         </Stack >

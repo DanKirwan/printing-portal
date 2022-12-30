@@ -137,9 +137,17 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     </Select>
                     <FormHelperText>Subject to change for order totalling over 2kg</FormHelperText>
                 </FormControl>
-                <PriceEstimation
-                    order={authOrder}
-                    materials={materials} />
+                <Stack>
+
+                    <PriceEstimation
+                        order={authOrder}
+                        materials={materials} />
+                    {order.parts.length > 3 &&
+                        <Typography variant='caption'>
+                            (May take up to {Math.floor(order.parts.length / 2)} minutes)
+                        </Typography>
+                    }
+                </Stack>
             </Stack>
         </Stack >
     )

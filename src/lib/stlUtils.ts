@@ -59,6 +59,7 @@ const getResolutionMultiplier = (resolution: number) => {
 
 export const estimateOrderPrice = async (
     order: Order, materials: Material[],
+    metricCache: Map<string, [number, number, number]> = new Map(),
     cutoffAngle: number = 0.959931, //55Deg
     wallThickness: number = 1.2,
     samples: number = 40,
@@ -76,10 +77,17 @@ export const estimateOrderPrice = async (
 
 
         const geom = await stlToGeom(file);
-        const unitPrice = estimatePrice(
-            geom, samples,
-            pricePerKg, density,
-            infill, supportInfill, wallThickness, cutoffAngle);
+
+
+
+        const metrics = metricCache.get(file.name) ?? computeGeometryMetrics(geom, samples, cutoffAngle);
+        const [vol, supportVol, surfaceArea] = metrics;
+
+        if (!metricCache.has(file.name)) {
+            metricCache.set(file.name, metrics);
+        }
+
+        const unitPrice = computePrice(vol, supportVol, surfaceArea, pricePerKg, density, infill, supportInfill, wallThickness);
         totalSum += unitPrice * quantity * resolutionFactor;
     }
 

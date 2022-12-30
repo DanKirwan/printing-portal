@@ -1,7 +1,6 @@
-import { Stack, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import { Order, PartOrder } from '@src/lib/types';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material';
+import { Order } from '@src/lib/types';
 import { FC, useState } from 'react';
-import DetailedPartOrderEditor from './DetailedPartOrderEditor';
 import DetailedPartOrderViewer from './DetailedPartOrderViewer';
 import PartDetailsEditorModal from './parts/PartDetailsModal';
 
@@ -30,6 +29,10 @@ export const OrderViewer: FC<Props> = ({ order }) => {
 
                     <PartDetailsEditorModal availableColors={[]} editing={false} onChange={part => null} part={order.parts[openPartIndex]} />
                 </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={() => setOpenPartIndex(null)} variant='contained'>Close</Button>
+                </DialogActions>
 
             </Dialog>}
         </Stack >
