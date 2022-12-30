@@ -5,20 +5,23 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-        match /materials/{material} {
+    match /materials/{material} {
     	allow read: if true;
       allow write: if isAdmin();
     }
     
 		match /orders/{order} {
-    	allow read, write: if isAdmin() || resource.data.userId == request.auth.uid;
-      allow write: if
-      	request.resource.data.userId == null || 
-        request.resource.data.userId == request.auth.uid;
+    	allow read, write: if 
+        isAdmin() || 
+        (	resource.data.userId == request.auth.uid &&
+          resource.data.userId != null &&
+          request.resource.data.price == null && 
+          request.resource.data.expectedShipping == null);
+      allow create: if
+      	(	request.resource.data.userId == null || 
+        	request.resource.data.userId == request.auth.uid) && 
+        request.resource.data.price == null && 
+        request.resource.data.expectedShipping == null;
     }
-    // match /{document=**} {
-    //   allow read, write: if
-    //       request.time < timestamp.date(2022, 12, 18);
-    // }
   }
 }

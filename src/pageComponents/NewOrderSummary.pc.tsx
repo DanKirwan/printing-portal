@@ -41,7 +41,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
             const orderId = await handleOrderUpload(authOrder, uid);
             navigate(uid ? `/orders/${orderId}` : '/ordercomplete');
         } catch (e: any) {
-            alert("Failed to upload model, the error has been logged");
+            alert("There was a problem uploading your order! Please contact henleyprint3d@gmail.com for suppport");
             console.log(e);
         }
         console.log("Uploaded");
