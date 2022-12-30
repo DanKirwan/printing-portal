@@ -6,11 +6,10 @@ import CountUp from 'react-countup';
 
 export const AboutPC: FC = () => {
     return (
-        <Stack alignItems='center' height='60vh' justifyContent='center' spacing={2} padding={20}>
+        <Stack alignItems='center' justifyContent='center' spacing={2} sx={{ px: 20, pt: 0, pb: 5 }}>
             {/* Hopefully render logo spinning */}
             <Stack>
-                <Stack height='300px'>
-
+                <Stack height='250px' >
                     <SpinningLogo />
                 </Stack>
             </Stack>
@@ -18,17 +17,17 @@ export const AboutPC: FC = () => {
                 <Card sx={{ padding: '20px' }}>
                     <Stack alignItems='center'>
 
-                        <Typography variant='h2'>
+                        <Typography variant='h2' textAlign='center'>
 
                             <CountUp end={72879} formattingFn={n => n.toLocaleString('en-GB')} duration={4} useEasing={true} />
                             {' Parts Printed'}
                         </Typography>
-                        <Typography>Delivered to 19 different countries</Typography>
+                        <Typography textAlign='center'>Delivered to 19 different countries</Typography>
                     </Stack>
                 </Card>
             </Container>
 
-            <Typography variant='h4'>Local, High Quality 3D Printing Service</Typography>
+            <Typography variant='h4' textAlign='center'>Local, High Quality 3D Printing Service</Typography>
             <Typography textAlign='center'>Providing Prototyping, Functional Parts, Additive Manufacturing, FDM, One-off, Batch, Large scale production as well us helpful friendly advice. We are here to help.</Typography>
         </Stack>
     )
