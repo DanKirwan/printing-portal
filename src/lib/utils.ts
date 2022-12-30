@@ -14,5 +14,6 @@ export const getEnumValues = <T extends object>(e: T): T[] => Object
     .values(e)
     .filter(v => isNaN(Number(v)));
 
+export const pluralise = (value: number, suffix: string) => `${value} ${suffix}${value == 1 ? '' : 's'}`;
 
 export type WithId<T> = T & { id: string };

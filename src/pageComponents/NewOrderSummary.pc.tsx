@@ -10,7 +10,7 @@ import { handleOrderUpload } from '@src/lib/appUtils';
 import { getDB } from '@src/lib/firebaseUtils';
 import { useCollection } from '@src/lib/hooks';
 import { genDefaultOrder, genDefaultParts, getOrderProblems, getShippingDetails } from '@src/lib/orderUtils';
-import { getEnumValues } from '@src/lib/utils';
+import { getEnumValues, pluralise } from '@src/lib/utils';
 import { analytics } from '@src/main';
 import { logEvent } from 'firebase/analytics';
 import _ from 'lodash';
@@ -144,7 +144,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                         materials={materials} />
                     {order.parts.length > 3 &&
                         <Typography variant='caption'>
-                            (May take up to {Math.floor(order.parts.length / 2)} minutes)
+                            (May take up to {pluralise(Math.floor(order.parts.length / 2), 'minute')})
                         </Typography>
                     }
                 </Stack>
