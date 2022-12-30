@@ -46,7 +46,7 @@ export const OrderSummaryRow: FC<Props> = ({ order, actions, showActions }) => {
 
             </TableCell>
             <TableCell>
-                {order.price ?? "No Quote Yet"}
+                {order.price ? `£${order.price}` : "No Quote Yet"}
             </TableCell>
             <TableCell>
                 {order.expectedShipping?.toDate().toLocaleDateString('en-GB') ?? "No Shipping Date Yet"}

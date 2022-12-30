@@ -1,4 +1,7 @@
 import { Stack, Typography } from '@mui/material';
+import { EventTypes } from '@src/lib/analytics';
+import { analytics } from '@src/main';
+import { logEvent } from 'firebase/analytics';
 import { FC, useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import NewOrderSummaryPC from './NewOrderSummary.pc';
@@ -9,6 +12,7 @@ const UploadFilesPC: FC = () => {
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         // Do something with the files
+        logEvent(analytics, EventTypes.StartOrder);
         setFiles(acceptedFiles);
     }, [])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'model/stl': ['.stl'] } })

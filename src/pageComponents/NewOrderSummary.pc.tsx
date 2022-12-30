@@ -5,11 +5,14 @@ import { OrderEditor } from '@src/components/OrderEditor';
 import { PriceEstimation } from '@src/components/upload/PriceEstimation';
 import { UploadDialog } from '@src/components/upload/UploadDialog';
 import { useAuth } from '@src/contexts/AuthContext';
+import { EventTypes } from '@src/lib/analytics';
 import { handleOrderUpload } from '@src/lib/appUtils';
 import { getDB } from '@src/lib/firebaseUtils';
 import { useCollection } from '@src/lib/hooks';
 import { genDefaultOrder, genDefaultParts, getOrderProblems, getShippingDetails } from '@src/lib/orderUtils';
 import { getEnumValues } from '@src/lib/utils';
+import { analytics } from '@src/main';
+import { logEvent } from 'firebase/analytics';
 import _ from 'lodash';
 import { uniqBy } from 'lodash';
 import { FC, useState } from 'react';
@@ -38,9 +41,12 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
         setLoading(true);
         try {
 
+            logEvent(analytics, EventTypes.CompleteOrder);
+
             const orderId = await handleOrderUpload(authOrder, uid);
             navigate(uid ? `/orders/${orderId}` : '/ordercomplete');
         } catch (e: any) {
+            logEvent(analytics, EventTypes.OrderError, { error: e });
             alert("There was a problem uploading your order! Please contact henleyprint3d@gmail.com for suppport");
             console.log(e);
         }

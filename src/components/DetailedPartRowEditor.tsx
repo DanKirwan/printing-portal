@@ -34,7 +34,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick, onDelete })
                     <Typography >{part.file.name}</Typography>
                 </Stack>
             </TableCell>
-            <TableCell align="left" valign='bottom'>
+            <TableCell align="left" valign='bottom' onClick={onClick} sx={{ cursor: 'pointer' }}>
                 <PartSummary part={part} />
             </TableCell>
             <TableCell align="left">
@@ -56,7 +56,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick, onDelete })
                     <DeleteIcon />
                 </IconButton>
             </TableCell>
-        </TableRow>
+        </TableRow >
     )
 }
 
