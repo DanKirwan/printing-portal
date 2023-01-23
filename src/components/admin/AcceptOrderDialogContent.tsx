@@ -4,7 +4,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { handleOrderGet } from '@src/lib/appUtils';
 import { getDB } from '@src/lib/firebaseUtils';
 import { useCollection, useCollectionWithIds } from '@src/lib/hooks';
-import { computeGeometryMetrics, estimateOrderPrice, stlToGeom } from '@src/lib/stlUtils';
+import { computeGeometryMetrics, estimateOrderCost, getOrderPrice, stlToGeom } from '@src/lib/stlUtils';
 import { Order } from '@src/lib/types';
 import { Timestamp } from 'firebase/firestore';
 import moment, { Moment } from 'moment';
@@ -35,10 +35,10 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
         const asyncCalcPrice = async () => {
             try {
                 console.log(order);
-                const price = await estimateOrderPrice(order, materials);
+                const cost = await estimateOrderCost(order, materials);
                 if (unmounted) return;
-                setEstimatedCost(price);
-                setPrice(p => p == 0 ? +(price * priceMult).toFixed(2) : p);
+                setEstimatedCost(cost);
+                setPrice(p => p == 0 ? +(getOrderPrice(cost, priceMult).toFixed(2)) : p);
             } catch (error) {
                 console.log(error);
                 alert("Failed to calculate estimated price: Check console for errors");

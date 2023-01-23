@@ -1,6 +1,7 @@
 import _, { intersection } from "lodash";
-import { BufferGeometry, DoubleSide, Intersection, Mesh, MeshStandardMaterial, Object3D, Raycaster, Vector3 } from "three";
+import { BufferGeometry, DoubleSide, Intersection, Mesh, MeshStandardMaterial, Object3D, Raycaster, TriangleFanDrawMode, Vector3 } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
+import { mergeVertices, toTrianglesDrawMode } from "three/examples/jsm/utils/BufferGeometryUtils";
 import { Material } from "./materialUtils";
 import { Order } from "./types";
 
@@ -57,13 +58,35 @@ const getResolutionMultiplier = (resolution: number) => {
     return 1;
 }
 
-export const estimateOrderPrice = async (
+export const findMatch = (value: number, pairs: [number, number][]) => {
+    const pair = _.findLast(pairs, ([cutoff,]) => value > cutoff) ?? _.last(pairs);
+    if (pair == undefined) throw "Cannot find any values that match";
+    const [, output] = pair;
+
+    return output;
+}
+
+
+
+export const getOrderPrice = (
+    orderCost: number, markup: number,
+    valueDiscounts: [number, number][] = [[0, 0], [40, 0.08], [100, 0.15], [200, 0.2], [500, 0.27]],
+) => {
+    const price = orderCost * markup;
+
+    const valueDiscount = findMatch(price, valueDiscounts);
+    return price * (1 - valueDiscount);
+}
+
+export const estimateOrderCost = async (
     order: Order, materials: Material[],
     metricCache: Map<string, [number, number, number]> = new Map(),
     cutoffAngle: number = 0.959931, //55Deg
     wallThickness: number = 1.2,
     samples: number = 40,
     supportInfill: number = 0.15,
+    quantityDiscounts: [number, number][] = [[0, 0], [50, 0.07], [150, 0.15], [250, 0.25]],
+    infilMultipliers: [number, number][] = [[0.2, 1], [0.3, 0.95], [0.4, 0.9], [0.5, 0.85]],
 ) => {
     let totalSum = 0;
     const material = materials.find(m => m.name == order.settings.material);
@@ -80,7 +103,7 @@ export const estimateOrderPrice = async (
 
 
 
-        const metrics = metricCache.get(file.name) ?? computeGeometryMetrics(geom, samples, cutoffAngle);
+        const metrics = metricCache.get(file.name) ?? computeGeometryMetrics(geom, samples, cutoffAngle, wallThickness);
         const [vol, supportVol, surfaceArea] = metrics;
 
         if (!metricCache.has(file.name)) {
@@ -88,10 +111,45 @@ export const estimateOrderPrice = async (
         }
 
         const unitPrice = computePrice(vol, supportVol, surfaceArea, pricePerKg, density, infill, supportInfill, wallThickness);
-        totalSum += unitPrice * quantity * resolutionFactor;
+        const quantityDiscount = findMatch(quantity, quantityDiscounts);
+        totalSum += unitPrice * quantity * resolutionFactor * (1 - quantityDiscount);
     }
 
+
     return totalSum;
+}
+
+export const scaleNormals = (inputGeometry: BufferGeometry, ratio: number): BufferGeometry => {
+    const noNormalGeom = inputGeometry.clone();
+    noNormalGeom.deleteAttribute('normal');
+    const geometry = mergeVertices(noNormalGeom, 0.000001);
+    geometry.computeVertexNormals();
+    geometry.normalizeNormals();
+
+
+    if (!geometry.isBufferGeometry) {
+        console.log("'geometry' must be an indexed or non-indexed buffer geometry");
+        return geometry;
+    }
+    var isIndexed = geometry.index !== null;
+    let position = geometry.attributes.position;
+    let normal = geometry.attributes.normal;
+    let tempVert = new Vector3(),
+        tempNormal = new Vector3();
+    let vertices = position.count;
+    for (let i = 0; i < vertices; i++) {
+        tempVert.fromBufferAttribute(position, i);
+        tempNormal.fromBufferAttribute(normal, i);
+        tempNormal.normalize();
+
+        tempNormal.multiplyScalar(ratio);
+        tempVert.add(tempNormal);
+        const { x, y, z } = tempVert;
+        geometry.attributes.position.setXYZ(i, x, y, z);
+    }
+
+
+    return geometry;
 }
 
 export const estimatePrice = (
@@ -130,7 +188,9 @@ export const computeVolume = (
     return saComponent + volumeComponent;
 }
 /// Returns [internalVolume, supportVolume, surfaceArea]
-export const computeGeometryMetrics = (geometry: BufferGeometry, samples: number = 10, cutoffAngle: number = 1.04, filteringDecimalPlaces = 8): [number, number, number] => {
+export const computeGeometryMetrics = (
+    geometry: BufferGeometry, samples: number = 10, cutoffAngle: number = 1.04,
+    wallThickness: number = 1.2, filteringDecimalPlaces = 8): [number, number, number] => {
 
     geometry.computeBoundingBox();
 
@@ -146,7 +206,9 @@ export const computeGeometryMetrics = (geometry: BufferGeometry, samples: number
 
     material.side = DoubleSide;
 
-    const mesh = new Mesh(geometry, material);
+    const internalGeometry = scaleNormals(geometry, -wallThickness);
+
+    const mesh = new Mesh(internalGeometry, material);
 
     const origin = new Vector3();
     const up = new Vector3(0, 0, 1);

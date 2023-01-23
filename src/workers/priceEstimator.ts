@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 
 import { Material } from "@src/lib/materialUtils";
-import { estimateOrderPrice } from "@src/lib/stlUtils";
+import { estimateOrderCost } from "@src/lib/stlUtils";
 import { Order } from "@src/lib/types";
 
 let currentRequest: string | null = null;
@@ -17,7 +17,7 @@ self.onmessage = async (e: MessageEvent<{ order: Order, materials: Material[], i
     }
     try {
 
-        const price = await estimateOrderPrice(order, materials, estimatorCache);
+        const price = await estimateOrderCost(order, materials, estimatorCache);
         self.postMessage({ price, id });
     } catch (error) {
         console.log(error);
