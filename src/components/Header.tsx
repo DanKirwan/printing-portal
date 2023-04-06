@@ -77,6 +77,9 @@ export const Header: FC = () => {
                                         <Typography variant='body2'>({email})</Typography>
                                     </Stack>
                                 </MenuItem>
+                                <MenuItem onClick={() => navigate('/cookies')}>
+                                    Privacy Settings
+                                </MenuItem>
                                 <MenuItem onClick={handleSignout}>
                                     <Typography textAlign="center">Logout</Typography>
                                 </MenuItem>

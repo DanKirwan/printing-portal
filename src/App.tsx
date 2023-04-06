@@ -11,6 +11,8 @@ import Loading from "@src/components/Loading";
 import { AuthProvider } from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { Layout } from './components/Layout';
+import { CookieConsentProvider } from '@use-cookie-consent/react';
+import { CookieConsentPopup } from './components/privacy/CookieConsentPopup';
 
 
 
@@ -18,20 +20,23 @@ import { Layout } from './components/Layout';
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AuthProvider>
+      <CookieConsentProvider>
+        <AuthProvider>
 
-        <ModelProvider>
-          <BrowserRouter>
-            <Suspense fallback={<Loading />}>
+          <ModelProvider>
+            <BrowserRouter>
+              <Suspense fallback={<Loading />}>
 
-              <CssBaseline />
-              <Layout>
-                <AppRoutes />
-              </Layout>
-            </Suspense>
-          </BrowserRouter>
-        </ModelProvider>
-      </AuthProvider>
+                <CssBaseline />
+                <CookieConsentPopup />
+                <Layout>
+                  <AppRoutes />
+                </Layout>
+              </Suspense>
+            </BrowserRouter>
+          </ModelProvider>
+        </AuthProvider>
+      </CookieConsentProvider>
     </ThemeProvider>
   )
 }
