@@ -44,7 +44,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
             logEvent(analytics, EventTypes.CompleteOrder);
 
             const orderId = await handleOrderUpload(authOrder, uid);
-            navigate(uid ? `/orders/${orderId}` : '/ordercomplete');
+            navigate(uid ? `/orders/${orderId}/confirmation` : '/ordercomplete');
         } catch (e: any) {
             logEvent(analytics, EventTypes.OrderError, { error: e });
             alert("There was a problem uploading your order! Please contact henleyprint3d@gmail.com for suppport");
@@ -109,7 +109,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     onClick={() => setDialogOpen(true)}
                     variant='contained'
                 >
-                    Upload
+                    Confirm Order
                 </LoadingButton>
                 <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
                 <UploadDialog
