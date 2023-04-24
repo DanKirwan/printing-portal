@@ -3,7 +3,7 @@
         "origin": [
             "http://localhost:*",
             "https://print-manage-dev.web.app",
-            "print-manage-dev.firebaseapp.com"
+            "https://print-manage-dev.firebaseapp.com"
         ],
         "method": [
             "GET"

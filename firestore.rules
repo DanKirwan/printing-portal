@@ -11,7 +11,11 @@ service cloud.firestore {
     }
     
 		match /orders/{order} {
-    	allow read, write: if 
+      allow read: if 
+        isAdmin() || 
+        (	resource.data.userId == request.auth.uid &&
+          resource.data.userId != null);
+    	allow write: if 
         isAdmin() || 
         (	resource.data.userId == request.auth.uid &&
           resource.data.userId != null &&

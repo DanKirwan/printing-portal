@@ -11,8 +11,7 @@ service firebase.storage {
     }
     
     match /anonymous/{orderFolder}/{allPaths=**} {
-    	allow write: if true;
-      
+      allow create: if true;
       allow read, write: if isAdmin();
 		}
   }

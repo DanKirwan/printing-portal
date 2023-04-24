@@ -1,7 +1,9 @@
 [
     {
         "origin": [
-            "*"
+            "https://print-manage.web.app",
+            "https://print-manage.firebaseapp.com",
+            "https://order.henleyprint3d.com"
         ],
         "method": [
             "GET"
