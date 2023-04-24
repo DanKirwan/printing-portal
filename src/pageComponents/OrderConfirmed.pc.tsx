@@ -1,6 +1,7 @@
 import { Card, Stack, Typography } from '@mui/material';
 import { EllipseLoadingText } from '@src/components/generic/EllipseLoadingText';
 import { OrderViewer } from '@src/components/OrderViewer';
+import { AddressMap } from '@src/components/shipping/AddressMap';
 import { AddressViewer } from '@src/components/shipping/AddressViewer';
 import { Order } from '@src/lib/types';
 import { WithId } from '@src/lib/utils';
@@ -22,9 +23,8 @@ export const OrderConfirmedPC: FC<Props> = ({ order }) => {
 
 
                     <Card>
-                        <Stack direction='row' width='100%' height='100px' alignItems='center' justifyContent='center'>
-                            Loading Map
-                            <EllipseLoadingText interval={500} />
+                        <Stack direction='row' width='100%' height='300px' alignItems='center' justifyContent='center'>
+                            <AddressMap address={address} />
                         </Stack>
                     </Card>
 
