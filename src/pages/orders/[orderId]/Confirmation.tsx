@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+import { CentralLoading } from "@src/components/generic/CentralLoading";
 import Loading from "@src/components/Loading";
 import { OrderEditor } from "@src/components/OrderEditor";
 import { handleOrderGet } from "@src/lib/appUtils";
@@ -24,7 +25,7 @@ export default () => {
     }), [orderId]);
     // TODO (Convert to not using order editor but order viewer)
     return (
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<CentralLoading />}>
 
 
             {'error' in order ?

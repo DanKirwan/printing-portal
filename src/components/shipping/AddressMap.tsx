@@ -22,9 +22,8 @@ export const AddressMap: FC<Props> = ({ address }) => {
     const onLoad = useCallback((map: google.maps.Map) => {
         const service = new google.maps.places.PlacesService(map);
         const addressString = `${address.line1}, ${address.line2 ?? ''}, ${address.postCode}`
-        console.log(addressString)
+
         service.findPlaceFromQuery({ query: addressString, fields: ['geometry.location'] }, (response, status) => {
-            console.log(response, status);
             if (!response || response.length == 0) return setFailed(true);
             setCenter(response[0].geometry!.location);
             setFailed(false);

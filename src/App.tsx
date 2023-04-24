@@ -13,6 +13,7 @@ import { Header } from './components/Header';
 import { Layout } from './components/Layout';
 import { CookieConsentProvider } from '@use-cookie-consent/react';
 import { CookieConsentPopup } from './components/privacy/CookieConsentPopup';
+import { CentralLoading } from './components/generic/CentralLoading';
 
 
 
@@ -25,14 +26,14 @@ function App() {
 
           <ModelProvider>
             <BrowserRouter>
-              <Suspense fallback={<Loading />}>
 
-                <CssBaseline />
-                <CookieConsentPopup />
-                <Layout>
+              <CssBaseline />
+              <CookieConsentPopup />
+              <Layout>
+                <Suspense fallback={<CentralLoading />}>
                   <AppRoutes />
-                </Layout>
-              </Suspense>
+                </Suspense>
+              </Layout>
             </BrowserRouter>
           </ModelProvider>
         </AuthProvider>
