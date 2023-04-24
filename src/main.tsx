@@ -7,20 +7,30 @@ import { connectFirestoreEmulator, enableIndexedDbPersistence, getFirestore } fr
 import { getStorage, ref, getDownloadURL, connectStorageEmulator } from "firebase/storage";
 import { getAnalytics, setConsent } from "firebase/analytics";
 import { useCookieConsent } from '@use-cookie-consent/core';
+import { createCookieConsentContext } from '@use-cookie-consent/react';
 
-const { consent } = useCookieConsent();
+
+const consent = {
+  statistics: false,
+  necessary: true
+};
+// TODO (Dan) this isn't actually working 
+
 const toConsent = (consented?: boolean) => consented ? 'granted' : 'denied';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA7eQSAHlXxxkmcNjfXGLaIE1GHREnbBHY",
-  authDomain: "print-manage.firebaseapp.com",
-  projectId: "print-manage",
-  storageBucket: "print-manage.appspot.com",
-  messagingSenderId: "40847904689",
-  appId: "1:40847904689:web:6c17647aa92b05ef0df790",
-  measurementId: "G-RPLJFD59CC"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
+
+
+console.log(firebaseConfig);
 
 const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);

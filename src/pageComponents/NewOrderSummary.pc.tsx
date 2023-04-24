@@ -47,7 +47,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
             navigate(uid ? `/orders/${orderId}/confirmation` : '/ordercomplete');
         } catch (e: any) {
             logEvent(analytics, EventTypes.OrderError, { error: e });
-            alert("There was a problem uploading your order! Please contact henleyprint3d@gmail.com for suppport");
+            alert("There was a problem uploading your order! Please contact support@henleyprint3d.com for suppport");
             console.log(e);
         }
         console.log("Uploaded");

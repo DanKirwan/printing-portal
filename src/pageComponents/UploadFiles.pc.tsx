@@ -38,8 +38,8 @@ const UploadFilesPC: FC = () => {
             <Typography textAlign='center' variant='body2'>
                 If you would like advice, have a specialist request, the webpage is not working,
                 or simply would like a manual quote then please email us at: {" "}
-                <a href="mailto:henleyprint3d@gmail.com" style={{ color: 'red' }}>
-                    henleyprint3d@gmail.com
+                <a href="order@henleyprint3d.com" style={{ color: 'red' }}>
+                    order@henleyprint3d.com
                 </a>
                 {" "}and we will get back to you within a matter of minutes.
             </Typography>

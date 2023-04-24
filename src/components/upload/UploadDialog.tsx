@@ -3,6 +3,7 @@ import { useAuth } from '@src/contexts/AuthContext';
 import { SignInWithSocialMedia, Providers } from '@src/lib/firebaseUtils';
 import { Order } from '@src/lib/types';
 import { FC, useState } from 'react';
+import { EllipseLoadingText } from '../generic/EllipseLoadingText';
 import Loading from '../Loading';
 import { ShippingInput } from './ShippingInput';
 
@@ -43,11 +44,12 @@ export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClo
     }
 
     if (uploading) return <Dialog open={open} >
-        <DialogTitle>Uploading Order...</DialogTitle>
+        <DialogTitle>Uploading Order<EllipseLoadingText interval={1000} /></DialogTitle>
         <DialogContent>
             <Stack alignItems='center'>
                 <Loading />
             </Stack>
+            (This may take some time for larger files)
         </DialogContent>
     </Dialog>
     return (

@@ -8,7 +8,6 @@ import { CookieSettings } from './CookieSettings';
 export const CookieConsentPopup: FC = () => {
     const { acceptCookies, consent, } = useCookieConsentContext();
     const [customisingCookies, setCustomisingCookies] = useState(false);
-    console.log(consent)
     return (
         <Dialog open={consent.statistics == null || !consent.necessary}>
             <DialogTitle align='center'>

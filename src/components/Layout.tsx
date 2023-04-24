@@ -16,13 +16,9 @@ export const Layout: FCC = ({ children }) => {
             <Toolbar variant='dense'>
 
                 <Stack direction='row' width='100%' justifyContent='center' spacing={5}>
-                    <Link to='/privacy' >
-                        <MuiLink variant='caption' color='#666'>Privacy</MuiLink>
-                    </Link>
-                    <Link to='/cookies'>
-                        <MuiLink variant='caption' color='#666'>Cookies</MuiLink>
+                    <MuiLink component={Link} to='/privacy' variant='caption' color='#666'>Privacy</MuiLink>
+                    <MuiLink component={Link} to='/cookies' variant='caption' color='#666'>Cookies</MuiLink>
 
-                    </Link>
                 </Stack>
             </Toolbar>
         </Stack>

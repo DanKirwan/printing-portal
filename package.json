@@ -4,8 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "vite --mode dev",
+    "build-prod": "tsc && vite build",
+    "build-dev": "tsc && vite build --mode dev",
+    "update-cors": "gsutil cors set cors.json gs://print-manage.appspot.com && gsutil cors set cors.dev.json gs://print-manage-dev.appspot.com",
+    "deploy-dev": "npm run build-dev && firebase deploy -P dev",
+    "deploy-prod": "npm run build-prod && firebase deploy -P prod",
     "preview": "vite preview",
     "test": "vitest",
     "db": "firebase emulators:start"
