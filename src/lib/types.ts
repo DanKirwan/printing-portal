@@ -64,6 +64,14 @@ export type Address = {
     county: string,
 }
 
+export type Email = {
+    to: string,
+    message: {
+        subject: string,
+        html: string
+    }
+};
+
 export type DBPart = Omit<PartOrder, 'file'> & { fileName: string };
 
 export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
@@ -71,6 +79,7 @@ export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
 export type DBCollections = {
     orders: CollectionReference<DBOrder>;
     materials: CollectionReference<Material>;
+    emails: CollectionReference<Email>;
 }
 
 
@@ -87,11 +96,12 @@ const typedCollection = <T>(db: Firestore, path: string, ...collectionPath: stri
 
 const collections = {
     orders: 'orders',
-    materials: 'materials'
+    materials: 'materials',
+    emails: 'emails',
 };
 
 export const getTypedFirestore = (fs: Firestore) => ({
     orders: typedCollection<DBOrder>(fs, collections.orders),
     materials: typedCollection<Material>(fs, collections.materials),
-
+    emails: typedCollection<Email>(fs, collections.emails),
 })
