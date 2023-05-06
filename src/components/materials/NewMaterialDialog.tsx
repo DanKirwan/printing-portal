@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
-import { Material } from '@src/lib/materialUtils';
+import { Material } from '@src/lib/types';
 import { FC, useState } from 'react';
 
 interface Props {

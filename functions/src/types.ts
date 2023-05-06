@@ -1,6 +1,3 @@
-import { Timestamp } from "firebase/firestore"
-
-
 export enum OrderStatus {
     Incoming,
     Processing,
@@ -14,8 +11,6 @@ export enum ShippingType {
     Expedited = 'Expedited',
 }
 
-
-
 export type Order = {
     address: Address,
     shippingType: ShippingType,
@@ -23,13 +18,13 @@ export type Order = {
     email: string,
     desc: string,
     parts: PartOrder[],
-    ordered: Timestamp,
+    ordered: any,
     lead: number,
     settings: OrderSettings,
     userId: string | null,
     // Private Settings
     price: number | null,
-    expectedShipping: Timestamp | null
+    expectedShipping: any | null
 }
 
 export type PartOrder = {
@@ -68,8 +63,8 @@ export type Email = {
     to: string,
     message: {
         subject: string,
-        html: string
-    }
+        html: string,
+    },
 };
 
 export type Material = {
@@ -87,12 +82,9 @@ export type Color = {
     available: boolean,
 }
 
-
 export type DBPart = Omit<PartOrder, 'file'> & { fileName: string };
 
 export type DBOrder = Omit<Order, 'parts'> & { parts: DBPart[] };
-
-
 
 export const collections = {
     orders: 'orders',

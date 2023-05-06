@@ -1,8 +1,7 @@
-import { User, AuthProvider, UserCredential, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider } from "firebase/auth";
-import { FirestoreDataConverter, QueryDocumentSnapshot, Firestore, collection } from "firebase/firestore";
-import { auth, fireStore } from "@src/main"
-import { DBOrder, getTypedFirestore, Order, PartOrder } from "./types";
-import { Material } from "./materialUtils";
+import { auth, fireStore } from "@src/main";
+import { AuthProvider, GoogleAuthProvider, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { DBOrder, Email, Material, collections } from "./types";
+import { CollectionReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, collection } from "firebase/firestore";
 
 
 
@@ -35,3 +34,26 @@ export const Providers = {
 };
 
 
+
+// Firebase type handling
+export const converter = <T>(): FirestoreDataConverter<T> => ({
+    toFirestore: ((data: T) => data) as any, //TODO Fix?
+    fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as T,
+});
+
+
+
+export type DBCollections = {
+    orders: CollectionReference<DBOrder>;
+    materials: CollectionReference<Material>;
+    emails: CollectionReference<Email>;
+}
+
+const typedCollection = <T>(db: Firestore, path: string, ...collectionPath: string[]) => collection(db, path, ...collectionPath).withConverter(converter<T>());
+
+
+export const getTypedFirestore = (fs: Firestore) => ({
+    orders: typedCollection<DBOrder>(fs, collections.orders),
+    materials: typedCollection<Material>(fs, collections.materials),
+    emails: typedCollection<Email>(fs, collections.emails),
+})

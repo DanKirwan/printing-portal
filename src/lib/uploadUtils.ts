@@ -1,8 +1,9 @@
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { DBCollections, DBOrder, DBPart, Order, PartOrder } from "./types";
+import { DBOrder, DBPart, Order, PartOrder } from "./types";
 import { v4 as uuidv4 } from 'uuid';
 import { FirebaseStorage, getBlob, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { uploadEmail } from "./emailUtils";
+import { DBCollections } from "./firebaseUtils";
 
 
 export const uploadOrder = async (order: Order, userId: string | null, db: DBCollections, storage: FirebaseStorage): Promise<string> => {
@@ -15,9 +16,6 @@ export const uploadOrder = async (order: Order, userId: string | null, db: DBCol
     for (var part of parts) {
         await uploadFile(part.file, uuid, userId, storage);
     }
-
-    // TODO (BEFORE PRODUCTION RELEASE) 
-    await uploadEmail({ ...dbOrder, id: uuid }, db);
 
     return uuid;
 

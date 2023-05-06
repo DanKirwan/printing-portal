@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 
-import { Material } from "@src/lib/materialUtils";
+import { Material } from "@src/lib/types";
 import { estimateOrderCost } from "@src/lib/stlUtils";
 import { Order } from "@src/lib/types";
 

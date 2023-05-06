@@ -2,10 +2,11 @@ import { Container, IconButton, List, ListItem, Stack, Typography } from '@mui/m
 import { MaterialManager } from '@src/components/materials/MaterialManager';
 import { getDB } from '@src/lib/firebaseUtils';
 import { useCollectionWithIds } from '@src/lib/hooks';
-import { addMaterial, deleteMaterial, Material, setMaterial } from '@src/lib/materialUtils';
+import { addMaterial, deleteMaterial, setMaterial } from '@src/lib/materialUtils';
 import { FC, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { NewMaterialDialog } from '@src/components/materials/NewMaterialDialog';
+import { Material } from '@src/lib/types';
 
 export const MaterialManagementPC: FC = () => {
     const [materials, loading] = useCollectionWithIds(getDB().materials);

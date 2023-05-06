@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { Material } from '@src/lib/materialUtils';
+import { Material } from '@src/lib/types';
 import { Order } from '@src/lib/types';
 import _ from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';

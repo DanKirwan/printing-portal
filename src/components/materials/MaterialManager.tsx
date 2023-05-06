@@ -1,10 +1,10 @@
 import { Accordion, AccordionDetails, AccordionSummary, FormControlLabel, IconButton, InputAdornment, List, ListItem, Stack, Switch, TextField, Typography } from '@mui/material';
-import { Color, Material } from '@src/lib/materialUtils';
 import { FC, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { TooltipIconButton } from '../generic/ToolTipIconButton';
 import { ConfirmIconButton } from '../generic/ConfirmIconButton';
+import { Color, Material } from '@src/lib/types';
 
 interface Props {
     material: Material;

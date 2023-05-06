@@ -1,6 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { Material } from "./materialUtils";
-import { PartOrder, Order, OrderStatus, Address, ShippingType } from "./types";
+import { PartOrder, Order, OrderStatus, Address, ShippingType, Material } from "./types";
 import isEmail from 'validator/lib/isEmail';
 
 

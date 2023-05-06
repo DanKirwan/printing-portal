@@ -2,8 +2,7 @@ import _, { intersection } from "lodash";
 import { BufferGeometry, DoubleSide, Intersection, Mesh, MeshStandardMaterial, Object3D, Raycaster, TriangleFanDrawMode, Vector3 } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { mergeVertices, toTrianglesDrawMode } from "three/examples/jsm/utils/BufferGeometryUtils";
-import { Material } from "./materialUtils";
-import { Order } from "./types";
+import { Order, Material } from "./types";
 
 
 export const stlToGeom = async (file: File) => {

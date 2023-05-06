@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "print-manage",
+    "default": "print-manage-dev",
     "dev": "print-manage-dev",
     "prod": "print-manage"
   },
