@@ -29,7 +29,7 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
 
     // TODO Convert to using order viewer
     return (
-        <Stack direction='row' spacing={4} padding={4} height='100%' flexGrow={1}>
+        <Stack direction='row' spacing={4} paddingX={4} height='100%' flexGrow={1}>
 
             <Stack width='80vw' spacing={2} padding={1}>
                 <Typography variant='h4'>Parts</Typography>
