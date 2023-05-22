@@ -2,7 +2,6 @@ import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { DBOrder, DBPart, Order, PartOrder } from "./types";
 import { v4 as uuidv4 } from 'uuid';
 import { FirebaseStorage, getBlob, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { uploadEmail } from "./emailUtils";
 import { DBCollections } from "./firebaseUtils";
 
 

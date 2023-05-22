@@ -2,11 +2,12 @@ import { Timestamp } from "firebase/firestore"
 
 
 export enum OrderStatus {
-    Incoming,
-    Processing,
+    Incoming, // These are orders which are yet to be assigned a price or confirmed
+    Processing, // These are paid and in production 
     Deleted,
-    Completed,
-    Shipped
+    Completed, // These have confirmed delivery
+    Shipped,
+    Accepted // This have been accepted and therefore will move to paid and in production after payment recieved 
 }
 
 export enum ShippingType {

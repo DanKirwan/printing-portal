@@ -1,14 +1,7 @@
 import {
-    assertFails,
-    assertSucceeds,
-    initializeTestEnvironment,
-    RulesTestEnvironment,
-} from "@firebase/rules-unit-testing"
-import { getTypedFirestore } from "@src/lib/types";
-import { genDefaultOrder } from "@src/lib/orderUtils";
-import { getOrder, uploadOrder } from "@src/lib/uploadUtils";
+    initializeTestEnvironment
+} from "@firebase/rules-unit-testing";
 import fs from 'fs';
-import { test, assert } from 'vitest';
 
 let testEnv = await initializeTestEnvironment({
     projectId: "demo-project-1234",

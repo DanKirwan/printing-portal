@@ -105,7 +105,7 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
 //       <mj-button href=${baseUrl} background-color="F45E43">Click To View Order</mj-button>
 //       <mj-divider border-color="#F45E43"></mj-divider>
 //       <mj-text font-size="20px" color="#F45E43" font-family="helvetica" align='center'>Shipping Details</mj-text>
-    //
+//
 //       <mj-accordion>
 //         <mj-accordion-element>
 //           <mj-accordion-title color='#F45E43'>
@@ -119,8 +119,8 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
 //           </mj-accordion-text>
 //         </mj-accordion-element>
 //       </mj-accordion>
-    //
-    //
+//
+//
 //     </mj-column>
 //   </mj-section>
 // </mj-body>
