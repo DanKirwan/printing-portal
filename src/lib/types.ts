@@ -30,7 +30,8 @@ export type Order = {
     userId: string | null,
     // Private Settings
     price: number | null,
-    expectedShipping: Timestamp | null
+    expectedShipping: Timestamp | null,
+    trackingLink: string | null,
 }
 
 export type PartOrder = {

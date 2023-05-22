@@ -1,6 +1,7 @@
 import { Stack } from "@mui/material";
 import Loading from "@src/components/Loading";
 import { OrderEditor } from "@src/components/OrderEditor";
+import { OrderNavigationBar } from "@src/components/orders/OrderNavigationBar";
 import { handleOrderGet } from "@src/lib/appUtils";
 import { AdminOrderViewerPC } from "@src/pageComponents/AdminOrderViewer.pc";
 import NewOrderSummaryPC from "@src/pageComponents/NewOrderSummary.pc";
@@ -15,6 +16,7 @@ export default () => {
     return (
         <Suspense fallback={<Loading />}>
             <Stack>
+                <OrderNavigationBar status={order.status} />
                 <AdminOrderViewerPC order={{ ...order, id: orderId }} />
             </Stack>
         </Suspense>

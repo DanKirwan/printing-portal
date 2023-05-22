@@ -11,7 +11,7 @@ interface Props {
 const getStage = (status: OrderStatus) => {
 
     const steps = [OrderStatus.Incoming, OrderStatus.Accepted, OrderStatus.Processing, OrderStatus.Shipped, OrderStatus.Completed];
-
+    console.log(steps)
     const index = steps.indexOf(status);
     if (index == -1) return 0;
     return index;
@@ -21,6 +21,7 @@ export const OrderProgressBar: FC<Props> = ({ status }) => {
 
     const step = getStage(status);
 
+    console.log(status, step, OrderStatus.Shipped);
     const getProgress = (lastStep: number) => {
         if (lastStep == step) return 50;
         return step > lastStep ? 100 : 0;

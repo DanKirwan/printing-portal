@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AcceptOrderDialog } from "@src/components/admin/AcceptOrderDialog";
 import { WithId } from "@src/lib/utils";
+import { ProcessingOrderTable } from "@src/components/admin/ProcessingOrderTable";
 
 export default () => {
     const [orders, loading] = useCollectionWithIds(getDB().orders);
@@ -16,7 +17,9 @@ export default () => {
 
     const [tabIndex, setTabIndex] = useState(0);
     const incoming = orders.filter(order => order.status == OrderStatus.Incoming);
+    const accepted = orders.filter(order => order.status == OrderStatus.Accepted);
     const processing = orders.filter(order => order.status == OrderStatus.Processing);
+    const shipped = orders.filter(order => order.status == OrderStatus.Shipped);
     const completed = orders.filter(order => order.status == OrderStatus.Completed);
     const deleted = orders.filter(order => order.status == OrderStatus.Deleted);
 
@@ -31,9 +34,9 @@ export default () => {
         if (acceptingOrderIndex == null) throw "cannot accept without an order";
         const { id } = incoming[acceptingOrderIndex];
 
-        await handleOrderUpdate(id, { ...order, status: OrderStatus.Processing });
+        await handleOrderUpdate(id, { ...order, status: OrderStatus.Accepted });
         setAcceptingOrderIndex(null);
-        setTabIndex(1);
+        setTabIndex(OrderStatus.Accepted);
 
     }
 
@@ -57,22 +60,52 @@ export default () => {
 
     }
 
-    const getProcessingActions = (index: number) => {
-        const order = processing[index];
+    const getAcceptedActions = (index: number) => {
+        const order = accepted[index];
+
+        const handleReject = async () => {
+            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted });
+            setTabIndex(OrderStatus.Deleted);
+        }
+
+        const handleStartProcessing = async () => {
+            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Processing });
+            setTabIndex(OrderStatus.Processing);
+        }
+
+        return (
+            <Stack direction='row' justifyContent='right' spacing={1}>
+                <ConfirmButton
+                    description='This order has alreay been accepted, make sure no payment has been made'
+                    title='Confirm Order Rejection'
+                    onConfirm={handleReject}
+                >
+                    Delete Order
+                </ConfirmButton>
+                <Button onClick={handleStartProcessing} variant='contained' color='info'>Start Processing</Button>
+                <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
+            </Stack>
+        )
+
+    }
+
+
+    const getShippedActions = (index: number) => {
+        const order = shipped[index];
         const handleComplete = async () => {
             await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Completed });
-            setTabIndex(2);
+            setTabIndex(OrderStatus.Completed);
         }
         return (
             <Stack direction='row' justifyContent='right' spacing={1}>
                 <ConfirmButton
-                    description='This order has alreay been accepted, are you sure you want to reject?'
+                    description='This order has alreay been shipped, are you sure you want to reject?'
                     title='Confirm Order Rejection'
                     onConfirm={() => handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted })}
                 >
                     Delete Order
                 </ConfirmButton>
-                <Button onClick={handleComplete} variant='contained'>Mark Done</Button>
+                <Button onClick={handleComplete} variant='contained'>Confirm Delivery</Button>
                 <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
             </Stack>
         )
@@ -92,7 +125,7 @@ export default () => {
         const order = deleted[index];
         const handleRecover = async () => {
             await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Incoming });
-            setTabIndex(0);
+            setTabIndex(OrderStatus.Incoming);
         }
         return (
             <Stack direction='row' justifyContent='right' spacing={1}>
@@ -104,22 +137,35 @@ export default () => {
         )
     }
 
+    const getTab = (status: OrderStatus) => {
+        switch (status) {
+            case OrderStatus.Incoming:
+                return <OrdersTable orders={incoming} getRowActions={getIncomingActions} />;
+            case OrderStatus.Accepted:
+                return <OrdersTable orders={accepted} getRowActions={getAcceptedActions} />;
+            case OrderStatus.Processing:
+                return <ProcessingOrderTable orders={processing} handleClick={handleClick} handleOrderUpdate={handleOrderUpdate} />;
+            case OrderStatus.Shipped:
+                return <OrdersTable orders={shipped} getRowActions={getShippedActions} />;
+            case OrderStatus.Completed:
+                return <OrdersTable orders={completed} getRowActions={getCompletedActions} />;
+            case OrderStatus.Deleted:
+                return <OrdersTable orders={deleted} getRowActions={getDeletedActions} />;
+        }
+    }
+
     return (
         <Stack>
 
             <Tabs value={tabIndex} onChange={(_, newTab) => setTabIndex(newTab)} aria-label="lab API tabs example">
-                <Tab label="Incoming" value={0} />
-                <Tab label="Processing" value={1} />
-                <Tab label="Completed" value={2} />
-                <Tab label="Deleted" value={3} />
+                <Tab label="Incoming" value={OrderStatus.Incoming} />
+                <Tab label="Awaiting Payment" value={OrderStatus.Accepted} />
+                <Tab label="Processing" value={OrderStatus.Processing} />
+                <Tab label="Shipped" value={OrderStatus.Shipped} />
+                <Tab label="Completed" value={OrderStatus.Completed} />
+                <Tab label="Deleted" value={OrderStatus.Deleted} />
             </Tabs>
-            {tabIndex == 0 && <OrdersTable orders={incoming} getRowActions={getIncomingActions} />}
-
-            {tabIndex == 1 && <OrdersTable orders={processing} getRowActions={getProcessingActions} />}
-
-            {tabIndex == 2 && <OrdersTable orders={completed} getRowActions={getCompletedActions} />}
-
-            {tabIndex == 3 && <OrdersTable orders={deleted} getRowActions={getDeletedActions} />}
+            {getTab(tabIndex)}
             {acceptingOrderIndex != null &&
                 <AcceptOrderDialog
                     open={acceptingOrderIndex != null}
