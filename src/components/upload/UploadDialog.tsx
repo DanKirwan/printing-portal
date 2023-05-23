@@ -58,13 +58,14 @@ export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClo
                 <DialogTitle>Submit Order Request</DialogTitle>
                 <DialogContent sx={{ maxHeight: '70vh' }}>
                     <Stack spacing={3} padding={1}>
-                        <TextField value={desc} onChange={e => onChange({ ...order, desc: e.target.value })} label='Order Notes' />
                         {userEmail ?
                             <Typography>Logged in as: {userEmail}</Typography>
                             :
                             <TextField value={email} onChange={e => onChange({ ...order, email: e.target.value })} label='Email Address' />
                         }
                         <ShippingInput address={address} onChange={address => onChange({ ...order, address })} />
+
+                        <TextField value={desc} onChange={e => onChange({ ...order, desc: e.target.value })} label='Add Order Notes (Optional)' />
 
                         {orderProblems.length > 0 &&
                             <Accordion>

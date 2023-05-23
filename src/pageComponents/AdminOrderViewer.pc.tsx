@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Link, Stack, Typography } from '@mui/material';
 import { OrderEditor } from '@src/components/OrderEditor';
 import { OrderViewer } from '@src/components/OrderViewer';
 import { AddressViewer } from '@src/components/shipping/AddressViewer';
@@ -49,6 +49,7 @@ export const AdminOrderViewerPC: FC<Props> = ({ order }) => {
                 <Stack>
 
                     <Typography variant='h6'>Shipping</Typography>
+                    {order.trackingLink && <Link href={order.trackingLink} >Track My Order</Link>}
                     <Typography>Shipping Type: {order.shippingType}</Typography>
                     <AddressViewer address={order.address} />
                 </Stack>

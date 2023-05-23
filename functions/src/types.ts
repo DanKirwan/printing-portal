@@ -3,7 +3,8 @@ export enum OrderStatus {
     Processing,
     Deleted,
     Completed,
-    Shipped
+    Shipped,
+    Accepted
 }
 
 export enum ShippingType {
@@ -24,7 +25,8 @@ export type Order = {
     userId: string | null,
     // Private Settings
     price: number | null,
-    expectedShipping: any | null
+    expectedShipping: any | null,
+    trackingLink: string | null,
 }
 
 export type PartOrder = {

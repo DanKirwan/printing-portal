@@ -103,6 +103,7 @@ export const genDefaultOrder = (files: File[]): Order => {
         },
         price: null,
         expectedShipping: null,
+        trackingLink: null,
     };
 
     return order;
