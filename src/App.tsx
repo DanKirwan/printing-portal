@@ -14,6 +14,7 @@ import { Layout } from './components/Layout';
 import { CookieConsentProvider } from '@use-cookie-consent/react';
 import { CookieConsentPopup } from './components/privacy/CookieConsentPopup';
 import { CentralLoading } from './components/generic/CentralLoading';
+import { SettingsProvider } from './contexts/SettingsContext';
 
 
 
@@ -21,23 +22,26 @@ import { CentralLoading } from './components/generic/CentralLoading';
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CookieConsentProvider>
-        <AuthProvider>
+      <Suspense fallback={<CentralLoading />}>
+        <CookieConsentProvider>
+          <AuthProvider>
+            <SettingsProvider>
 
-          <ModelProvider>
-            <BrowserRouter>
 
-              <CssBaseline />
-              <CookieConsentPopup />
-              <Layout>
-                <Suspense fallback={<CentralLoading />}>
-                  <AppRoutes />
-                </Suspense>
-              </Layout>
-            </BrowserRouter>
-          </ModelProvider>
-        </AuthProvider>
-      </CookieConsentProvider>
+              <ModelProvider>
+                <BrowserRouter>
+
+                  <CssBaseline />
+                  <CookieConsentPopup />
+                  <Layout>
+                    <AppRoutes />
+                  </Layout>
+                </BrowserRouter>
+              </ModelProvider>
+            </SettingsProvider>
+          </AuthProvider>
+        </CookieConsentProvider>
+      </Suspense>
     </ThemeProvider>
   )
 }

@@ -11,6 +11,7 @@ import moment, { Moment } from 'moment';
 import { FC, Suspense, useEffect, useState } from 'react';
 import { suspend } from 'suspend-react';
 import Loading from '../Loading';
+import { useSettings } from '@src/contexts/SettingsContext';
 
 interface Props {
     orderId: string;
@@ -24,7 +25,9 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
 
 
     const [date, setDate] = useState<Moment | null>(moment().add(5, 'days'));
-    const [priceMult, setPriceMult] = useState(10);
+    const { settings } = useSettings();
+    const { priceMultiplier } = settings;
+    const [priceMult, setPriceMult] = useState(priceMultiplier);
     const [estimatedCost, setEstimatedCost] = useState<null | number>(null);
     const [price, setPrice] = useState(0);
 

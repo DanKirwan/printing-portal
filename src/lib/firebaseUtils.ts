@@ -1,6 +1,6 @@
 import { auth, fireStore } from "@src/main";
 import { AuthProvider, GoogleAuthProvider, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
-import { DBOrder, Email, Material, collections } from "./types";
+import { AppSettings, DBOrder, Email, Material, collections } from "./types";
 import { CollectionReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, collection } from "firebase/firestore";
 
 
@@ -47,6 +47,7 @@ export type DBCollections = {
     orders: CollectionReference<DBOrder>;
     materials: CollectionReference<Material>;
     emails: CollectionReference<Email>;
+    settings: CollectionReference<AppSettings>;
 }
 
 const typedCollection = <T>(db: Firestore, path: string, ...collectionPath: string[]) => collection(db, path, ...collectionPath).withConverter(converter<T>());
@@ -56,4 +57,5 @@ export const getTypedFirestore = (fs: Firestore) => ({
     orders: typedCollection<DBOrder>(fs, collections.orders),
     materials: typedCollection<Material>(fs, collections.materials),
     emails: typedCollection<Email>(fs, collections.emails),
+    settings: typedCollection<AppSettings>(fs, collections.settings),
 })

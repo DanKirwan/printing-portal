@@ -9,6 +9,11 @@ service cloud.firestore {
     	allow read: if true;
       allow write: if isAdmin();
     }
+
+    match /settings/settings {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
     
 		match /orders/{order} {
       allow read: if 

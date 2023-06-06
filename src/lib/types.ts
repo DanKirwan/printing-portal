@@ -16,6 +16,21 @@ export enum ShippingType {
 }
 
 
+export type AppSettings = {
+    priceMultiplier: number;
+    minimumPrice: number;
+    // Shipping options will involve changing the shipping type enum
+
+    // Model Settings
+    wallThickness: number;
+    supportAngle: number;
+    supportDensity: number;
+
+    // shipping
+    minLeadDays: number;
+    volumeLeadMultiplier: number;
+
+}
 
 export type Order = {
     address: Address,
@@ -100,5 +115,6 @@ export const collections = {
     orders: 'orders',
     materials: 'materials',
     emails: 'emails',
+    settings: 'settings',
 };
 

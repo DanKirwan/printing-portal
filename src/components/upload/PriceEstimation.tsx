@@ -7,6 +7,7 @@ import { EllipseLoadingText } from '../generic/EllipseLoadingText';
 
 import Estimator from '@src/workers/priceEstimator?worker';
 import { getOrderPrice, scaleNormals } from '@src/lib/stlUtils';
+import { useSettings } from '@src/contexts/SettingsContext';
 interface Props {
     order: Order;
     materials: Material[];
@@ -20,9 +21,11 @@ const getRangeString = (ranges: number[], upperIndex: number) => {
     return `£${ranges[upperIndex - 1]} - £${ranges[upperIndex]}`;
 }
 
-const profitMultiplier = 10;
 
 export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = () => null }) => {
+
+    const { settings } = useSettings();
+    const { priceMultiplier, minimumPrice } = settings;
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState<number | null>(null);
     const requestId = useRef<null | string>(null);
@@ -52,8 +55,15 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
         estimator.onmessage = (e: MessageEvent<{ price: number, id: string }>) => {
             const { price, id } = e.data;
             if (id != requestId.current) return;
-            setPrice(Number.isNaN(price) ? null : getOrderPrice(price, profitMultiplier));
-            onCalculated(price * profitMultiplier);
+            if (Number.isNaN(price)) {
+                setPrice(null);
+                setLoading(false);
+
+                return;
+            }
+            const orderPrice = Math.max(minimumPrice, getOrderPrice(price, priceMultiplier))
+            setPrice(orderPrice);
+            onCalculated(orderPrice);
             setLoading(false);
 
         }
