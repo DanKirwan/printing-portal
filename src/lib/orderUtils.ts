@@ -36,7 +36,7 @@ const getPartProblems = (part: PartOrder, currentMaterial: Material): string[] =
     }
 
     const { colors, name: materialName } = currentMaterial;
-    if (!colors.find(c => c.name == color)) {
+    if (!colors.find(c => c.name == color) && color) {
         const validColours = colors
             .filter(c => c.available)
             .map(c => c.name)

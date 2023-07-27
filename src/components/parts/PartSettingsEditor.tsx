@@ -15,7 +15,8 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
     const { color, infill, resolution } = settings;
 
     const setColor = (color: string) => {
-        const newSettings = { ...settings, color };
+        const partColor = color == 'Any' ? '' : color;
+        const newSettings = { ...settings, color: partColor };
         onChange({ ...restOfPart, settings: newSettings });
     }
 
@@ -31,7 +32,11 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
         const newSettings = { ...settings, resolution };
         onChange({ ...restOfPart, settings: newSettings })
     }
-    const invalidColor = !validColors.find(c => c == color);
+
+    console.log(color);
+    const invalidColor = !!color && !validColors.find(c => c == color);
+
+    const displayColor = !color ? '' : color;
     return (
         <Stack spacing={1.5}>
 
@@ -40,12 +45,14 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
                 <Select
                     error={invalidColor}
 
-                    value={color}
+                    value={displayColor || 'Any'}
                     onChange={e => setColor(e.target.value as string)}
                 >
                     {validColors.map((v, idx) => (
                         <MenuItem key={idx} value={v}>{v}</MenuItem>
                     ))}
+
+                    <MenuItem value='Any'>Any</MenuItem>
                 </Select>
                 {invalidColor && <FormHelperText>select a valid colour for this material </FormHelperText>}
 

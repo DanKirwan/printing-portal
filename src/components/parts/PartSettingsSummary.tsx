@@ -9,7 +9,7 @@ interface Props {
 const PartSettingsSummary: FC<Props> = ({ part }) => {
     return (
         <>
-            <Typography>Colour: {part.settings.color}</Typography>
+            <Typography>Colour: {part.settings.color || 'Any'}</Typography>
             <Typography>Infil: {part.settings.infill * 100}%</Typography>
             <Typography>Resolution: {part.settings.resolution}μm</Typography>
         </>
