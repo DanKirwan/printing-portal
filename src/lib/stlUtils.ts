@@ -3,6 +3,7 @@ import { BufferGeometry, DoubleSide, Intersection, Mesh, MeshStandardMaterial, O
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { mergeVertices, toTrianglesDrawMode } from "three/examples/jsm/utils/BufferGeometryUtils";
 import { Order, Material } from "./types";
+import { CUBIC_MM_IN_CUBIC_M } from "./constants";
 
 
 export const stlToGeom = async (file: File) => {
@@ -77,6 +78,40 @@ export const getOrderPrice = (
     return price * (1 - valueDiscount);
 }
 
+
+export const estimateLeadTime = async (
+    order: Order, materials: Material[],
+    metricCache: Map<string, [number, number, number]> = new Map(),
+    cutoffAngle: number = 0.959931, //55Deg
+    wallThickness: number = 1.2,
+    samples: number = 40,
+    supportInfill: number = 0.15,
+) => {
+
+    const material = materials.find(m => m.name == order.settings.material);
+    if (!material) throw "Cannot find required material from list of materials";
+
+    let totalDays = 0;
+
+
+    for (const part of order.parts) {
+        const { file, quantity } = part;
+
+        const geom = await stlToGeom(file);
+        const metrics = metricCache.get(file.name) ?? computeGeometryMetrics(geom, samples, cutoffAngle, wallThickness);
+        const [vol, supportVol, surfaceArea] = metrics;
+
+        if (!metricCache.has(file.name)) {
+            metricCache.set(file.name, metrics);
+        }
+        const totalVol = vol + supportVol * supportInfill;
+        const volInMetersCubed = totalVol / CUBIC_MM_IN_CUBIC_M;
+        totalDays += volInMetersCubed * material.daysPerCubicMeter * quantity;
+    }
+
+    return Math.ceil(totalDays);
+}
+
 export const estimateOrderCost = async (
     order: Order, materials: Material[],
     metricCache: Map<string, [number, number, number]> = new Map(),
@@ -95,13 +130,9 @@ export const estimateOrderCost = async (
         const { file, quantity, settings } = part;
         const { infill, resolution } = settings;
 
-        const resolutionFactor = getResolutionMultiplier(resolution);
 
 
         const geom = await stlToGeom(file);
-
-
-
         const metrics = metricCache.get(file.name) ?? computeGeometryMetrics(geom, samples, cutoffAngle, wallThickness);
         const [vol, supportVol, surfaceArea] = metrics;
 
@@ -109,6 +140,7 @@ export const estimateOrderCost = async (
             metricCache.set(file.name, metrics);
         }
 
+        const resolutionFactor = getResolutionMultiplier(resolution);
         const unitPrice = computePrice(vol, supportVol, surfaceArea, pricePerKg, density, infill, supportInfill, wallThickness);
         const quantityDiscount = findMatch(quantity, quantityDiscounts);
         totalSum += unitPrice * quantity * resolutionFactor * (1 - quantityDiscount);
@@ -173,8 +205,7 @@ export const computePrice = (
         internalVolume, supportVolume, surfaceArea,
         infill, supportInfill, wallThickness
     );
-    const cubicMilisInMeters = 1000000000;
-    const mass = volume / cubicMilisInMeters * density;
+    const mass = volume / CUBIC_MM_IN_CUBIC_M * density;
     return mass * pricePerKg;
 }
 

@@ -94,6 +94,7 @@ export type Material = {
     description: string,
     colors: Color[],
     pricePerKg: number,
+    daysPerCubicMeter: number,
     density: number, // In kg/m3
     priority?: number, // This is the order in which materials will be shown
 };

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { Material } from '@src/lib/types';
 import { Order } from '@src/lib/types';
 import _ from 'lodash';
@@ -28,6 +28,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
     const { priceMultiplier, minimumPrice } = settings;
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState<number | null>(null);
+    const [leadDays, setLeadDays] = useState<number | null>(null);
     const requestId = useRef<null | string>(null);
 
     const estimator: Worker = useMemo(
@@ -36,6 +37,9 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
     );
 
     const priceString = price?.toFixed(0);
+    const leadString = !leadDays ?
+        null :
+        leadDays >= 10 ? '10 Days + (Review Required)' : `${leadDays} Days`;
 
     // Stops the message queue becoming completely overpopulated with requests
 
@@ -45,6 +49,26 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
         },
         200), [estimator]);
 
+    const handleSetPrice = (cost: number) => {
+        if (Number.isNaN(cost)) {
+            setPrice(null);
+            return;
+        }
+        const orderPrice = getOrderPrice(cost, priceMultiplier);
+        const filteredPrice = orderPrice == 0 ? null : Math.max(minimumPrice, orderPrice);
+        setPrice(filteredPrice);
+        if (filteredPrice == null) return;
+        onCalculated(orderPrice);
+    }
+
+    const handleSetLead = (leadDays: number) => {
+        if (Number.isNaN(leadDays)) {
+            setLeadDays(null);
+            return;
+        }
+
+        setLeadDays(Math.max(settings.minLeadDays, leadDays));
+    }
 
     useEffect(() => {
         if (!window.Worker) return;
@@ -52,20 +76,12 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
 
         const id = _.uniqueId();
         requestId.current = id;
-        estimator.onmessage = (e: MessageEvent<{ price: number, id: string }>) => {
-            const { price, id } = e.data;
+        estimator.onmessage = (e: MessageEvent<{ cost: number, leadDays: number, id: string }>) => {
+            const { cost, leadDays, id } = e.data;
             if (id != requestId.current) return;
-            if (Number.isNaN(price)) {
-                setPrice(null);
-                setLoading(false);
-
-                return;
-            }
-            const orderPrice = Math.max(minimumPrice, getOrderPrice(price, priceMultiplier))
-            setPrice(orderPrice);
-            onCalculated(orderPrice);
+            handleSetLead(leadDays);
+            handleSetPrice(cost);
             setLoading(false);
-
         }
         setLoading(true);
         postMessageDebounced({ order, materials, id });
@@ -76,7 +92,10 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
 
     if (loading) return <Typography>Calculating price<EllipseLoadingText /></Typography>;
     return priceString ?
-        <Typography>Price Estimate: £{priceString} Approx.</Typography> :
+        <Stack>
+            <Typography>Price Estimate: £{priceString} Approx.</Typography>
+            <Typography variant='caption'>Lead Time: {leadString} Approx.</Typography>
+        </Stack> :
         <Typography>
             No price estimate can be provided at this time please your submit order for a quote.
         </Typography>

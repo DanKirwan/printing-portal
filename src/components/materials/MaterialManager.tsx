@@ -34,8 +34,11 @@ export const MaterialManager: FC<Props> = ({ material, onDelete, onChange }) => 
         const newColors: Color[] = [...colors, { available: true, name }];
         setNewColor('');
         onChange({ ...rest, colors: newColors });
+    }
 
-
+    const handleSetDaysPerMeterCubed = (days: number) => {
+        const { daysPerCubicMeter, ...rest } = material;
+        onChange({ daysPerCubicMeter: days, ...rest })
     }
 
     return (
@@ -53,6 +56,7 @@ export const MaterialManager: FC<Props> = ({ material, onDelete, onChange }) => 
                     <TextField type='number' value={material.density.toString()} onChange={e => onChange({ ...material, density: +e.target.value })} label='Density' />
                     <TextField type='number' value={material.pricePerKg.toString()} onChange={e => onChange({ ...material, pricePerKg: +e.target.value })} label='Price Per Kilogram' />
                     <TextField type='number' value={material.priority?.toString() ?? 0} onChange={e => onChange({ ...material, priority: +e.target.value })} label='Viewing Priority' />
+                    <TextField type='number' value={material.daysPerCubicMeter?.toString() ?? 0} onChange={e => onChange({ ...material, daysPerCubicMeter: +e.target.value })} label='Days Per 100cm3' />
 
                     <Typography >Description: {material.description}</Typography>
                     <List>
