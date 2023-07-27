@@ -4,7 +4,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { handleOrderGet } from '@src/lib/appUtils';
 import { getDB } from '@src/lib/firebaseUtils';
 import { useCollection, useCollectionWithIds } from '@src/lib/hooks';
-import { computeGeometryMetrics, estimateOrderCost, getOrderPrice, stlToGeom } from '@src/lib/stlUtils';
+import { computeGeometryMetrics, estimateLeadTime, estimateOrderCost, getOrderPrice, stlToGeom } from '@src/lib/stlUtils';
 import { Order } from '@src/lib/types';
 import { Timestamp } from 'firebase/firestore';
 import moment, { Moment } from 'moment';
@@ -29,16 +29,18 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
     const { priceMultiplier } = settings;
     const [priceMult, setPriceMult] = useState(priceMultiplier);
     const [estimatedCost, setEstimatedCost] = useState<null | number>(null);
+    const [estimatedLead, setEstimatedLead] = useState<null | number>(null);
     const [price, setPrice] = useState(0);
 
     useEffect(() => {
         if (price != 0) return;
         if (loadingMaterials) return;
         let unmounted = false;
+        const metricCache = new Map<string, [number, number, number]>();
         const asyncCalcPrice = async () => {
             try {
                 console.log(order);
-                const cost = await estimateOrderCost(order, materials);
+                const cost = await estimateOrderCost(order, materials, metricCache);
                 if (unmounted) return;
                 setEstimatedCost(cost);
                 setPrice(p => p == 0 ? +(getOrderPrice(cost, priceMult).toFixed(2)) : p);
@@ -48,7 +50,20 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
             }
         }
 
+        const asyncCalcLead = async () => {
+            try {
+                const leadDays = await (estimateLeadTime(order, materials, metricCache));
+                if (unmounted) return;
+                setEstimatedLead(leadDays);
+                setDate(moment().add(leadDays, 'days'));
+            } catch (error) {
+                console.log(error);
+                alert("Failed to calculate estimated lead days: Check console for errors");
+            }
+        }
+
         asyncCalcPrice();
+        asyncCalcLead();
 
         return () => {
             unmounted = true;
@@ -79,6 +94,9 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
         </DialogTitle>
         <DialogContent>
             <Stack padding={2} spacing={2}>
+                <Typography variant='caption'>
+                    {estimatedLead ? `Estimated ${estimatedLead} Days` : 'Calculating Lead Time...'}
+                </Typography>
 
                 <DatePicker
                     label="Shipping Date"
