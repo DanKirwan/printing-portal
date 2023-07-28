@@ -26,8 +26,9 @@ export default () => {
         };
     }), [orderId]);
 
-    const handleSignIn = () => {
-        SignInWithSocialMedia(Providers.google);
+    const handleSignIn = async () => {
+        await SignInWithSocialMedia(Providers.google);
+        window.location.reload();
     }
 
 
