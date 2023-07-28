@@ -5,7 +5,7 @@ import { OrderProgressBar } from "@src/components/orders/OrderProgressBar";
 import { useAuth } from "@src/contexts/AuthContext";
 import { handleOrderGet } from "@src/lib/appUtils";
 import { Providers, SignInWithSocialMedia } from "@src/lib/firebaseUtils";
-import { AdminOrderViewerPC } from "@src/pageComponents/AdminOrderViewer.pc";
+import { OrderViewerPC } from "@src/pageComponents/OrderViewer";
 import { Suspense } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { suspend } from "suspend-react";
@@ -43,7 +43,7 @@ export default () => {
                 </Stack> :
                 <Stack>
                     <OrderNavigationBar status={order.status} />
-                    <AdminOrderViewerPC order={{ ...order, id: orderId }} />
+                    <OrderViewerPC order={{ ...order, id: orderId }} />
                 </Stack>
             }
         </Suspense >

@@ -1,14 +1,18 @@
-import { IconButton, DialogActions, DialogTitle, DialogContent, Dialog, Button } from '@mui/material';
+import { IconButton, DialogActions, DialogTitle, DialogContent, Dialog, Button, ButtonProps } from '@mui/material';
 import { FCC } from '@src/lib/utils';
 import { FC, useState, ReactNode } from 'react';
+import { LoadingButton } from './LoadingButton';
 
 interface Props {
     onConfirm: () => void;
     title: string;
     description: string;
+    loading?: boolean;
 }
 
-export const ConfirmButton: FCC<Props> = ({ onConfirm, title, description, children }) => {
+export const ConfirmButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style' | 'disabled' | 'sx'>> = ({
+    onConfirm, title, description, children, loading = false,
+    ...buttonProps }) => {
     const [isOpen, setIsOpen] = useState(false);
     const handleConfirm = () => {
         setIsOpen(false);
@@ -17,9 +21,9 @@ export const ConfirmButton: FCC<Props> = ({ onConfirm, title, description, child
 
     return (
         <>
-            <Button onClick={() => setIsOpen(true)}>
+            <LoadingButton loading={loading} onClick={() => setIsOpen(true)} {...buttonProps}>
                 {children}
-            </Button>
+            </LoadingButton>
 
             <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
                 <DialogTitle>

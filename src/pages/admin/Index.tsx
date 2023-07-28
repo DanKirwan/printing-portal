@@ -4,7 +4,7 @@ import { OrdersTable } from "@src/components/orders/OrdersTable"
 import { getDB } from "@src/lib/firebaseUtils";
 import { useCollectionWithIds, useSnapshot } from "@src/lib/hooks"
 import { Order, OrderStatus } from "@src/lib/types";
-import { handleOrderUpdate } from "@src/lib/appUtils";
+import { handleOrderMetadataUpdate } from "@src/lib/appUtils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AcceptOrderDialog } from "@src/components/admin/AcceptOrderDialog";
@@ -34,7 +34,7 @@ export default () => {
         if (acceptingOrderIndex == null) throw "cannot accept without an order";
         const { id } = incoming[acceptingOrderIndex];
 
-        await handleOrderUpdate(id, { ...order, status: OrderStatus.Accepted });
+        await handleOrderMetadataUpdate(id, { ...order, status: OrderStatus.Accepted });
         setAcceptingOrderIndex(null);
         setTabIndex(OrderStatus.Accepted);
 
@@ -45,7 +45,7 @@ export default () => {
         const order = incoming[index];
 
         const handleReject = async () => {
-            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted });
+            await handleOrderMetadataUpdate(order.id, { ...order, status: OrderStatus.Deleted });
             setTabIndex(3);
         }
 
@@ -64,12 +64,12 @@ export default () => {
         const order = accepted[index];
 
         const handleReject = async () => {
-            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted });
+            await handleOrderMetadataUpdate(order.id, { ...order, status: OrderStatus.Deleted });
             setTabIndex(OrderStatus.Deleted);
         }
 
         const handleStartProcessing = async () => {
-            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Processing });
+            await handleOrderMetadataUpdate(order.id, { ...order, status: OrderStatus.Processing });
             setTabIndex(OrderStatus.Processing);
         }
 
@@ -93,7 +93,7 @@ export default () => {
     const getShippedActions = (index: number) => {
         const order = shipped[index];
         const handleComplete = async () => {
-            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Completed });
+            await handleOrderMetadataUpdate(order.id, { ...order, status: OrderStatus.Completed });
             setTabIndex(OrderStatus.Completed);
         }
         return (
@@ -101,7 +101,7 @@ export default () => {
                 <ConfirmButton
                     description='This order has alreay been shipped, are you sure you want to reject?'
                     title='Confirm Order Rejection'
-                    onConfirm={() => handleOrderUpdate(order.id, { ...order, status: OrderStatus.Deleted })}
+                    onConfirm={() => handleOrderMetadataUpdate(order.id, { ...order, status: OrderStatus.Deleted })}
                 >
                     Delete Order
                 </ConfirmButton>
@@ -124,7 +124,7 @@ export default () => {
     const getDeletedActions = (index: number) => {
         const order = deleted[index];
         const handleRecover = async () => {
-            await handleOrderUpdate(order.id, { ...order, status: OrderStatus.Incoming });
+            await handleOrderMetadataUpdate(order.id, { ...order, status: OrderStatus.Incoming });
             setTabIndex(OrderStatus.Incoming);
         }
         return (
@@ -144,7 +144,7 @@ export default () => {
             case OrderStatus.Accepted:
                 return <OrdersTable orders={accepted} getRowActions={getAcceptedActions} />;
             case OrderStatus.Processing:
-                return <ProcessingOrderTable orders={processing} handleClick={handleClick} handleOrderUpdate={handleOrderUpdate} />;
+                return <ProcessingOrderTable orders={processing} handleClick={handleClick} handleOrderUpdate={handleOrderMetadataUpdate} />;
             case OrderStatus.Shipped:
                 return <OrdersTable orders={shipped} getRowActions={getShippedActions} />;
             case OrderStatus.Completed:

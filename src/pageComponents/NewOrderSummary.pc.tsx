@@ -65,7 +65,9 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
     const handleAddFiles = (files: File[]) => {
         const { parts, ...rest } = order;
-        const newParts = uniqBy(parts.concat(genDefaultParts(files)), p => p.file.name);
+        const fileNames = files.map(file => file.name);
+        const remainingParts = parts.filter(p => !fileNames.includes(p.file.name));
+        const newParts = uniqBy(remainingParts.concat(genDefaultParts(files)), p => p.file.name);
         setOrder({ ...rest, parts: newParts });
     }
 

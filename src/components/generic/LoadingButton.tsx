@@ -17,7 +17,9 @@ export const LoadingButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style' | 
 
                     {children}
                 </Stack>
-                <CircularProgress sx={{ opacity: loading ? 1 : 0, gridRow: 1, gridColumn: 1 }} />
+                <Stack direction='row' sx={{ opacity: loading ? 1 : 0, gridRow: 1, gridColumn: 1 }} justifyContent='center'>
+                    <CircularProgress color='info' />
+                </Stack>
 
             </Stack>
         </Button>

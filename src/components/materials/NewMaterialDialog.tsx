@@ -14,10 +14,11 @@ export const NewMaterialDialog: FC<Props> = ({ isOpen, onClose, onAdd }) => {
     const [newDescription, setNewDescription] = useState('');
     const [pricePerKg, setPricePerKg] = useState(10);
     const [density, setDensity] = useState(1000);
+    const [daysPerCubicMeter, setDaysPerCubicMeter] = useState(10);
 
 
     const handleAdd = () => {
-        onAdd({ colors: [], name: newName, description: newDescription, pricePerKg, density });
+        onAdd({ colors: [], name: newName, description: newDescription, pricePerKg, density, daysPerCubicMeter });
         onClose();
     }
     return (
@@ -30,6 +31,7 @@ export const NewMaterialDialog: FC<Props> = ({ isOpen, onClose, onAdd }) => {
                     <TextField value={newName} onChange={e => setNewName(e.target.value)} label='Name' />
                     <TextField type='number' value={pricePerKg.toString()} onChange={e => setPricePerKg(+e.target.value)} label='Price Per Kg' />
                     <TextField type='number' value={density.toString()} onChange={e => setDensity(+e.target.value)} label='Density' />
+                    <TextField type='number' value={daysPerCubicMeter.toString()} onChange={e => setDaysPerCubicMeter(+e.target.value)} label='Days Per 100cm3' />
                     <TextField value={newDescription} onChange={e => setNewDescription(e.target.value)} label='Description' multiline rows={4} />
                 </Stack>
             </DialogContent>

@@ -1,10 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { CentralLoading } from "@src/components/generic/CentralLoading";
-import Loading from "@src/components/Loading";
-import { OrderEditor } from "@src/components/OrderEditor";
 import { handleOrderGet } from "@src/lib/appUtils";
-import { AdminOrderViewerPC } from "@src/pageComponents/AdminOrderViewer.pc";
-import NewOrderSummaryPC from "@src/pageComponents/NewOrderSummary.pc";
 import { OrderConfirmedPC } from "@src/pageComponents/OrderConfirmed.pc";
 import { Suspense } from "react";
 import { useParams } from "react-router-dom";
