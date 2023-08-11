@@ -12,6 +12,9 @@ interface Props {
     onChange: (material: Material) => void;
 }
 
+
+const METER_CUBED_TO_1000CM_CUBED = 1000;
+
 export const MaterialManager: FC<Props> = ({ material, onDelete, onChange }) => {
     const [newColor, setNewColor] = useState('');
     const handleColorSwitch = (index: number, available: boolean) => {
@@ -56,22 +59,29 @@ export const MaterialManager: FC<Props> = ({ material, onDelete, onChange }) => 
                     <TextField type='number' value={material.density.toString()} onChange={e => onChange({ ...material, density: +e.target.value })} label='Density' />
                     <TextField type='number' value={material.pricePerKg.toString()} onChange={e => onChange({ ...material, pricePerKg: +e.target.value })} label='Price Per Kilogram' />
                     <TextField type='number' value={material.priority?.toString() ?? 0} onChange={e => onChange({ ...material, priority: +e.target.value })} label='Viewing Priority' />
-                    <TextField type='number' value={material.daysPerCubicMeter?.toString() ?? 0} onChange={e => onChange({ ...material, daysPerCubicMeter: +e.target.value })} label='Days Per 100cm3' />
+                    <TextField
+                        type='number'
+                        value={+(material.daysPerCubicMeter ?? 0) / METER_CUBED_TO_1000CM_CUBED}
+                        onChange={e => onChange({ ...material, daysPerCubicMeter: +e.target.value * METER_CUBED_TO_1000CM_CUBED })}
+                        label={<>Days Per 1000cm<sup>3</sup></>}
+                    />
 
                     <Typography >Description: {material.description}</Typography>
                     <List>
                         {material.colors.map((color, i) => (
-                            <ListItem secondaryAction={
-                                <Stack direction='row'>
-                                    <IconButton onClick={() => handleDeleteColor(i)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                    <FormControlLabel
-                                        control={<Switch checked={color.available} onChange={e => handleColorSwitch(i, e.target.checked)} />}
-                                        label='Available'
-                                    />
-                                </Stack>
-                            }>
+                            <ListItem
+                                key={i}
+                                secondaryAction={
+                                    <Stack direction='row'>
+                                        <IconButton onClick={() => handleDeleteColor(i)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                        <FormControlLabel
+                                            control={<Switch checked={color.available} onChange={e => handleColorSwitch(i, e.target.checked)} />}
+                                            label='Available'
+                                        />
+                                    </Stack>
+                                }>
                                 {color.name}
 
 
