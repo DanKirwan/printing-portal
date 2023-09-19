@@ -96,7 +96,7 @@ export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClo
                         <span>
                             {/* required for tooltip to be visible */}
                             <Button
-
+                                color='secondary'
                                 onClick={() => handleSubmit()}
                                 variant='contained'
                                 disabled={orderProblems.length > 0}

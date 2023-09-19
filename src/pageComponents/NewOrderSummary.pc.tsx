@@ -106,6 +106,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                 </FormControl>
 
                 <LoadingButton
+                    color='secondary'
                     sx={{ width: '100%' }}
                     loading={loading}
                     onClick={() => setDialogOpen(true)}

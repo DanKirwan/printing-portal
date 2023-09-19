@@ -35,10 +35,15 @@ export const Header: FC = () => {
 
                 <img src='/favicon.png' height='80px' style={{ marginTop: '10px', marginBottom: '10px' }} />
 
+                <Stack sx={{ flexGrow: 1, padding: 2 }}>
 
-                <Typography variant="h6" fontWeight={600} letterSpacing={6} component="div" sx={{ flexGrow: 1, padding: 2 }} >
-                    HENLEYPRINT3D
-                </Typography>
+                    <Typography variant="h6" fontWeight={600} letterSpacing={6} component="div"  >
+                        HENLEYPRINT3D
+                    </Typography>
+                    <Typography letterSpacing={6} fontWeight={100}>
+                        CMC Technologies
+                    </Typography>
+                </Stack>
 
                 <Stack alignItems='center' justifyContent='center' direction='row' sx={{ flexGrow: 0 }} spacing={5}>
                     {uid && <MenuItem onClick={() => navigate('/orders')}  >MANAGE</MenuItem>}
