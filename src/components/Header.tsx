@@ -30,20 +30,20 @@ export const Header: FC = () => {
     }
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" >
             <Toolbar>
 
-                <img src='/favicon.png' height='40px' />
+                <img src='/favicon.png' height='80px' style={{ marginTop: '10px', marginBottom: '10px' }} />
 
 
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1, padding: 2 }}>
-                    Henley Print 3D
+                <Typography variant="h6" fontWeight={600} letterSpacing={6} component="div" sx={{ flexGrow: 1, padding: 2 }} >
+                    HENLEYPRINT3D
                 </Typography>
 
                 <Stack alignItems='center' justifyContent='center' direction='row' sx={{ flexGrow: 0 }} spacing={5}>
-                    {uid && <Button onClick={() => navigate('/orders')}>Manage</Button>}
-                    <Button onClick={() => navigate('/')}>Order</Button>
-                    <Button onClick={() => navigate('/about')} >About</Button>
+                    {uid && <MenuItem onClick={() => navigate('/orders')}  >MANAGE</MenuItem>}
+                    <MenuItem onClick={() => navigate('/')}>ORDER</MenuItem>
+                    <MenuItem onClick={() => navigate('/about')} >ABOUT</MenuItem>
 
                     {uid && photoURL && displayName && email
                         ?

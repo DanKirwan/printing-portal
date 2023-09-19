@@ -31,7 +31,7 @@ export const OrdersTable: FC<Props> = ({ orders, getRowActions, showActions = tr
                     <TableCell>Estimated Shipping</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell align="right" >Description</TableCell>
-                    {showActions && <TableCell align='right'>Actions</TableCell>}
+                    {showActions && <TableCell align='right'></TableCell>}
                 </TableRow>
             </TableHead>
 

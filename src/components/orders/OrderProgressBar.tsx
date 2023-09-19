@@ -28,7 +28,7 @@ export const OrderProgressBar: FC<Props> = ({ status }) => {
     }
 
     return (
-        <Stack direction='row' width='100%' justifyContent='center'>
+        <Stack direction='row' width='100%' justifyContent='center' paddingTop={2.5}>
             <OrderStepIcon completed={step >= 0} description='Submitted' step={1} />
             <LinearProgress variant="determinate" value={getProgress(0)} sx={{ width: 100, marginTop: '18px' }} />
             <OrderStepIcon completed={step >= 1} description='Accepted' step={2} />

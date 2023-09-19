@@ -52,7 +52,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick, onDelete })
                     onChange={e => handleQuantityChange(e.target.value)} />
             </TableCell>
             <TableCell align='right'>
-                <IconButton onClick={onDelete}>
+                <IconButton onClick={onDelete} size='large'>
                     <DeleteIcon />
                 </IconButton>
             </TableCell>

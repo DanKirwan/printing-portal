@@ -39,6 +39,15 @@ export const fireStore = getFirestore(app);
 export const analytics = getAnalytics(app);
 
 
+//TODO
+// if (import.meta.env.VITE_USE_EMULATORS) {
+//   connectStorageEmulator(storage, "127.0.0.1", 9199);
+//   connectFirestoreEmulator(fireStore, "127.0.0.1", 5050);
+//   connectStorageEmulator(storage, "127.0.0.1", 9199);
+
+// }
+
+
 setConsent({
   ad_storage: 'denied',
   analytics_storage: toConsent(consent.statistics),

@@ -7,9 +7,9 @@ import { Header } from './Header';
 
 export const Layout: FCC = ({ children }) => {
     return (
-        <Stack height='100vh' width='100vw'>
+        <Stack height='100vh' width='100vw' sx={{ font: 'helvetica', fontFamily: 'Poppins,Helvetica, Arial, Sans-Serif, serif' }}>
             <Header />
-            <Stack overflow='auto' height='100%'>
+            <Stack overflow='auto' height='100%' >
 
                 {children}
             </Stack>

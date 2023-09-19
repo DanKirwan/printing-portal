@@ -30,7 +30,7 @@ const DetailedPartOrderEditor: FC<Props> = ({ parts, onClick, onChange, onDelete
                 <TableCell align="left" >Summary</TableCell>
                 <TableCell align="left">Notes</TableCell>
                 <TableCell align="center">Quantity</TableCell>
-                <TableCell align='right'>Actions</TableCell>
+                <TableCell align='right'></TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
