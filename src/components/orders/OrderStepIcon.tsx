@@ -18,7 +18,8 @@ export const OrderStepIcon: FC<Props> = ({ completed, step, description }) => {
                 <Typography sx={{
                     borderRadius: '50%',
                     width: 34, height: 34,
-                    paddingTop: '2px',
+                    paddingLeft: '2px',
+                    paddingTop: '4.5px',
                     marginTop: '4px',
                     border: `solid ${theme.palette.secondary.main} 2px`,
                     marginBottom: 0.2

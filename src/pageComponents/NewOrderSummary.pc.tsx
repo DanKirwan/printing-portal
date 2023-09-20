@@ -45,7 +45,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
             logEvent(analytics, EventTypes.CompleteOrder);
 
             const orderId = await handleOrderUpload(authOrder, uid);
-            navigate(uid ? `/orders/${orderId}/confirmation` : '/ordercomplete');
+            navigate(uid ? `/orders/${orderId}` : '/ordercomplete');
         } catch (e: any) {
             logEvent(analytics, EventTypes.OrderError, { error: e });
             alert("There was a problem uploading your order! Please contact support@henleyprint3d.com for suppport");
@@ -128,8 +128,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     </FormHelperText>
                 </FormControl>
                 <Divider />
-                <Stack>
-
+                <Stack >
                     <PriceEstimation
                         order={authOrder}
                         materials={materials}
@@ -140,18 +139,20 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                         </Typography>
                     }
                 </Stack>
-
                 <Divider />
-                <LoadingButton
-                    color='secondary'
-                    sx={{ width: '100%' }}
-                    loading={loading}
-                    onClick={() => setDialogOpen(true)}
-                    variant='contained'
-                >
-                    Confirm Order
-                </LoadingButton>
-                <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
+                <Stack spacing={0.5} >
+
+                    <FileLoadButton onFilesLoad={handleAddFiles} title='Add Files' variant='contained' extension='.stl' />
+                    <LoadingButton
+                        color='secondary'
+                        sx={{ width: '100%' }}
+                        loading={loading}
+                        onClick={() => setDialogOpen(true)}
+                        variant='contained'
+                    >
+                        Confirm Order
+                    </LoadingButton>
+                </Stack>
                 <UploadDialog
                     orderProblems={orderProblems}
                     uploading={loading}
