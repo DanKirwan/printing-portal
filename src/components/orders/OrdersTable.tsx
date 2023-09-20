@@ -5,6 +5,7 @@ import { DBOrder } from '@src/lib/types';
 import { WithId } from '@src/lib/utils';
 import { FC, ReactNode } from 'react';
 import { OrderSummaryRow } from './OrderSummaryRow';
+import { orderBy } from 'lodash';
 
 
 interface Props {
@@ -13,10 +14,12 @@ interface Props {
     showActions?: boolean;
 }
 
+const timesortOrders = (orders: WithId<DBOrder>[]) => orderBy(orders, o => o.ordered.seconds, 'desc');
+
 export const OrdersTable: FC<Props> = ({ orders, getRowActions, showActions = true }) => {
 
 
-
+    const sortedOrders = timesortOrders(orders);
 
     return (
         <Table stickyHeader>
@@ -36,7 +39,7 @@ export const OrdersTable: FC<Props> = ({ orders, getRowActions, showActions = tr
             </TableHead>
 
             <TableBody>
-                {orders.map((order, i) => (
+                {sortedOrders.map((order, i) => (
                     <OrderSummaryRow
                         showActions={showActions}
                         key={i}

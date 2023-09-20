@@ -3,25 +3,27 @@ import { ConfirmButton } from "@src/components/generic/ConfirmButton";
 import { OrdersTable } from "@src/components/orders/OrdersTable"
 import { getDB } from "@src/lib/firebaseUtils";
 import { useCollectionWithIds, useSnapshot } from "@src/lib/hooks"
-import { Order, OrderStatus } from "@src/lib/types";
+import { DBOrder, Order, OrderStatus } from "@src/lib/types";
 import { handleOrderMetadataUpdate } from "@src/lib/appUtils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AcceptOrderDialog } from "@src/components/admin/AcceptOrderDialog";
 import { WithId } from "@src/lib/utils";
 import { ProcessingOrderTable } from "@src/components/admin/ProcessingOrderTable";
+import { orderBy } from "lodash";
 
+const timesortOrders = (orders: WithId<DBOrder>[]) => orderBy(orders, o => o.ordered.seconds, 'desc');
 export default () => {
     const [orders, loading] = useCollectionWithIds(getDB().orders);
     const [acceptingOrderIndex, setAcceptingOrderIndex] = useState<number | null>(null);
 
     const [tabIndex, setTabIndex] = useState(0);
-    const incoming = orders.filter(order => order.status == OrderStatus.Incoming);
-    const accepted = orders.filter(order => order.status == OrderStatus.Accepted);
-    const processing = orders.filter(order => order.status == OrderStatus.Processing);
-    const shipped = orders.filter(order => order.status == OrderStatus.Shipped);
-    const completed = orders.filter(order => order.status == OrderStatus.Completed);
-    const deleted = orders.filter(order => order.status == OrderStatus.Deleted);
+    const incoming = timesortOrders(orders.filter(order => order.status == OrderStatus.Incoming))
+    const accepted = timesortOrders(orders.filter(order => order.status == OrderStatus.Accepted));
+    const processing = timesortOrders(orders.filter(order => order.status == OrderStatus.Processing));
+    const shipped = timesortOrders(orders.filter(order => order.status == OrderStatus.Shipped));
+    const completed = timesortOrders(orders.filter(order => order.status == OrderStatus.Completed));
+    const deleted = timesortOrders(orders.filter(order => order.status == OrderStatus.Deleted));
 
 
     const navigate = useNavigate();
