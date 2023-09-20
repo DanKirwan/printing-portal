@@ -1,13 +1,15 @@
-import { Stack, Typography } from '@mui/material';
-import { Material } from '@src/lib/types';
+import { Divider, Grid, Stack, Typography } from '@mui/material';
+import { Material, ShippingType } from '@src/lib/types';
 import { Order } from '@src/lib/types';
-import _ from 'lodash';
+import _, { sum } from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { EllipseLoadingText } from '../generic/EllipseLoadingText';
 
 import Estimator from '@src/workers/priceEstimator?worker';
 import { getOrderPrice, scaleNormals } from '@src/lib/stlUtils';
 import { useSettings } from '@src/contexts/SettingsContext';
+import { getShippingDetails } from '@src/lib/orderUtils';
+import { PriceSummary } from '../generic/PriceSummary';
 interface Props {
     order: Order;
     materials: Material[];
@@ -30,13 +32,13 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
     const [price, setPrice] = useState<number | null>(null);
     const [leadDays, setLeadDays] = useState<number | null>(null);
     const requestId = useRef<null | string>(null);
-
+    const { shippingType } = order;
     const estimator: Worker = useMemo(
         () => new Estimator(),
         []
     );
 
-    const priceString = price?.toFixed(0);
+    const displayPrice = price == null ? null : Math.round(price);
     const leadString = !leadDays ?
         null :
         leadDays >= 10 ? '10 Days + (Review Required)' : `${leadDays} Days`;
@@ -89,11 +91,19 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
 
     }, [estimator, order.parts, order.settings.material, materials])
 
+    const [, shippingPrice] = getShippingDetails(shippingType);
+    const partCount = sum(order.parts.map(p => p.quantity));
 
     if (loading) return <Typography>Calculating price<EllipseLoadingText /></Typography>;
-    return priceString ?
+    return displayPrice != null ?
         <Stack>
-            <Typography>Price Estimate: £{priceString} Approx.</Typography>
+            <PriceSummary
+                components={[
+                    [`Parts (${partCount} Part${partCount > 1 ? 's' : ''})`, displayPrice],
+                    [`Shipping (${order.shippingType})`, shippingPrice ?? 0]
+                ]}
+            />
+
             <Typography variant='caption'>Lead Time: {leadString} Approx.</Typography>
         </Stack> :
         <Typography>

@@ -28,7 +28,6 @@ export const SettingsProvider: FCC = ({ children }) => {
                 </SettingsContext.Provider> :
                 <CentralLoading />
             }
-
         </Suspense>
     );
 }

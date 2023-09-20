@@ -17,29 +17,36 @@ const lightGrey = '#eceff1';
 const background = 'white';
 const blue = '#501cfc';
 const red = '#a42117';
+const contrastText = '#fff';
 const preTheme = createTheme({
     palette: {
         mode: 'light',
         primary: {
             main: darkGrey,
-            contrastText: '#fff',
+            contrastText: contrastText,
         },
         secondary: {
             main: red,
-            contrastText: '#fff',
+            contrastText: contrastText,
         },
         action: {
-            disabled: '#fff',
+            disabled: contrastText,
         }
     },
     typography: {
         allVariants: {
             letterSpacing: 2,
-            fontWeight: 'lighter'
+            fontWeight: 'lighter',
+
 
         },
         caption: {
             color: darkGrey
+        },
+
+        body1: {
+            color: darkGrey,
+            fontSize: 14
         },
         subtitle1: {
             color: darkGrey,
@@ -55,18 +62,6 @@ const preTheme = createTheme({
     },
     components: {
 
-        MuiMenuItem: {
-            styleOverrides: {
-                root: {
-                    background: 'grey',
-                    ":hover": {
-                        background: '#706c6c'
-                    },
-                    p: 1.2,
-                    borderRadius: 1
-                }
-            }
-        }
     }
 });
 

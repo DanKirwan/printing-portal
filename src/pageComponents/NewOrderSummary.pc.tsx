@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, Tooltip, Typography } from '@mui/material';
+import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, Tooltip, Typography } from '@mui/material';
 import { FileLoadButton } from '@src/components/FileLoadButton';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { OrderEditor } from '@src/components/OrderEditor';
@@ -29,6 +29,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
     const [order, setOrder] = useState<Order>(genDefaultOrder(files));
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
     const { uid, email } = useAuth();
     const navigate = useNavigate();
@@ -84,14 +85,12 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
         <Stack direction='row' spacing={4} padding={4} height='100%' flexGrow={1}>
 
             <Stack width='80vw' spacing={2} padding={1}>
-                <Typography variant='h4'>Parts</Typography>
                 <OrderEditor availableColors={availableColors} order={order} onChange={setOrder} />
 
             </Stack >
 
 
             <Stack width='20vw' minWidth='300px' spacing={2} padding={1}>
-                <Typography variant='h4'>Order Details</Typography>
                 <FormControl variant='standard'>
                     <InputLabel>Pick Material</InputLabel>
                     <Select
@@ -105,6 +104,44 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     </Select>
                 </FormControl>
 
+
+
+                <FormControl variant='standard'>
+                    <InputLabel>Shipping Options</InputLabel>
+                    <Select
+                        value={order.shippingType}
+                        onChange={e => setOrder({ ...order, shippingType: e.target.value as ShippingType })}
+                    >
+                        {Object.values(ShippingType).map((v, idx) => {
+                            const [text, price] = getShippingDetails(v);
+                            return (
+                                <MenuItem key={idx} value={v}>{text} - £{price}</MenuItem>
+                            )
+                        })
+                        }
+                    </Select>
+                    <FormHelperText>
+                        <Typography variant='subtitle2'>
+
+                            Subject to change for order totalling over 2kg
+                        </Typography>
+                    </FormHelperText>
+                </FormControl>
+                <Divider />
+                <Stack>
+
+                    <PriceEstimation
+                        order={authOrder}
+                        materials={materials}
+                        onCalculated={setEstimatedPrice} />
+                    {order.parts.length > 3 && estimatedPrice == null &&
+                        <Typography variant='caption'>
+                            (May take up to {pluralise(Math.floor(order.parts.length / 2), 'minute')})
+                        </Typography>
+                    }
+                </Stack>
+
+                <Divider />
                 <LoadingButton
                     color='secondary'
                     sx={{ width: '100%' }}
@@ -123,34 +160,6 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     onClose={() => setDialogOpen(false)}
                     onSubmit={() => handleUpload()}
                     onChange={setOrder} />
-
-                <FormControl variant='standard'>
-                    <InputLabel>Shipping Options</InputLabel>
-                    <Select
-                        value={order.shippingType}
-                        onChange={e => setOrder({ ...order, shippingType: e.target.value as ShippingType })}
-                    >
-                        {Object.values(ShippingType).map((v, idx) => {
-                            const [text, price] = getShippingDetails(v);
-                            return (
-                                <MenuItem key={idx} value={v}>{text} - £{price}</MenuItem>
-                            )
-                        })
-                        }
-                    </Select>
-                    <FormHelperText>Subject to change for order totalling over 2kg</FormHelperText>
-                </FormControl>
-                <Stack>
-
-                    <PriceEstimation
-                        order={authOrder}
-                        materials={materials} />
-                    {order.parts.length > 3 &&
-                        <Typography variant='caption'>
-                            (May take up to {pluralise(Math.floor(order.parts.length / 2), 'minute')})
-                        </Typography>
-                    }
-                </Stack>
             </Stack>
         </Stack >
     )
