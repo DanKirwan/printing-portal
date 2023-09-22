@@ -1,6 +1,7 @@
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Slider, Stack, TextField, Typography } from '@mui/material';
 import { FC } from 'react';
 import { PartOrder } from '../../lib/types';
+import { clamp } from 'lodash';
 
 interface Props {
     part: PartOrder;
@@ -20,10 +21,9 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
         onChange({ ...restOfPart, settings: newSettings });
     }
 
-    const setInfill = (infilValue: string) => {
-        const infill = infilValue == '' ? 0 : Number.parseInt(infilValue);
-        if (Number.isNaN(infill) || infill < 0 || infill > 100) return;
-        const newSettings = { ...settings, infill: infill / 100 };
+    const setInfill = (infillValue: number) => {
+        const infill = clamp(infillValue, 0.1, 1);
+        const newSettings = { ...settings, infill };
         onChange({ ...restOfPart, settings: newSettings })
 
     }
@@ -33,7 +33,6 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
         onChange({ ...restOfPart, settings: newSettings })
     }
 
-    console.log(color);
     const invalidColor = !!color && !validColors.find(c => c == color);
 
     const displayColor = !color ? '' : color;
@@ -41,7 +40,7 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
         <Stack spacing={1.5}>
 
             <FormControl variant='standard'>
-                <InputLabel>Colour</InputLabel>
+                <InputLabel disableAnimation>Colour</InputLabel>
                 <Select
                     error={invalidColor}
 
@@ -57,7 +56,23 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
                 {invalidColor && <FormHelperText>select a valid colour for this material </FormHelperText>}
 
             </FormControl>
-            <TextField variant='standard' value={Math.trunc(infill * 100)} onChange={e => setInfill(e.target.value)} label='Infill %' />
+
+            <Stack >
+                <Stack direction='row' padding={0}>
+                    {/* Hardcoded font size as styling is challenging otherwise */}
+                    <Typography variant='body1' fontSize={10.5}>Infill ({infill * 100}%)</Typography>
+                </Stack>
+                <Slider
+                    size='small'
+                    title='Infill'
+                    value={infill * 100}
+                    onChange={(_, value) => setInfill((value as number) / 100)}
+                    min={0} max={100}
+                    valueLabelDisplay='auto'
+                    valueLabelFormat={value => `${value}%`}
+                    step={10}
+                />
+            </Stack>
 
             <FormControl variant='standard'>
                 <InputLabel>Resolution (μm)</InputLabel>
@@ -70,6 +85,6 @@ export const PartSettingsEditor: FC<Props> = ({ part, onChange, validColors }) =
                     ))}
                 </Select>
             </FormControl>
-        </Stack>
+        </Stack >
     )
 }

@@ -18,6 +18,8 @@ import { uniqBy } from 'lodash';
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Order, OrderSettings, ShippingType } from '../lib/types';
+import { ShippingDateViewer } from '@src/components/generic/ShippingDateViewer';
+import moment from 'moment';
 interface Props {
     files: File[]
 }
@@ -138,6 +140,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                             (May take up to {pluralise(Math.floor(order.parts.length / 2), 'minute')})
                         </Typography>
                     }
+
                 </Stack>
                 <Divider />
                 <Stack spacing={0.5} >

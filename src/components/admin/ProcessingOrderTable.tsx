@@ -30,7 +30,7 @@ export const ProcessingOrderTable: FC<Props> = ({ orders, handleOrderUpdate, han
                 >
                     Delete Order
                 </ConfirmButton>
-                <Button onClick={() => setSelectedOrderIndex(index)} variant='contained'>Mark As Shipped</Button>
+                <Button onClick={() => setSelectedOrderIndex(index)} variant='contained' color='secondary'>Mark As Shipped</Button>
                 <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
             </Stack>
         )

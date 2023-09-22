@@ -55,7 +55,7 @@ export default () => {
         return (
             <Stack direction='row' justifyContent='right' spacing={1}>
                 <Button onClick={handleReject} variant='contained' color='primary'>Reject</Button>
-                <Button onClick={() => setAcceptingOrderIndex(index)} variant='contained' color='info'>Accept </Button>
+                <Button onClick={() => setAcceptingOrderIndex(index)} variant='contained' color='secondary'>Accept </Button>
                 <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
             </Stack>
         )
@@ -84,7 +84,7 @@ export default () => {
                 >
                     Delete Order
                 </ConfirmButton>
-                <Button onClick={handleStartProcessing} variant='contained' color='info'>Start Processing</Button>
+                <Button onClick={handleStartProcessing} variant='contained' color='secondary' >Start Processing</Button>
                 <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
             </Stack>
         )
@@ -104,10 +104,11 @@ export default () => {
                     description='This order has alreay been shipped, are you sure you want to reject?'
                     title='Confirm Order Rejection'
                     onConfirm={() => handleOrderMetadataUpdate(order.id, { ...order, status: OrderStatus.Deleted })}
+                    variant='contained'
                 >
                     Delete Order
                 </ConfirmButton>
-                <Button onClick={handleComplete} variant='contained'>Confirm Delivery</Button>
+                <Button onClick={handleComplete} variant='contained' color='secondary'>Confirm Delivery</Button>
                 <Button onClick={() => handleClick(order.id)} variant='contained'>View</Button>
             </Stack>
         )
@@ -131,7 +132,7 @@ export default () => {
         }
         return (
             <Stack direction='row' justifyContent='right' spacing={1}>
-                <Button onClick={handleRecover} variant='contained'>
+                <Button onClick={handleRecover} variant='contained' color='secondary'>
                     Recover to Incoming
                 </Button>
 

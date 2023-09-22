@@ -1,6 +1,6 @@
 import { Stack, Grid, Typography } from '@mui/material';
 import { sum } from 'lodash';
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 
 interface Props {
     components: [string, number][];
@@ -9,14 +9,14 @@ interface Props {
 export const PriceSummary: FC<Props> = ({ components }) => {
     return (
         <Grid container spacing={2}>
-            {components.map(([description, value]) => <>
-                <Grid item xs={8} alignContent='right'>
+            {components.map(([description, value], i) => <Fragment key={i}>
+                <Grid item xs={8} alignContent='right' >
                     <Typography variant='body1' textAlign='right'>{description}: </Typography>
                 </Grid>
                 <Grid item xs={4}>
                     <Typography variant='body1'>£{value.toFixed(2)}</Typography>
                 </Grid>
-            </>)}
+            </Fragment>)}
 
 
             <Grid item xs={8}>

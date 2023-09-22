@@ -112,7 +112,7 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
                         <Typography>Calculating Estimated Price...</Typography>
                         <Loading />
                     </Stack> :
-                    <Typography>Estimated Cost: £{estimatedCost}</Typography>
+                    <Typography>Estimated Cost: £{estimatedCost.toFixed(2)}</Typography>
                 }
 
                 <TextField type='number' value={priceMult.toString()} onChange={e => handleProfitMultChange(+e.target.value)} label='Profit Multiplier' />
