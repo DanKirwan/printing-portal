@@ -1,4 +1,4 @@
-import { TableCell, Stack, Typography } from '@mui/material';
+import { TableCell, Stack, Typography, Tooltip } from '@mui/material';
 import TableRow from '@mui/material/TableRow';
 import { FC } from 'react';
 import { PartOrder } from '../lib/types';
@@ -21,7 +21,16 @@ const DetailedPartRow: FC<Props> = ({ part, onClick }) => {
             <TableCell align="right" width="20px">
                 <Stack width={200} alignItems='center'>
                     <ModelPreview file={part.file} color={'lightGrey'} />
-                    <Typography textAlign='center' >{part.file.name}</Typography>
+                    <Tooltip title={part.file.name}>
+                        <Typography
+                            textAlign='center'
+                            textOverflow='ellipsis'
+                            noWrap width='100%'
+                            variant='caption'
+                        >
+                            {part.file.name}
+                        </Typography>
+                    </Tooltip>
                 </Stack>
             </TableCell>
             <TableCell align="left" valign='bottom'>

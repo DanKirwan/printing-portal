@@ -1,18 +1,8 @@
 import { createTheme } from "@mui/material";
-// Dark grey 504c4c
-// Light grey eceff1
-//  boxes white
-// highlight colours
-// blue 501cfc
-// red a42117
-declare module '@mui/material/Icon' {
-    interface IconPropsVariantOverrides {
-        text: true;
-    }
-}
 
 
-const darkGrey = '#504c4c';
+
+const darkGrey = '#414241';
 const lightGrey = '#eceff1';
 const background = 'white';
 const blue = '#501cfc';

@@ -5,7 +5,7 @@ import { OrderNavigationBar } from "@src/components/orders/OrderNavigationBar";
 import { handleOrderGet, handleOrderMetadataUpdate, handleOrderUpdate } from "@src/lib/appUtils";
 import { DBPart, Order } from "@src/lib/types";
 import { AdminOrderEditorPC } from "@src/pageComponents/AdminOrderEditor.pc";
-import { OrderViewerPC } from "@src/pageComponents/OrderViewer";
+import { OrderViewerPC } from "@src/pageComponents/OrderViewer.pc";
 import { Suspense, useState } from "react";
 import { useParams } from "react-router-dom";
 import { suspend } from "suspend-react";

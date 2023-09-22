@@ -92,7 +92,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
             </Stack >
 
 
-            <Stack width='20vw' minWidth='300px' spacing={2} padding={1}>
+            <Stack width='336px' spacing={2} padding={1}>
                 <FormControl variant='standard'>
                     <InputLabel>Pick Material</InputLabel>
                     <Select

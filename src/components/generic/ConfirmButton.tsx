@@ -10,7 +10,7 @@ interface Props {
     loading?: boolean;
 }
 
-export const ConfirmButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style' | 'disabled' | 'sx'>> = ({
+export const ConfirmButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style' | 'disabled' | 'sx' | 'color'>> = ({
     onConfirm, title, description, children, loading = false,
     ...buttonProps }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +34,7 @@ export const ConfirmButton: FCC<Props & Pick<ButtonProps, 'variant' | 'style' | 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setIsOpen(false)} variant='contained' color='primary'>Close</Button>
-                    <Button onClick={() => handleConfirm()} variant='contained' color='info'>Confim</Button>
+                    <Button onClick={() => handleConfirm()} variant='contained' color='secondary'>Confim</Button>
                 </DialogActions>
             </Dialog>
         </>

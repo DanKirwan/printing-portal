@@ -1,8 +1,9 @@
-import { Button, Link, Stack, Typography } from '@mui/material';
+import { Button, Divider, Link, Stack, Typography } from '@mui/material';
 import { FileLoadButton } from '@src/components/FileLoadButton';
 import { OrderEditor } from '@src/components/OrderEditor';
 import { ConfirmButton } from '@src/components/generic/ConfirmButton';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
+import { OrderSummary } from '@src/components/orders/OrderSummary';
 import { AddressViewer } from '@src/components/shipping/AddressViewer';
 import { handleOrderDownload } from '@src/lib/downloadUtils';
 import { getDB } from '@src/lib/firebaseUtils';
@@ -26,6 +27,8 @@ export const AdminOrderEditorPC: FC<Props> = ({ initialOrder, saveChanges, saveM
     const [order, setOrder] = useState<Order>(initialOrder);
     const [saving, setSaving] = useState(false);
     const [filesChanged, setFilesChanged] = useState(false);
+    // This tracks if there has been any change to the order
+    const [anyChange, setAnyChange] = useState(false);
 
     const [materials, loadingMaterials] = useCollection(getDB().materials);
     const currentMaterial = materials.find(material => material.name == order.settings.material);
@@ -45,6 +48,7 @@ export const AdminOrderEditorPC: FC<Props> = ({ initialOrder, saveChanges, saveM
     }
 
     const handleUpdate = (newOrder: Order) => {
+        setAnyChange(true);
         // all you can do here is delete so we just need to check length the same
         if (order.parts.length !== newOrder.parts.length) {
             setFilesChanged(true);
@@ -73,7 +77,6 @@ export const AdminOrderEditorPC: FC<Props> = ({ initialOrder, saveChanges, saveM
 
     const [, shippingPrice] = order.shippingType ? getShippingDetails(order.shippingType) : [null, null];
 
-    // TODO Convert to using order viewer
     return (
         <Stack direction='row' spacing={4} paddingX={4} height='100%' flexGrow={1}>
 
@@ -86,46 +89,42 @@ export const AdminOrderEditorPC: FC<Props> = ({ initialOrder, saveChanges, saveM
             </Stack >
 
 
-            <Stack width='20vw' minWidth='300px' spacing={2} padding={1}>
+            <Stack width='336px' spacing={2} padding={1}>
+
+
+                <OrderSummary order={order} />
+                <Divider />
+                <Button onClick={() => downloadOrder()} variant='contained'>Download Files</Button>
+                <FileLoadButton onFilesLoad={handleUploadFiles} title='Add Files' variant='contained' extension='.stl' />
                 {filesChanged ?
                     <>
-                        <Stack>
+                        <Stack alignItems='center' width='100%'>
 
                             <ConfirmButton
+                                sx={{ width: '100%' }}
                                 loading={saving}
                                 variant='contained'
                                 onConfirm={() => handleSave()}
                                 description='Saving your changes may overwrite the old files in this order'
                                 title='Confirm Order Update'
+                                color='secondary'
                             >
                                 Save Changes
                             </ConfirmButton>
-                            <Typography variant='caption'>Files changed</Typography>
+                            <Typography variant='caption'>(Files changed)</Typography>
                         </Stack>
 
                     </> :
-                    <LoadingButton loading={saving} onClick={() => handleSave()} variant='contained'>
+                    <LoadingButton
+                        disabled={!anyChange}
+                        loading={saving}
+                        onClick={() => handleSave()}
+                        variant='contained' color='secondary'
+                    >
                         Save Changes
                     </LoadingButton>
                 }
 
-                <Typography variant='h4'>Order Details</Typography>
-                <Button onClick={() => downloadOrder()} variant='contained'>Download Files</Button>
-                <FileLoadButton onFilesLoad={handleUploadFiles} title='Add Files' variant='contained' extension='.stl' />
-
-                <Stack>
-                    <Typography variant='h6'>Pricing</Typography>
-                    <Typography>Price: {order.price ? `£${order.price}` : 'No Price Assigned'}</Typography>
-                    {shippingPrice && <Typography>Shipping Price: £{shippingPrice}</Typography>}
-                    {order.price && shippingPrice && <Typography>Total Price: £{order.price + shippingPrice} </Typography>}
-                </Stack>
-                <Stack>
-
-                    <Typography variant='h6'>Shipping</Typography>
-                    {order.trackingLink && <Link href={order.trackingLink} >Track My Order</Link>}
-                    <Typography>Shipping Type: {order.shippingType}</Typography>
-                    <AddressViewer address={order.address} />
-                </Stack>
             </Stack>
         </Stack >
 

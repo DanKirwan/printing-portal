@@ -10,6 +10,8 @@ import { getOrderPrice, scaleNormals } from '@src/lib/stlUtils';
 import { useSettings } from '@src/contexts/SettingsContext';
 import { getShippingDetails } from '@src/lib/orderUtils';
 import { PriceSummary } from '../generic/PriceSummary';
+import { ShippingDateViewer } from '../generic/ShippingDateViewer';
+import moment from 'moment';
 interface Props {
     order: Order;
     materials: Material[];
@@ -41,7 +43,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
     const displayPrice = price == null ? null : Math.round(price);
     const leadString = !leadDays ?
         null :
-        leadDays >= 10 ? '10 Days + (Review Required)' : `${leadDays} Days`;
+        leadDays >= 10 ? '10 Days + (Review Required)' : `${leadDays} Days Approx.`;
 
     // Stops the message queue becoming completely overpopulated with requests
 
@@ -94,7 +96,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
     const [, shippingPrice] = getShippingDetails(shippingType);
     const partCount = sum(order.parts.map(p => p.quantity));
 
-    if (loading) return <Typography>Calculating price<EllipseLoadingText /></Typography>;
+    if (!displayPrice) return <Typography>Calculating price<EllipseLoadingText /></Typography>;
     return displayPrice != null ?
         <Stack>
             <PriceSummary
@@ -103,8 +105,12 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
                     [`Shipping (${order.shippingType})`, shippingPrice ?? 0]
                 ]}
             />
+            <Divider />
 
-            <Typography variant='caption'>Lead Time: {leadString} Approx.</Typography>
+            {leadDays !== null &&
+                <ShippingDateViewer orderDate={moment()} shippingDate={moment().add(leadDays, 'days')} />
+            }
+            <Typography variant='caption' textAlign='center'>Lead Time: {leadString}</Typography>
         </Stack> :
         <Typography>
             No price estimate can be provided at this time please your submit order for a quote.

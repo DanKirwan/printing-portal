@@ -10,6 +10,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const menuItemStyles = {
     background: 'grey',
+    color: 'white',
 
     ":hover": {
         background: '#706c6c'
@@ -56,7 +57,7 @@ export const Header: FC = () => {
                 </Stack>
 
                 <Stack alignItems='center' justifyContent='center' direction='row' sx={{ flexGrow: 0 }} spacing={5}>
-                    {uid && <MenuItem onClick={() => navigate('/orders')} sx={menuItemStyles}>
+                    {uid && <MenuItem onClick={() => navigate('/orders')} sx={menuItemStyles} >
                         MANAGE
                     </MenuItem>}
                     <MenuItem onClick={() => navigate('/')} sx={menuItemStyles}>

@@ -16,7 +16,7 @@ const renderer = new WebGLRenderer();
 const width = 600;
 const height = 400;
 
-const camera = new PerspectiveCamera(75, width / height, 0.1, 1000);
+const camera = new PerspectiveCamera(60, width / height, 0.1, 1000);
 camera.position.set(1, 1, 1);
 camera.up.set(0, 0, 1);
 camera.lookAt(0, 0, 0);

@@ -39,6 +39,7 @@ const DetailedPartRowEditor: FC<Props> = ({ part, onChange, onClick, onDelete })
             </TableCell>
             <TableCell align="left">
                 <TextField
+                    sx={{ width: '100%' }}
                     value={part.notes}
                     onChange={e => handleNotesChange(e.target.value)}
                     multiline

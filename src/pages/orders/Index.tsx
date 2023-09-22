@@ -9,13 +9,16 @@ import { WithId } from "@src/lib/utils";
 import { analytics } from "@src/main";
 import { logEvent } from "firebase/analytics";
 import { query, where } from "firebase/firestore";
+import { orderBy } from "lodash";
 import { useNavigate } from "react-router-dom";
+
+const timesortOrders = (orders: WithId<DBOrder>[]) => orderBy(orders, o => o.ordered.seconds, 'desc');
 
 export default () => {
     const { uid } = useAuth();
 
     const [orderSnapshots, loadingOrders] = useQuery(query(getDB().orders, where("userId", "==", uid)));
-    const orders: WithId<DBOrder>[] = orderSnapshots.map(s => ({ ...s.data(), id: s.id }));
+    const orders: WithId<DBOrder>[] = timesortOrders(orderSnapshots.map(s => ({ ...s.data(), id: s.id })));
     const navigate = useNavigate();
 
     const handleClick = (orderId: string) => {

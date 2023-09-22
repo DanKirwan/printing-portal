@@ -14,12 +14,10 @@ interface Props {
     showActions?: boolean;
 }
 
-const timesortOrders = (orders: WithId<DBOrder>[]) => orderBy(orders, o => o.ordered.seconds, 'desc');
 
 export const OrdersTable: FC<Props> = ({ orders, getRowActions, showActions = true }) => {
 
 
-    const sortedOrders = timesortOrders(orders);
 
     return (
         <Table stickyHeader>
@@ -39,7 +37,7 @@ export const OrdersTable: FC<Props> = ({ orders, getRowActions, showActions = tr
             </TableHead>
 
             <TableBody>
-                {sortedOrders.map((order, i) => (
+                {orders.map((order, i) => (
                     <OrderSummaryRow
                         showActions={showActions}
                         key={i}
