@@ -15,30 +15,34 @@ const buildAddress = (address: Address) => {
   const { firstName, lastName, line1, line2, city, county, postCode } = address;
 
   return `
-  <mj-text line-height="5px" font font-size="12px" color="${darkGrey}" font-family="helvetica" font-weight="bold">${firstName} ${lastName}</mj-text>
-  <mj-text line-height="5px" font font-size="12px" color="${darkGrey}" font-family="helvetica">${line1}</mj-text>
-  <mj-text line-height="5px" font font-size="12px" color="${darkGrey}" font-family="helvetica">${line2}</mj-text>
-  <mj-text line-height="5px" font font-size="12px" color="${darkGrey}" font-family="helvetica">${city}</mj-text>
-  <mj-text line-height="5px" font font-size="12px" color="${darkGrey}" font-family="helvetica">${county}</mj-text>
-  <mj-text line-height="5px" font font-size="12px" color="${darkGrey}" font-family="helvetica">${postCode}</mj-text>
+  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica" font-weight="bold">${firstName} ${lastName}</mj-text>
+  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${line1}</mj-text>
+  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${line2}</mj-text>
+  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${city}</mj-text>
+  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${county}</mj-text>
+  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${postCode}</mj-text>
   `;
 };
 
 
+const buildLink = (baseUrl: string, orderId: string) => {
+  const link = `${baseUrl}/orders/${orderId}`;
+  return `
+  <mj-text align='center' line-height="1px" font-size="16px" color=${darkGrey}">Order Link:</mj-text>
+  <mj-text align='center' font-size="8px" href="${link}"  color=${darkGrey}">${link}</mj-text>
+  `;
+};
 const buildOrderDetails = (order: DBOrder) => {
   const { address, lead, price } = order;
   return `
   <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Quoted Order Price</mj-text>
   <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">£${price?.toFixed(2)}</mj-text>
 
-  <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center'>Order Details</mj-text>
   <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Address</mj-text>
   ${buildAddress(address)}
 
   <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Expected Lead Time</mj-text>
   <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">${lead} days</mj-text>
-
-
   `;
 };
 
@@ -56,17 +60,18 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' fontWeight='bold'>Order Confirmed</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Confirmed</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
             Thank you for submitting your order! We have received it and our team will now review and approve it. An
             invoice will be sent to you shortly and upon receipt of payment, your order will be moved into
             production. We appreciate your business and look forward to fulfilling your order.
           </mj-text>
-        
-          <mj-button href="${baseUrl}/orders/${orderId}" background-color=${darkGrey}">View Order</mj-button>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center'>Shipping Details</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+          ${buildLink(baseUrl, orderId)}
+          <mj-divider border-color="${darkGrey}"></mj-divider>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Shipping Details</mj-text>
           <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Address</mj-text>
           ${buildAddress(address)}
 
@@ -95,17 +100,19 @@ export const buildAcceptEmail = (order: DBOrder, baseUrl: string, orderId: strin
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' fontWeight='bold'>Order Accepted</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Accepted</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
               Your order has been accepted! We have quoted your order at £${price?.toFixed(2)} with a lead time 
               of ${lead} days for production. Please do not hesitate to contact us with any questions,
               an invoice will follow shortly.
           </mj-text>
-        
-          <mj-button href="${baseUrl}/orders/${orderId}" background-color=${darkGrey}">View Order</mj-button>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center'>Order Details</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+
+          ${buildLink(baseUrl, orderId)}
+          <mj-divider border-color="${darkGrey}"></mj-divider>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Details</mj-text>
           ${buildOrderDetails(order)}
         </mj-column>
       </mj-section>
@@ -127,16 +134,17 @@ export const buildProcessEmail = (order: DBOrder, baseUrl: string, orderId: stri
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' fontWeight='bold'>Order In Production</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order In Production</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
-              Your payment has been recieved and your under is under production!
+              Your payment has been recieved and your order is under production!
               Your order is currently being printed in our production facility and will be shipped once completed.
           </mj-text>
-        
-          <mj-button href="${baseUrl}/orders/${orderId}" background-color="${darkGrey}">View Order</mj-button>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center'>Order Details</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+          ${buildLink(baseUrl, orderId)}
+          <mj-divider border-color="${darkGrey}"></mj-divider>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Details</mj-text>
           ${buildOrderDetails(order)}
 
         </mj-column>
@@ -147,11 +155,15 @@ export const buildProcessEmail = (order: DBOrder, baseUrl: string, orderId: stri
 
 
 export const buildShippingEmail = (order: DBOrder, baseUrl: string, orderId: string) => {
-  const { address, lead, price, trackingLink } = order;
-  const { firstName, lastName, line1, line2, city, county, postCode } = address;
+  const { address, trackingLink } = order;
+  const { firstName } = address;
 
   const trackingButton = trackingLink ?
-    `<mj-button href="${trackingLink}" background-color=${darkGrey}">Click To Track Order</mj-button>` :
+
+    `
+    <mj-text align='center' line-height="1px" font-size="16px" color=${darkGrey}">Tracking Link:</mj-text>
+    <mj-text align='center' font-size="8px" href="${trackingLink}"  color=${darkGrey}">${trackingLink}</mj-text>
+    ` :
     '';
 
   return mjml2html(`<mjml>
@@ -163,16 +175,20 @@ export const buildShippingEmail = (order: DBOrder, baseUrl: string, orderId: str
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' fontWeight='bold'>Order Shipped!</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Shipped</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
               Your order is on the way! 
           </mj-text>
+
+          <mj-divider border-color="${darkGrey}"></mj-divider>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+
         
           ${trackingButton}
-          <mj-button href="${baseUrl}/orders/${orderId}" background-color=${darkGrey}">View Order</mj-button>
+          ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center'>Order Details</mj-text>
+          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Details</mj-text>
           ${buildOrderDetails(order)}
         </mj-column>
       </mj-section>

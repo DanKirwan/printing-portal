@@ -42,78 +42,83 @@ export const Header: FC = () => {
 
     return (
         <AppBar position="static" >
-            <Toolbar>
+            <Toolbar >
+                <Stack direction='row' justifyContent='space-between' width='100%'>
 
-                <img src='/favicon.png' height='80px' style={{ marginTop: '10px', marginBottom: '10px' }} />
+                    <Stack direction='row' >
 
-                <Stack sx={{ flexGrow: 1, padding: 2 }}>
+                        <img src='/favicon.png' height='80px' style={{ marginTop: '10px', marginBottom: '10px', cursor: 'pointer' }} onClick={() => navigate('/')} />
 
-                    <Typography variant="h6" fontWeight={600} letterSpacing={6}   >
-                        HENLEYPRINT3D
-                    </Typography>
-                    <Typography letterSpacing={6} fontWeight={100} color='white'>
-                        CMC Technologies
-                    </Typography>
-                </Stack>
+                        <Stack sx={{ padding: 2, cursor: 'pointer' }} >
 
-                <Stack alignItems='center' justifyContent='center' direction='row' sx={{ flexGrow: 0 }} spacing={5}>
-                    {uid && <MenuItem onClick={() => navigate('/orders')} sx={menuItemStyles} >
-                        MANAGE
-                    </MenuItem>}
-                    <MenuItem onClick={() => navigate('/')} sx={menuItemStyles}>
-                        ORDER
-                    </MenuItem>
-                    <MenuItem onClick={() => navigate('/about')} sx={menuItemStyles}>
-                        ABOUT
-                    </MenuItem>
-
-                    {uid && photoURL && displayName && email
-                        ?
-                        <Stack sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt={displayName} src={photoURL} />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-
-                                <MenuItem disabled={true}>
-                                    <Stack>
-
-                                        <Typography>{displayName}</Typography>
-                                        <Typography variant='body2'>({email})</Typography>
-                                    </Stack>
-                                </MenuItem>
-                                <MenuItem onClick={() => navigate('/cookies')}>
-                                    Privacy Settings
-                                </MenuItem>
-                                <MenuItem onClick={handleSignout}>
-                                    <Typography textAlign="center">Logout</Typography>
-                                </MenuItem>
-
-                            </Menu>
+                            <Typography variant="h6" fontWeight={600} letterSpacing={6} onClick={() => navigate('/')}  >
+                                HENLEYPRINT3D
+                            </Typography>
+                            <Typography letterSpacing={6} fontWeight={100} color='white' onClick={() => navigate('/')} >
+                                CMC Technologies
+                            </Typography>
                         </Stack>
-                        :
-                        <Button color="inherit" onClick={handleSignIn}>Login</Button>
+                    </Stack>
 
-                    }
+                    <Stack alignItems='center' justifyContent='center' direction='row' sx={{ flexGrow: 0 }} spacing={5}>
+                        {uid && <MenuItem onClick={() => navigate('/orders')} sx={menuItemStyles} >
+                            MANAGE
+                        </MenuItem>}
+                        <MenuItem onClick={() => navigate('/')} sx={menuItemStyles}>
+                            ORDER
+                        </MenuItem>
+                        <MenuItem onClick={() => navigate('/about')} sx={menuItemStyles}>
+                            ABOUT
+                        </MenuItem>
+
+                        {uid && photoURL && displayName && email
+                            ?
+                            <Stack sx={{ flexGrow: 0 }}>
+                                <Tooltip title="Open settings">
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                        <Avatar alt={displayName} src={photoURL} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+
+                                    <MenuItem disabled={true}>
+                                        <Stack>
+
+                                            <Typography>{displayName}</Typography>
+                                            <Typography variant='body2'>({email})</Typography>
+                                        </Stack>
+                                    </MenuItem>
+                                    <MenuItem onClick={() => navigate('/cookies')}>
+                                        Privacy Settings
+                                    </MenuItem>
+                                    <MenuItem onClick={handleSignout}>
+                                        <Typography textAlign="center">Logout</Typography>
+                                    </MenuItem>
+
+                                </Menu>
+                            </Stack>
+                            :
+                            <Button color="inherit" onClick={handleSignIn}>Login</Button>
+
+                        }
+                    </Stack>
+
                 </Stack>
-
             </Toolbar>
         </AppBar>
     )
