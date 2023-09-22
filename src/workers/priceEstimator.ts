@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 
-import { Material } from "@src/lib/types";
+import { AppSettings, Material } from "@src/lib/types";
 import { estimateLeadTime, estimateOrderCost } from "@src/lib/stlUtils";
 import { Order } from "@src/lib/types";
 
@@ -8,22 +8,29 @@ let currentRequest: string | null = null;
 // This functions as a cache between files and their volume estimation
 const estimatorCache = new Map<string, [number, number, number]>();
 
-type EstimatorMessage = {
+export type EstimatorMessage = {
     order: Order,
     materials: Material[],
     id: string,
+    settings: AppSettings,
 }
 
 // A request id is sent alongside the request to ensure most up to date result used
-self.onmessage = async (e: MessageEvent<{ order: Order, materials: Material[], id: string }>) => {
-    const { order, materials, id } = e.data;
+self.onmessage = async (e: MessageEvent<EstimatorMessage>) => {
+    const { order, materials, id, settings } = e.data;
+    const { supportAngle, wallThickness, supportDensity, bulkPricingDiscounts, quantityPricingDiscounts, resolutionPriceMultiplier, modelSampleRate, } = settings;
     e.lastEventId
     if (id != currentRequest) {
 
     }
     try {
+        const quantityDiscounts: [number, number][] = quantityPricingDiscounts.map(({ key, value }) => [key, value]);
 
-        const cost = await estimateOrderCost(order, materials, estimatorCache);
+        const cost = await estimateOrderCost(
+            order, materials, estimatorCache,
+            supportAngle, wallThickness, modelSampleRate, supportDensity,
+            quantityDiscounts
+        );
         const leadDays = await estimateLeadTime(order, materials, estimatorCache);
 
         self.postMessage({ cost, leadDays, id });

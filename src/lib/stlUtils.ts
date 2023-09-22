@@ -120,7 +120,6 @@ export const estimateOrderCost = async (
     samples: number = 40,
     supportInfill: number = 0.15,
     quantityDiscounts: [number, number][] = [[0, 0], [50, 0.07], [150, 0.15], [250, 0.25]],
-    infilMultipliers: [number, number][] = [[0.2, 1], [0.3, 0.95], [0.4, 0.9], [0.5, 0.85]],
 ) => {
     let totalSum = 0;
     const material = materials.find(m => m.name == order.settings.material);

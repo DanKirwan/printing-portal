@@ -12,6 +12,7 @@ import { getShippingDetails } from '@src/lib/orderUtils';
 import { PriceSummary } from '../generic/PriceSummary';
 import { ShippingDateViewer } from '../generic/ShippingDateViewer';
 import moment from 'moment';
+import { EstimatorMessage } from '@src/workers/priceEstimator';
 interface Props {
     order: Order;
     materials: Material[];
@@ -48,7 +49,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
     // Stops the message queue becoming completely overpopulated with requests
 
     const postMessageDebounced = useCallback(_.debounce(
-        (message: { order: Order, materials: Material[], id: string }) => {
+        (message: EstimatorMessage) => {
             estimator.postMessage(message)
         },
         200), [estimator]);
@@ -88,7 +89,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
             setLoading(false);
         }
         setLoading(true);
-        postMessageDebounced({ order, materials, id });
+        postMessageDebounced({ order, materials, id, settings });
 
 
     }, [estimator, order.parts, order.settings.material, materials])

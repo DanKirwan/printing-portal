@@ -19,6 +19,9 @@ export enum ShippingType {
 export type AppSettings = {
     priceMultiplier: number;
     minimumPrice: number;
+    bulkPricingDiscounts: { key: number, value: number }[];
+    resolutionPriceMultiplier: { key: number, value: number }[];
+    quantityPricingDiscounts: { key: number, value: number }[];
     // Shipping options will involve changing the shipping type enum
 
     // Model Settings
@@ -29,6 +32,12 @@ export type AppSettings = {
     // shipping
     minLeadDays: number;
     volumeLeadMultiplier: number;
+
+    // misc 
+    modelSampleRate: number;
+
+
+
 
 }
 
