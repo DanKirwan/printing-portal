@@ -1,13 +1,7 @@
 /* eslint-disable indent */
 import * as functions from 'firebase-functions';
 import { createTransport } from 'nodemailer';
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+
 
 import { defineInt, defineString } from 'firebase-functions/v2/params';
 import {
@@ -19,6 +13,7 @@ import {
 import { DBOrder, OrderStatus } from './types';
 
 // Define some parameters
+const senderEmail = defineString('SENDER_EMAIL');
 const mailPort = defineInt('MAIL_PORT');
 const mailHost = defineString('MAIL_HOST');
 const mailUser = defineString('MAIL_USER');
@@ -27,6 +22,7 @@ const baseUrl = defineString('BASE_URL');
 // This is the email address that should be alerted every time a new order added
 const alertEmail = defineString('ALERT_EMAIL');
 
+const fromAddress = `"Henley Print 3D" <${senderEmail.value()}>`;
 
 export const triggerEmail = functions
     .firestore
@@ -48,7 +44,7 @@ export const triggerEmail = functions
         });
 
         await transporter.sendMail({
-            from: '"Henley Print" 3D <order@henleyprint3d.com>',
+            from: fromAddress,
             to: order.email,
             subject: 'Order Confirmation',
             html: buildConfirmationEmail(order, baseUrl.value(), orderId).html,
@@ -56,7 +52,7 @@ export const triggerEmail = functions
 
         const adminUrl = `${baseUrl.value()}/admin/${orderId}`;
         await transporter.sendMail({
-            from: '"Henley Print 3D" <order@henleyprint3d.com>',
+            from: fromAddress,
             to: alertEmail.value(),
             subject: 'New order alert',
             html: `<a href="${adminUrl}">Click here to view</a>`,
@@ -89,7 +85,7 @@ export const orderUpdateEmail = functions
         switch (order.status) {
             case OrderStatus.Accepted:
                 await transporter.sendMail({
-                    from: '"Henley Print 3D" <order@henleyprint3d.com>',
+                    from: fromAddress,
                     to: order.email,
                     subject: 'Order Accepted',
                     html: buildAcceptEmail(order, url, orderId).html,
@@ -98,7 +94,7 @@ export const orderUpdateEmail = functions
 
             case OrderStatus.Processing:
                 await transporter.sendMail({
-                    from: '"Henley Print 3D" <order@henleyprint3d.com>',
+                    from: fromAddress,
                     to: order.email,
                     subject: 'Order In Production',
                     html: buildProcessEmail(order, url, orderId).html,
@@ -107,7 +103,7 @@ export const orderUpdateEmail = functions
 
             case OrderStatus.Shipped:
                 await transporter.sendMail({
-                    from: '"Henley Print 3D" <order@henleyprint3d.com>',
+                    from: fromAddress,
                     to: order.email,
                     subject: 'Order Shipped',
                     html: buildShippingEmail(order, url, orderId).html,
