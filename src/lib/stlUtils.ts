@@ -59,7 +59,7 @@ const getResolutionMultiplier = (resolution: number) => {
 }
 
 export const findMatch = (value: number, pairs: [number, number][]) => {
-    const pair = _.findLast(pairs, ([cutoff,]) => value > cutoff) ?? _.last(pairs);
+    const pair = _.findLast(pairs, ([cutoff,]) => value >= cutoff) ?? _.last(pairs);
     if (pair == undefined) throw "Cannot find any values that match";
     const [, output] = pair;
 
