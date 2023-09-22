@@ -45,7 +45,7 @@ const UploadFilesPC: FC = () => {
 
 
                     <Tooltip
-                        title="All your files are secure with us – contact us for more information in regarding our use of data."
+                        title="All your files are secure with us – contact us for more information regarding our use of data."
                     >
 
                         <Typography variant='subtitle1' textAlign='center' >
@@ -66,7 +66,7 @@ const UploadFilesPC: FC = () => {
                     </Tooltip>
 
                     <Tooltip
-                        title='If you require us to sign an NDA, please do not hesitate to contact us, and we will promptly review and respond to your request. If you would like to discuss specific requests we are moe than happy to set up a call.'
+                        title='If you require us to sign an NDA, please do not hesitate to contact us, and we will promptly review and respond to your request. If you would like to discuss specific requests we are more than happy to set up a call.'
                     >
                         <Typography variant='subtitle1' textAlign='center' >
 
