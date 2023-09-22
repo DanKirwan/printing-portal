@@ -13,6 +13,7 @@ import { PriceSummary } from '../generic/PriceSummary';
 import { ShippingDateViewer } from '../generic/ShippingDateViewer';
 import moment from 'moment';
 import { EstimatorMessage } from '@src/workers/priceEstimator';
+import { tupalize } from '@src/lib/utils';
 interface Props {
     order: Order;
     materials: Material[];
@@ -30,7 +31,7 @@ const getRangeString = (ranges: number[], upperIndex: number) => {
 export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = () => null }) => {
 
     const { settings } = useSettings();
-    const { priceMultiplier, minimumPrice } = settings;
+    const { priceMultiplier, minimumPrice, bulkPricingDiscounts } = settings;
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState<number | null>(null);
     const [leadDays, setLeadDays] = useState<number | null>(null);
@@ -59,7 +60,8 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
             setPrice(null);
             return;
         }
-        const orderPrice = getOrderPrice(cost, priceMultiplier);
+        const valueDiscounts = tupalize(bulkPricingDiscounts);
+        const orderPrice = getOrderPrice(cost, priceMultiplier, valueDiscounts);
         const filteredPrice = orderPrice == 0 ? null : Math.max(minimumPrice, orderPrice);
         setPrice(filteredPrice);
         if (filteredPrice == null) return;

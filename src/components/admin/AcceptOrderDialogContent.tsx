@@ -12,6 +12,8 @@ import { FC, Suspense, useEffect, useState } from 'react';
 import { suspend } from 'suspend-react';
 import Loading from '../Loading';
 import { useSettings } from '@src/contexts/SettingsContext';
+import { tupalize } from '@src/lib/utils';
+
 
 interface Props {
     orderId: string;
@@ -26,7 +28,11 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
 
     const [date, setDate] = useState<Moment | null>(moment().add(5, 'days'));
     const { settings } = useSettings();
-    const { priceMultiplier } = settings;
+    const {
+        priceMultiplier,
+        bulkPricingDiscounts, resolutionPriceMultiplier,
+        supportAngle, supportDensity, modelSampleRate, quantityPricingDiscounts,
+        wallThickness } = settings;
     const [priceMult, setPriceMult] = useState(priceMultiplier);
     const [estimatedCost, setEstimatedCost] = useState<null | number>(null);
     const [estimatedLead, setEstimatedLead] = useState<null | number>(null);
@@ -39,11 +45,17 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
         const metricCache = new Map<string, [number, number, number]>();
         const asyncCalcPrice = async () => {
             try {
+                const quantityDiscounts: [number, number][] = tupalize(quantityPricingDiscounts);
+                const resolutionMultipliers: [number, number][] = tupalize(resolutionPriceMultiplier);
+                const valueDiscounts: [number, number][] = tupalize(bulkPricingDiscounts);
                 console.log(order);
-                const cost = await estimateOrderCost(order, materials, metricCache);
+                const cost = await estimateOrderCost(
+                    order, materials, metricCache,
+                    quantityDiscounts, resolutionMultipliers, supportAngle,
+                    wallThickness, modelSampleRate, supportDensity);
                 if (unmounted) return;
                 setEstimatedCost(cost);
-                setPrice(p => p == 0 ? +(getOrderPrice(cost, priceMult).toFixed(2)) : p);
+                setPrice(p => p == 0 ? +(getOrderPrice(cost, priceMult, valueDiscounts).toFixed(2)) : p);
             } catch (error) {
                 console.log(error);
                 alert("Failed to calculate estimated price: Check console for errors");

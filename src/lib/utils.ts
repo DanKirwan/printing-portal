@@ -17,3 +17,6 @@ export const getEnumValues = <T extends object>(e: T): T[] => Object
 export const pluralise = (value: number, suffix: string) => `${value} ${suffix}${value == 1 ? '' : 's'}`;
 
 export type WithId<T> = T & { id: string };
+
+// Converts a key, value array to a tuple array
+export const tupalize = <A, B>(entries: { key: A, value: B }[]): [A, B][] => entries.map(({ key, value }) => [key, value]);

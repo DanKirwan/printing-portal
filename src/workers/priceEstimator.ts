@@ -18,18 +18,19 @@ export type EstimatorMessage = {
 // A request id is sent alongside the request to ensure most up to date result used
 self.onmessage = async (e: MessageEvent<EstimatorMessage>) => {
     const { order, materials, id, settings } = e.data;
-    const { supportAngle, wallThickness, supportDensity, bulkPricingDiscounts, quantityPricingDiscounts, resolutionPriceMultiplier, modelSampleRate, } = settings;
+    const { supportAngle, wallThickness, supportDensity, quantityPricingDiscounts, resolutionPriceMultiplier, modelSampleRate, } = settings;
     e.lastEventId
     if (id != currentRequest) {
 
     }
     try {
         const quantityDiscounts: [number, number][] = quantityPricingDiscounts.map(({ key, value }) => [key, value]);
-
+        const resolutionMultipliers: [number, number][] = resolutionPriceMultiplier.map(({ key, value }) => [key, value]);
         const cost = await estimateOrderCost(
             order, materials, estimatorCache,
+            quantityDiscounts, resolutionMultipliers,
             supportAngle, wallThickness, modelSampleRate, supportDensity,
-            quantityDiscounts
+
         );
         const leadDays = await estimateLeadTime(order, materials, estimatorCache);
 

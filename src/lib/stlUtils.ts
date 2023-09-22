@@ -1,4 +1,4 @@
-import _, { intersection } from "lodash";
+import _, { find, intersection } from "lodash";
 import { BufferGeometry, DoubleSide, Intersection, Mesh, MeshStandardMaterial, Object3D, Raycaster, TriangleFanDrawMode, Vector3 } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { mergeVertices, toTrianglesDrawMode } from "three/examples/jsm/utils/BufferGeometryUtils";
@@ -67,10 +67,19 @@ export const findMatch = (value: number, pairs: [number, number][]) => {
 }
 
 
+// Finds an exact match for the value or returns the default value
+const findExactMatch = (value: number, pairs: [number, number][], defaultVal: number) => {
+    const pair = find(pairs, ([key]) => key == value);
+    if (!pair) return defaultVal;
+    const [, output] = pair;
+    return output;
+}
+
+
 
 export const getOrderPrice = (
     orderCost: number, markup: number,
-    valueDiscounts: [number, number][] = [[0, 0], [40, 0.08], [100, 0.15], [200, 0.2], [500, 0.27]],
+    valueDiscounts: [number, number][]
 ) => {
     const price = orderCost * markup;
 
@@ -115,11 +124,13 @@ export const estimateLeadTime = async (
 export const estimateOrderCost = async (
     order: Order, materials: Material[],
     metricCache: Map<string, [number, number, number]> = new Map(),
+    quantityDiscounts: [number, number][],
+    resolutionPriceMultipliers: [number, number][],
     cutoffAngle: number = 0.959931, //55Deg
     wallThickness: number = 1.2,
     samples: number = 40,
     supportInfill: number = 0.15,
-    quantityDiscounts: [number, number][] = [[0, 0], [50, 0.07], [150, 0.15], [250, 0.25]],
+
 ) => {
     let totalSum = 0;
     const material = materials.find(m => m.name == order.settings.material);
@@ -139,7 +150,8 @@ export const estimateOrderCost = async (
             metricCache.set(file.name, metrics);
         }
 
-        const resolutionFactor = getResolutionMultiplier(resolution);
+        // Look for a matching multiplier or return 1 (no resolution change)
+        const resolutionFactor = findExactMatch(resolution, resolutionPriceMultipliers, 1);
         const unitPrice = computePrice(vol, supportVol, surfaceArea, pricePerKg, density, infill, supportInfill, wallThickness);
         const quantityDiscount = findMatch(quantity, quantityDiscounts);
         totalSum += unitPrice * quantity * resolutionFactor * (1 - quantityDiscount);
