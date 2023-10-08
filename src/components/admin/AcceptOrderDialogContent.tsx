@@ -96,6 +96,7 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
         onAccept({
             ...order,
             expectedShipping: Timestamp.fromDate(date.toDate()),
+            lead: date.diff(moment(), 'days'),
             price: price
         });
     }

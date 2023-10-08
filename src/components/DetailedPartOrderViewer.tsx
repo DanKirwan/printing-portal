@@ -1,11 +1,8 @@
-import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
 import { FC } from 'react';
 import { PartOrder } from '../lib/types';
 import DetailedPartRow from './DetailedPartRow';
-import DetailedPartRowEditor from './DetailedPartRowEditor';
-import ModelPreview from './ModelPreview';
 
 
 

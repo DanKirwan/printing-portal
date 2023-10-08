@@ -15,12 +15,12 @@ export const SpinningLogo: FC = () => {
     const cubeModel = suspend(() => new STLLoader().loadAsync(cubeUrl), [cubeUrl]);
     return (
         <Suspense fallback={<Loading />}>
-            <Canvas dpr={window.devicePixelRatio} camera={{ position: [1, 1, -1], fov: 60, near: 0.01, far: 2000, up: [0, 0, -1] }} style={{ height: '100%' }}>
+            <Canvas dpr={window.devicePixelRatio} camera={{ position: [1, 0, -1], fov: 60, near: 0.01, far: 2000, up: [0, 0, -1] }} style={{ height: '100%' }}>
 
 
-                <pointLight position={[-5, 5, 20]} />
-                <pointLight position={[5, 5, -15]} />
-                <pointLight position={[-10, -10, 0]} />
+                <pointLight position={[10, 0, -10]} intensity={6} />
+                <pointLight position={[-10, 0, -10]} intensity={3} />
+                {/* <pointLight position={[-5, -5, 0]} intensity={3} /> */}
                 <SpinController radius={1.5} rpm={5} />
                 <NormalizedModel geometry={cubeModel} color="rgb(100,0, 0)" />
             </Canvas>
