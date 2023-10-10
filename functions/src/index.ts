@@ -24,6 +24,7 @@ const alertEmail = defineString('ALERT_EMAIL');
 
 const fromAddress = `"Henley Print 3D" <${senderEmail.value()}>`;
 
+
 export const triggerEmail = functions
     .firestore
     .document('orders/{orderId}')
@@ -46,7 +47,7 @@ export const triggerEmail = functions
         await transporter.sendMail({
             from: fromAddress,
             to: order.email,
-            subject: 'Order Confirmation',
+            subject: `Order Confirmation: ${orderId}`,
             html: buildConfirmationEmail(order, baseUrl.value(), orderId).html,
         });
 
@@ -87,7 +88,7 @@ export const orderUpdateEmail = functions
                 await transporter.sendMail({
                     from: fromAddress,
                     to: order.email,
-                    subject: 'Order Accepted',
+                    subject: `Order Accepted: ${orderId}`,
                     html: buildAcceptEmail(order, url, orderId).html,
                 });
                 break;
@@ -96,7 +97,7 @@ export const orderUpdateEmail = functions
                 await transporter.sendMail({
                     from: fromAddress,
                     to: order.email,
-                    subject: 'Order In Production',
+                    subject: `Order In Production : ${orderId}`,
                     html: buildProcessEmail(order, url, orderId).html,
                 });
                 break;
@@ -105,7 +106,7 @@ export const orderUpdateEmail = functions
                 await transporter.sendMail({
                     from: fromAddress,
                     to: order.email,
-                    subject: 'Order Shipped',
+                    subject: `Order Shipped: ${orderId}`,
                     html: buildShippingEmail(order, url, orderId).html,
                 });
                 break;

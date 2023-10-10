@@ -3,6 +3,19 @@
 import mjml2html from 'mjml';
 import { Address, DBOrder } from './types';
 
+
+const basicHeader = `
+<mj-head>
+  <mj-attributes>
+  
+    <mj-all font-family='Mulish,Helvetica, Arial, Sans-Serif, serif'/>
+  </mj-attributes>
+  
+</mj-head>
+`;
+
+const headerStyle = 'font-size="20px"  align="center" font-weight="bold" text-transform="uppercase"';
+
 // TODO unify across this and non functions code
 const darkGrey = '#504c4c';
 // const lightGrey = '#eceff1';
@@ -15,7 +28,7 @@ const buildAddress = (address: Address) => {
   const { firstName, lastName, line1, line2, city, county, postCode } = address;
 
   return `
-  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica" font-weight="bold">${firstName} ${lastName}</mj-text>
+  <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-weight="bold">${firstName} ${lastName}</mj-text>
   <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${line1}</mj-text>
   <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${line2}</mj-text>
   <mj-text line-height="1px" font-size="12px" color="${darkGrey}" font-family="helvetica">${city}</mj-text>
@@ -35,13 +48,13 @@ const buildLink = (baseUrl: string, orderId: string) => {
 const buildOrderDetails = (order: DBOrder) => {
   const { address, lead, price } = order;
   return `
-  <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Quoted Order Price</mj-text>
+  <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Quoted Order Price</mj-text>
   <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">£${price?.toFixed(2)}</mj-text>
 
-  <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Address</mj-text>
+  <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Address</mj-text>
   ${buildAddress(address)}
 
-  <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Expected Lead Time</mj-text>
+  <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Expected Lead Time</mj-text>
   <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">${lead} days</mj-text>
   `;
 };
@@ -52,6 +65,7 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
   const { firstName } = address;
 
   return mjml2html(`<mjml>
+    ${basicHeader}
     <mj-body background-color=white>
       <mj-section>
         <mj-column>
@@ -60,7 +74,7 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Confirmed</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle} >Order Confirmed</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
             Thank you for submitting your order! We have received it and our team will now review and approve it. An
@@ -68,14 +82,14 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
             production. We appreciate your business and look forward to fulfilling your order.
           </mj-text>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle} >Tracking</mj-text>
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Shipping Details</mj-text>
-          <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Address</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Shipping Details</mj-text>
+          <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Address</mj-text>
           ${buildAddress(address)}
 
-          <mj-text font-size="16px" color="${darkGrey}" font-family="helvetica" font-weight="bold">Expected Lead Time</mj-text>
+          <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Expected Lead Time</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">${lead} days</mj-text>
 
 
@@ -92,6 +106,7 @@ export const buildAcceptEmail = (order: DBOrder, baseUrl: string, orderId: strin
   const { firstName } = address;
 
   return mjml2html(`<mjml>
+    ${basicHeader}
     <mj-body background-color=white>
       <mj-section>
         <mj-column>
@@ -100,7 +115,7 @@ export const buildAcceptEmail = (order: DBOrder, baseUrl: string, orderId: strin
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Accepted</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order Accepted</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
               Your order has been accepted! We have quoted your order at £${price?.toFixed(2)} with a lead time 
@@ -108,11 +123,11 @@ export const buildAcceptEmail = (order: DBOrder, baseUrl: string, orderId: strin
               an invoice will follow shortly.
           </mj-text>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Tracking</mj-text>
 
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Details</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order Details</mj-text>
           ${buildOrderDetails(order)}
         </mj-column>
       </mj-section>
@@ -126,7 +141,9 @@ export const buildProcessEmail = (order: DBOrder, baseUrl: string, orderId: stri
   const { firstName } = address;
 
   return mjml2html(`<mjml>
+    ${basicHeader}
     <mj-body background-color=white>
+    
       <mj-section>
         <mj-column>
   
@@ -134,17 +151,17 @@ export const buildProcessEmail = (order: DBOrder, baseUrl: string, orderId: stri
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order In Production</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order In Production</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
               Your payment has been recieved and your order is under production!
               Your order is currently being printed in our production facility and will be shipped once completed.
           </mj-text>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Tracking</mj-text>
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Details</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order Details</mj-text>
           ${buildOrderDetails(order)}
 
         </mj-column>
@@ -167,6 +184,7 @@ export const buildShippingEmail = (order: DBOrder, baseUrl: string, orderId: str
     '';
 
   return mjml2html(`<mjml>
+    ${basicHeader}
     <mj-body background-color=white>
       <mj-section>
         <mj-column>
@@ -175,20 +193,20 @@ export const buildShippingEmail = (order: DBOrder, baseUrl: string, orderId: str
   
           <mj-divider border-color="${darkGrey}"></mj-divider>
   
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Shipped</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order Shipped</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">Dear ${firstName}</mj-text>
           <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">
               Your order is on the way! 
           </mj-text>
 
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Tracking</mj-text>
+          <mj-text  color="${darkGrey}" ${headerStyle}>Tracking</mj-text>
 
         
           ${trackingButton}
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text font-size="20px" color="${darkGrey}" font-family="helvetica" align='center' font-weight="bold">Order Details</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order Details</mj-text>
           ${buildOrderDetails(order)}
         </mj-column>
       </mj-section>

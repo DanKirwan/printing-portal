@@ -86,6 +86,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
         estimator.onmessage = (e: MessageEvent<{ cost: number, leadDays: number, id: string }>) => {
             const { cost, leadDays, id } = e.data;
             if (id != requestId.current) return;
+            console.log(e.data);
             handleSetLead(leadDays);
             handleSetPrice(cost);
             setLoading(false);

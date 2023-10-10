@@ -126,6 +126,7 @@ export const estimateOrderCost = async (
     metricCache: Map<string, [number, number, number]> = new Map(),
     quantityDiscounts: [number, number][],
     resolutionPriceMultipliers: [number, number][],
+    infillPriceMultipliers: [number, number][],
     cutoffAngle: number = 0.959931, //55Deg
     wallThickness: number = 1.2,
     samples: number = 40,
@@ -154,9 +155,9 @@ export const estimateOrderCost = async (
         const resolutionFactor = findExactMatch(resolution, resolutionPriceMultipliers, 1);
         const unitPrice = computePrice(vol, supportVol, surfaceArea, pricePerKg, density, infill, supportInfill, wallThickness);
         const quantityDiscount = findMatch(quantity, quantityDiscounts);
-        totalSum += unitPrice * quantity * resolutionFactor * (1 - quantityDiscount);
+        const infillFactor = findMatch(infill, infillPriceMultipliers);
+        totalSum += unitPrice * quantity * resolutionFactor * infillFactor * (1 - quantityDiscount);
     }
-
 
     return totalSum;
 }

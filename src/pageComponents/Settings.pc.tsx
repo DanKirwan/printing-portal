@@ -14,6 +14,7 @@ const defaults: AppSettings = {
     bulkPricingDiscounts: [{ key: 0, value: 0 }, { key: 40, value: 0.08 }, { key: 100, value: 0.15 }, { key: 200, value: 0.2 }, { key: 500, value: 0.27 }],
     quantityPricingDiscounts: [{ key: 0, value: 0 }, { key: 50, value: 0.07 }, { key: 150, value: 0.15 }, { key: 250, value: 0.25 }], //[[0, 0], [50, 0.07], [150, 0.15], [250, 0.25]],
     resolutionPriceMultiplier: [{ key: 100, value: 0.95 }, { key: 200, value: 1 }, { key: 300, value: 1.15 }],
+    infillPriceMultiplier: [{ key: 0, value: 1 }, { key: 20, value: 1 }, { key: 40, value: 0.8 }, { key: 100, value: 0.6 }],
     modelSampleRate: 40,
     minimumPrice: 20,
     minLeadDays: 2,
@@ -61,6 +62,7 @@ export const SettingsPC: FC = () => {
         volumeLeadMultiplier, minLeadDays,
         bulkPricingDiscounts,
         resolutionPriceMultiplier,
+        infillPriceMultiplier,
         modelSampleRate,
         quantityPricingDiscounts } = internalSettings;
     const handleSave = () => {
@@ -165,9 +167,19 @@ export const SettingsPC: FC = () => {
                             valueTitle='Price Mult'
                         />
                     </Stack>
+                    <Stack width='250px' >
+                        <Typography variant='h6'>Infill Multipliers</Typography>
+                        <PairListEditor
+                            entries={infillPriceMultiplier}
+                            setEntries={entries => setInternalSettings({ ...internalSettings, infillPriceMultiplier: orderBy(entries, e => e.key) })}
+                            keyTitle='Layer'
+                            valueTitle='Price Mult'
+                        />
+                    </Stack>
                 </Stack>
+
                 <Button onClick={() => handleSave()} variant='contained'>Save Changes</Button>
             </Stack>
-        </Container>
+        </Container >
     )
 }

@@ -22,6 +22,7 @@ export type AppSettings = {
     bulkPricingDiscounts: { key: number, value: number }[];
     resolutionPriceMultiplier: { key: number, value: number }[];
     quantityPricingDiscounts: { key: number, value: number }[];
+    infillPriceMultiplier: { key: number, value: number }[];
     // Shipping options will involve changing the shipping type enum
 
     // Model Settings
