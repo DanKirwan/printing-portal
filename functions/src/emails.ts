@@ -45,7 +45,7 @@ const buildLink = (baseUrl: string, orderId: string) => {
   <mj-text align='center' font-size="8px" href="${link}"  color=${darkGrey}">${link}</mj-text>
   `;
 };
-const buildOrderDetails = (order: DBOrder) => {
+const buildOrderDetails = (order: DBOrder, includeLead: boolean) => {
   const { address, lead, price } = order;
   return `
   <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Quoted Order Price</mj-text>
@@ -54,8 +54,10 @@ const buildOrderDetails = (order: DBOrder) => {
   <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Address</mj-text>
   ${buildAddress(address)}
 
-  <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Expected Lead Time</mj-text>
-  <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">${lead} days</mj-text>
+  ${includeLead ? `
+    <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Expected Lead Time</mj-text>
+    <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">${lead} days</mj-text>
+  ` : ''}
   `;
 };
 
@@ -128,7 +130,7 @@ export const buildAcceptEmail = (order: DBOrder, baseUrl: string, orderId: strin
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
           <mj-text color="${darkGrey}" ${headerStyle}>Order Details</mj-text>
-          ${buildOrderDetails(order)}
+          ${buildOrderDetails(order, true)}
         </mj-column>
       </mj-section>
     </mj-body>
@@ -162,7 +164,7 @@ export const buildProcessEmail = (order: DBOrder, baseUrl: string, orderId: stri
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
           <mj-text color="${darkGrey}" ${headerStyle}>Order Details</mj-text>
-          ${buildOrderDetails(order)}
+          ${buildOrderDetails(order, true)}
 
         </mj-column>
       </mj-section>
@@ -207,7 +209,7 @@ export const buildShippingEmail = (order: DBOrder, baseUrl: string, orderId: str
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
           <mj-text color="${darkGrey}" ${headerStyle}>Order Details</mj-text>
-          ${buildOrderDetails(order)}
+          ${buildOrderDetails(order, false)}
         </mj-column>
       </mj-section>
     </mj-body>

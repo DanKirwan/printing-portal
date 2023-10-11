@@ -30,7 +30,7 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
     const { settings } = useSettings();
     const {
         priceMultiplier,
-        bulkPricingDiscounts, resolutionPriceMultiplier,
+        bulkPricingDiscounts, resolutionPriceMultiplier, infillPriceMultiplier,
         supportAngle, supportDensity, modelSampleRate, quantityPricingDiscounts,
         wallThickness } = settings;
     const [priceMult, setPriceMult] = useState(priceMultiplier);
@@ -48,10 +48,11 @@ export const AcceptOrderDialogContent: FC<Props> = ({ orderId, onAccept, onClose
                 const quantityDiscounts: [number, number][] = tupalize(quantityPricingDiscounts);
                 const resolutionMultipliers: [number, number][] = tupalize(resolutionPriceMultiplier);
                 const valueDiscounts: [number, number][] = tupalize(bulkPricingDiscounts);
+                const infillMultipliers: [number, number][] = tupalize(infillPriceMultiplier);
                 console.log(order);
                 const cost = await estimateOrderCost(
                     order, materials, metricCache,
-                    quantityDiscounts, resolutionMultipliers, supportAngle,
+                    quantityDiscounts, resolutionMultipliers, infillMultipliers, supportAngle,
                     wallThickness, modelSampleRate, supportDensity);
                 if (unmounted) return;
                 setEstimatedCost(cost);
