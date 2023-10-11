@@ -17,21 +17,14 @@ import { tupalize } from '@src/lib/utils';
 interface Props {
     order: Order;
     materials: Material[];
-    onCalculated?: (price: number) => void;
-}
-
-const getRangeString = (ranges: number[], upperIndex: number) => {
-    if (upperIndex == 0) return `Less than £${ranges[0]}`;
-    if (upperIndex >= ranges.length - 1 || upperIndex == -1) return `Greater than £${ranges[ranges.length - 1]}`;
-
-    return `£${ranges[upperIndex - 1]} - £${ranges[upperIndex]}`;
+    onCalculated?: (price: number, leadDays: number) => void;
 }
 
 
 export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = () => null }) => {
 
     const { settings } = useSettings();
-    const { priceMultiplier, minimumPrice, bulkPricingDiscounts } = settings;
+    const { priceMultiplier, minimumPrice, bulkPricingDiscounts, volumeLeadMultiplier } = settings;
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState<number | null>(null);
     const [leadDays, setLeadDays] = useState<number | null>(null);
@@ -55,27 +48,25 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
         },
         200), [estimator]);
 
-    const handleSetPrice = (cost: number) => {
-        if (Number.isNaN(cost)) {
+    const handleCompleteCalculation = (cost: number, leadDays: number) => {
+        if (Number.isNaN(cost) || Number.isNaN(leadDays)) {
             setPrice(null);
+            setLeadDays(null);
+
             return;
         }
+        const filteredLeadDays = Math.ceil(Math.max(settings.minLeadDays, leadDays * volumeLeadMultiplier));
+
+
         const valueDiscounts = tupalize(bulkPricingDiscounts);
         const orderPrice = getOrderPrice(cost, priceMultiplier, valueDiscounts);
         const filteredPrice = orderPrice == 0 ? null : Math.max(minimumPrice, orderPrice);
         setPrice(filteredPrice);
-        if (filteredPrice == null) return;
-        onCalculated(orderPrice);
+        setLeadDays(filteredLeadDays);
+        if (filteredPrice == null || filteredLeadDays == null) return;
+        onCalculated(orderPrice, filteredLeadDays);
     }
 
-    const handleSetLead = (leadDays: number) => {
-        if (Number.isNaN(leadDays)) {
-            setLeadDays(null);
-            return;
-        }
-
-        setLeadDays(Math.max(settings.minLeadDays, leadDays));
-    }
 
     useEffect(() => {
         if (!window.Worker) return;
@@ -87,8 +78,7 @@ export const PriceEstimation: FC<Props> = ({ order, materials, onCalculated = ()
             const { cost, leadDays, id } = e.data;
             if (id != requestId.current) return;
             console.log(e.data);
-            handleSetLead(leadDays);
-            handleSetPrice(cost);
+            handleCompleteCalculation(cost, leadDays);
             setLoading(false);
         }
         setLoading(true);

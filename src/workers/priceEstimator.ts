@@ -18,7 +18,10 @@ export type EstimatorMessage = {
 // A request id is sent alongside the request to ensure most up to date result used
 self.onmessage = async (e: MessageEvent<EstimatorMessage>) => {
     const { order, materials, id, settings } = e.data;
-    const { supportAngle, wallThickness, supportDensity, quantityPricingDiscounts, resolutionPriceMultiplier, infillPriceMultiplier, modelSampleRate, } = settings;
+    const {
+        supportAngle, wallThickness, supportDensity,
+        quantityPricingDiscounts, resolutionPriceMultiplier, infillPriceMultiplier,
+        modelSampleRate, } = settings;
     e.lastEventId
     if (id != currentRequest) {
 

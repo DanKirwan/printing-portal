@@ -63,7 +63,7 @@ const buildOrderDetails = (order: DBOrder, includeLead: boolean) => {
 
 
 export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId: string) => {
-  const { address, lead } = order;
+  const { address } = order;
   const { firstName } = address;
 
   return mjml2html(`<mjml>
@@ -90,12 +90,6 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
           <mj-text color="${darkGrey}" ${headerStyle}>Shipping Details</mj-text>
           <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Address</mj-text>
           ${buildAddress(address)}
-
-          <mj-text font-size="16px" color="${darkGrey}" font-weight="bold">Expected Lead Time</mj-text>
-          <mj-text font-size="12px" color="${darkGrey}" font-family="helvetica">${lead} days</mj-text>
-
-
-          
         </mj-column>
       </mj-section>
     </mj-body>

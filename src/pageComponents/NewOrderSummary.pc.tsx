@@ -32,6 +32,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+    const [estimatedLeadDays, setEstimatedLeadDays] = useState<number | null>(null);
 
     const { uid, email } = useAuth();
     const navigate = useNavigate();
@@ -45,8 +46,9 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
         try {
 
             logEvent(analytics, EventTypes.CompleteOrder);
+            const orderWithEstimates: Order = estimatedLeadDays == null ? authOrder : { ...authOrder, lead: estimatedLeadDays };
 
-            const orderId = await handleOrderUpload(authOrder, uid);
+            const orderId = await handleOrderUpload(orderWithEstimates, uid);
             navigate(uid ? `/orders/${orderId}` : '/ordercomplete');
         } catch (e: any) {
             logEvent(analytics, EventTypes.OrderError, { error: e });
@@ -59,6 +61,11 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
 
 
 
+    }
+
+    const handleEstimateCalculations = (price: number, leadDays: number) => {
+        setEstimatedPrice(price);
+        setEstimatedLeadDays(leadDays);
     }
 
     const handleChangeSettings = (newSettings: OrderSettings) => {
@@ -134,7 +141,7 @@ const NewOrderSummaryPC: FC<Props> = ({ files }) => {
                     <PriceEstimation
                         order={authOrder}
                         materials={materials}
-                        onCalculated={setEstimatedPrice} />
+                        onCalculated={handleEstimateCalculations} />
                     {order.parts.length > 3 && estimatedPrice == null &&
                         <Typography variant='caption'>
                             (May take up to {pluralise(Math.floor(order.parts.length / 2), 'minute')})
