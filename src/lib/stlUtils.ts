@@ -104,8 +104,8 @@ export const estimateLeadTime = async (
 
 
     for (const part of order.parts) {
-        const { file, quantity } = part;
-
+        const { file, quantity, settings } = part;
+        const { infill } = settings;
         const geom = await stlToGeom(file);
         const metrics = metricCache.get(file.name) ?? computeGeometryMetrics(geom, samples, cutoffAngle, wallThickness);
         const [vol, supportVol, surfaceArea] = metrics;
@@ -113,7 +113,12 @@ export const estimateLeadTime = async (
         if (!metricCache.has(file.name)) {
             metricCache.set(file.name, metrics);
         }
-        const totalVol = vol + supportVol * supportInfill;
+
+        const totalVol = computeVolume(
+            vol, supportVol, surfaceArea,
+            infill, supportInfill, wallThickness
+        );
+
         const volInMetersCubed = totalVol / CUBIC_MM_IN_CUBIC_M;
         totalDays += volInMetersCubed * material.daysPerCubicMeter * quantity;
     }
