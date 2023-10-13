@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode dev",
-    "build-prod": "tsc && vite build",
+    "build-prod": "tsc && vite build --mode prod",
     "build-dev": "tsc && vite build --mode dev",
     "update-cors": "gsutil cors set cors.json gs://print-manage.appspot.com && gsutil cors set cors.dev.json gs://print-manage-dev.appspot.com",
     "deploy-dev": "npm run build-dev && firebase deploy -P dev",
