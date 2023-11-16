@@ -67,9 +67,6 @@ export const Header: FC = () => {
                         <MenuItem onClick={() => navigate('/')} sx={menuItemStyles}>
                             ORDER
                         </MenuItem>
-                        <MenuItem onClick={() => navigate('/about')} sx={menuItemStyles}>
-                            ABOUT
-                        </MenuItem>
 
                         {uid && photoURL && displayName && email
                             ?

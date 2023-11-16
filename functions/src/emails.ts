@@ -84,7 +84,7 @@ export const buildConfirmationEmail = (order: DBOrder, baseUrl: string, orderId:
             production. We appreciate your business and look forward to fulfilling your order.
           </mj-text>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text color="${darkGrey}" ${headerStyle} >Tracking</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle} >Order Status</mj-text>
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
           <mj-text color="${darkGrey}" ${headerStyle}>Shipping Details</mj-text>
@@ -119,7 +119,7 @@ export const buildAcceptEmail = (order: DBOrder, baseUrl: string, orderId: strin
               an invoice will follow shortly.
           </mj-text>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text color="${darkGrey}" ${headerStyle}>Tracking</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order Status</mj-text>
 
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
@@ -154,7 +154,7 @@ export const buildProcessEmail = (order: DBOrder, baseUrl: string, orderId: stri
               Your order is currently being printed in our production facility and will be shipped once completed.
           </mj-text>
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text color="${darkGrey}" ${headerStyle}>Tracking</mj-text>
+          <mj-text color="${darkGrey}" ${headerStyle}>Order Status</mj-text>
           ${buildLink(baseUrl, orderId)}
           <mj-divider border-color="${darkGrey}"></mj-divider>
           <mj-text color="${darkGrey}" ${headerStyle}>Order Details</mj-text>
@@ -196,7 +196,7 @@ export const buildShippingEmail = (order: DBOrder, baseUrl: string, orderId: str
           </mj-text>
 
           <mj-divider border-color="${darkGrey}"></mj-divider>
-          <mj-text  color="${darkGrey}" ${headerStyle}>Tracking</mj-text>
+          <mj-text  color="${darkGrey}" ${headerStyle}>Order Status</mj-text>
 
         
           ${trackingButton}
