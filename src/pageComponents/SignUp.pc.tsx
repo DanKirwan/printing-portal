@@ -6,6 +6,7 @@ import { LoadingButton } from '@src/components/generic/LoadingButton';
 import { PasswordField } from '@src/components/generic/PasswordField';
 import { useAuth } from '@src/contexts/AuthContext';
 import { getErrorDescription, signUp } from '@src/lib/firebaseUtils';
+import { sendEmailVerification } from 'firebase/auth';
 import { debounce } from 'lodash';
 import { FC, useCallback, useMemo, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -36,7 +37,8 @@ export const SignUpPC: FC = () => {
                 navigate('/')
                 return;
             }
-            sendVerification();
+            // Using the firebase method here - not from context as context isn't yet updated
+            sendEmailVerification(signupResult.user);
         } catch (e: any) {
             console.log(e, e.code);
             const msg = getErrorDescription(e.code ?? '');
@@ -91,7 +93,7 @@ export const SignUpPC: FC = () => {
                                     <Stack alignItems='center'>
                                         <Typography variant='h6' fontWeight='bold'>Email Verification</Typography>
                                         <Typography>You're almost there! We sent an email to</Typography>
-                                        <Typography fontWeight='bold'>{loggedInEmail}.</Typography>
+                                        <Typography fontWeight='bold'>{loggedInEmail}</Typography>
                                     </Stack>
                                     <Stack alignItems='center'>
                                         <Typography variant='caption'>Didn't recieve an email? No Problem</Typography>
