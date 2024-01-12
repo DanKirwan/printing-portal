@@ -11,7 +11,7 @@ const NotFoundPC: FC = () => {
             <Typography variant='h4' fontWeight='bold'>This Page Does Not Exist!</Typography>
             <Link href='/' >
                 <Typography variant='body2'>
-                    Please click here to get back on track.
+                    Get back on track.
                 </Typography>
             </Link>
         </Stack>

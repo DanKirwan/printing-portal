@@ -2,7 +2,7 @@ import { Stack, Button, Typography } from "@mui/material";
 import { OrdersTable } from "@src/components/orders/OrdersTable"
 import { useAuth } from "@src/contexts/AuthContext";
 import { EventTypes } from "@src/lib/analytics";
-import { SignInWithSocialMedia, Providers, getDB } from "@src/lib/firebaseUtils";
+import { signInWithSocialMedia, Providers, getDB } from "@src/lib/firebaseUtils";
 import { useQuery } from "@src/lib/hooks";
 import { DBOrder } from "@src/lib/types";
 import { WithId } from "@src/lib/utils";
@@ -41,7 +41,7 @@ export default () => {
         <Stack alignItems='center' padding={2} spacing={2}>
             <Typography variant='h3'>Not Logged in!</Typography>
             <Typography variant='h6'>You must be logged in to view orders</Typography>
-            <Button onClick={() => SignInWithSocialMedia(Providers.google)} variant='contained'>Login</Button>
+            <Button onClick={() => signInWithSocialMedia(Providers.google)} variant='contained'>Login</Button>
         </Stack>
     )
 

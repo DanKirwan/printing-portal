@@ -1,10 +1,9 @@
-import { AppBar, Toolbar, IconButton, Typography, Button, Avatar, Menu, MenuItem, Tooltip, Stack, Tab } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Button, Avatar, Menu, MenuItem, Tooltip, Stack, Tab, Divider } from '@mui/material';
 import { useAuth } from '@src/contexts/AuthContext';
 import { signOut } from 'firebase/auth';
 import { FC, useState, MouseEvent } from 'react';
-import { SignInWithSocialMedia, Providers, SignOut } from '@src/lib/firebaseUtils';
+import { signInWithSocialMedia, Providers, SignOut } from '@src/lib/firebaseUtils';
 import { Link, useNavigate } from 'react-router-dom';
-
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -37,7 +36,7 @@ export const Header: FC = () => {
     }
 
     const handleSignIn = () => {
-        SignInWithSocialMedia(Providers.google);
+        navigate('/login')
     }
 
     return (
@@ -60,20 +59,19 @@ export const Header: FC = () => {
                         </Stack>
                     </Stack>
 
-                    <Stack alignItems='center' justifyContent='center' direction='row' sx={{ flexGrow: 0 }} spacing={5}>
+                    <Stack alignItems='center' justifyContent='center' direction='row' sx={{ flexGrow: 0 }} spacing={2}>
                         {uid && <MenuItem onClick={() => navigate('/orders')} sx={menuItemStyles} >
                             MANAGE
                         </MenuItem>}
                         <MenuItem onClick={() => navigate('/')} sx={menuItemStyles}>
                             ORDER
                         </MenuItem>
-
-                        {uid && photoURL && displayName && email
+                        {uid && email
                             ?
                             <Stack sx={{ flexGrow: 0 }}>
                                 <Tooltip title="Open settings">
-                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                        <Avatar alt={displayName} src={photoURL} />
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} >
+                                        <Avatar alt={displayName ?? ''} src={photoURL ?? ''} />
                                     </IconButton>
                                 </Tooltip>
                                 <Menu
@@ -110,7 +108,10 @@ export const Header: FC = () => {
                                 </Menu>
                             </Stack>
                             :
-                            <Button color="inherit" onClick={handleSignIn}>Login</Button>
+                            <Stack direction='row' spacing={2}>
+
+                                <Button variant='outlined' color="inherit" onClick={handleSignIn}>Login</Button>
+                            </Stack>
 
                         }
                     </Stack>

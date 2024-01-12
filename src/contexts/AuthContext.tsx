@@ -1,5 +1,5 @@
 import { auth } from "@src/main";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, sendEmailVerification, User } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { FCC } from "../lib/utils";
 interface IAuthContext {
@@ -7,13 +7,14 @@ interface IAuthContext {
     email: string | null;
     photoURL: string | null;
     displayName: string | null;
+    emailVerified: boolean;
+    sendVerification: () => Promise<void>;
 }
 
 export const AuthContext = createContext({} as IAuthContext);
 
 export const AuthProvider: FCC = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
-
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
@@ -26,12 +27,19 @@ export const AuthProvider: FCC = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
+    const sendVerification = async () => {
+        if (!user) return;
+        sendEmailVerification(user);
+    }
+
     return (
         <AuthContext.Provider value={{
             uid: user?.uid ?? null,
             email: user?.email ?? null,
             photoURL: user?.photoURL ?? null,
-            displayName: user?.displayName ?? null
+            displayName: user?.displayName ?? null,
+            emailVerified: user?.emailVerified ?? false,
+            sendVerification
         }}>
             {children}
         </AuthContext.Provider>

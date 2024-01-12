@@ -4,7 +4,7 @@ import { OrderNavigationBar } from "@src/components/orders/OrderNavigationBar";
 import { OrderProgressBar } from "@src/components/orders/OrderProgressBar";
 import { useAuth } from "@src/contexts/AuthContext";
 import { handleOrderGet } from "@src/lib/appUtils";
-import { Providers, SignInWithSocialMedia } from "@src/lib/firebaseUtils";
+import { Providers, signInWithSocialMedia } from "@src/lib/firebaseUtils";
 import { OrderViewerPC } from "@src/pageComponents/OrderViewer.pc";
 import { Suspense } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -27,7 +27,7 @@ export default () => {
     }), [orderId]);
 
     const handleSignIn = async () => {
-        await SignInWithSocialMedia(Providers.google);
+        await signInWithSocialMedia(Providers.google);
         window.location.reload();
     }
 

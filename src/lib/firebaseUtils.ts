@@ -1,5 +1,5 @@
 import { auth, fireStore } from "@src/main";
-import { AuthProvider, GoogleAuthProvider, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { AuthProvider, GoogleAuthProvider, UserCredential, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { AppSettings, DBOrder, Email, Material, collections } from "./types";
 import { CollectionReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, collection } from "firebase/firestore";
 
@@ -10,7 +10,23 @@ import { CollectionReference, Firestore, FirestoreDataConverter, QueryDocumentSn
 export const getDB = () => getTypedFirestore(fireStore);
 
 
-export const SignInWithSocialMedia = (provider: AuthProvider) =>
+type ErrorCode =
+    'auth/email-alreay-exsits' |
+    'auth/invalid-email' |
+    'auth/invalid-password' |
+    'auth/weak-password';
+export const getErrorDescription = (code: ErrorCode | string) => {
+    switch (code) {
+        case 'auth/email-alreay-exsits': return "This email already has an account";
+        case 'auth/invalid-email': return "This email is not registered with an account";
+        case 'auth/invalid-password': return "Incorrect Password";
+        case 'auth/weak-password': return "Passwords should be at least 6 characters";
+        case 'auth/email-already-in-use': return "This email already has an account";
+        default: return 'Please try again';
+    }
+}
+
+export const signInWithSocialMedia = (provider: AuthProvider) =>
     new Promise<UserCredential>((resolve, reject) => {
         signInWithPopup(auth, provider)
             .then(result => resolve(result))
@@ -18,14 +34,13 @@ export const SignInWithSocialMedia = (provider: AuthProvider) =>
     });
 
 
-export const SignInWithEmailAndPassword = ({ loginEmail, loginPassword }: any) => {
+export const loginWithEmailAndPassword = ({ loginEmail, loginPassword }: any) => {
     return signInWithEmailAndPassword(auth, loginEmail, loginPassword)
 };
 
-export const SignUp = async ({ registerEmail, registerPassword }: any) => {
+export const signUp = async (registerEmail: string, registerPassword: string) => {
     return await createUserWithEmailAndPassword(auth, registerEmail, registerPassword)
 };
-
 
 export const SignOut = () => { signOut(auth).catch((error) => { alert("Error Signing out"); console.log(error) }) }
 

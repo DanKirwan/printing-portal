@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import { useAuth } from '@src/contexts/AuthContext';
-import { SignInWithSocialMedia, Providers } from '@src/lib/firebaseUtils';
+import { signInWithSocialMedia, Providers } from '@src/lib/firebaseUtils';
 import { Order } from '@src/lib/types';
 import { FC, useState } from 'react';
 import { EllipseLoadingText } from '../generic/EllipseLoadingText';
@@ -27,7 +27,7 @@ export const UploadDialog: FC<Props> = ({ order, onChange, onSubmit, open, onClo
     const [confirmAnonymousOpen, setConfirmAnonymousOpen] = useState(false);
 
     const handleSignin = async () => {
-        await SignInWithSocialMedia(Providers.google);
+        await signInWithSocialMedia(Providers.google);
         setConfirmAnonymousOpen(false);
     }
 
