@@ -14,7 +14,9 @@ type ErrorCode =
     'auth/email-alreay-exsits' |
     'auth/invalid-email' |
     'auth/invalid-password' |
-    'auth/weak-password';
+    'auth/weak-password' |
+    'auth/too-many-requests' |
+    'auth/wrong-password';
 export const getErrorDescription = (code: ErrorCode | string) => {
     switch (code) {
         case 'auth/email-alreay-exsits': return "This email already has an account";
@@ -22,6 +24,8 @@ export const getErrorDescription = (code: ErrorCode | string) => {
         case 'auth/invalid-password': return "Incorrect Password";
         case 'auth/weak-password': return "Passwords should be at least 6 characters";
         case 'auth/email-already-in-use': return "This email already has an account";
+        case 'auth/too-many-requests': return "Too many failed login attempts. Please reset password or try again later";
+        case 'auth/wrong-password': return "Invalid Credentials"
         default: return 'Please try again';
     }
 }
@@ -43,6 +47,7 @@ export const signUp = async (registerEmail: string, registerPassword: string) =>
 };
 
 export const SignOut = () => { signOut(auth).catch((error) => { alert("Error Signing out"); console.log(error) }) }
+
 
 export const Providers = {
     google: new GoogleAuthProvider(),

@@ -1,5 +1,5 @@
 import { auth } from "@src/main";
-import { onAuthStateChanged, sendEmailVerification, User } from "firebase/auth";
+import { onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, User } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { FCC } from "../lib/utils";
 interface IAuthContext {

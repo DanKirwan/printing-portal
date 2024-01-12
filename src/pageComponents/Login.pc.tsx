@@ -1,5 +1,5 @@
 import { Button, Card, Container, Divider, Fab, FormControl, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, Stack, TextField, Typography } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import logoUrl from '@src/assets/logo.png';
 import GoogleIcon from '@mui/icons-material/Google';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
@@ -8,12 +8,16 @@ import { signInWithSocialMedia, Providers, loginWithEmailAndPassword, getErrorDe
 import { PasswordField } from '@src/components/generic/PasswordField';
 import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@src/components/generic/LoadingButton';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '@src/main';
+import { debounce } from 'lodash';
 export const LoginPC: FC = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [failCount, setFailCount] = useState(0);
 
     const navigate = useNavigate();
     const handleLogin = async () => {
@@ -26,8 +30,11 @@ export const LoginPC: FC = () => {
             navigate(signupResult.user.emailVerified ? '/' : '/signup');
 
         } catch (e: any) {
+            console.log(JSON.stringify(e))
+
             console.log(e, e.code);
             const msg = getErrorDescription(e.code ?? '');
+            setFailCount(count => count + 1);
             setErrorMessage(`We encoutered an error: ${msg}`);
         } finally {
             setLoading(false);
@@ -62,6 +69,26 @@ export const LoginPC: FC = () => {
     const handleSetPassword = (pass: string) => {
         setErrorMessage('');
         setPassword(pass);
+    }
+
+
+    const internalSendEmail = useCallback(async () => {
+        await sendPasswordResetEmail(auth, email);
+    }, [email]);
+
+    const debouncedSendEmail = useMemo(() => debounce(internalSendEmail, 30000, { leading: true }), [internalSendEmail]);
+
+    const handleResetPassword = async () => {
+        if (loading || !email) return;
+        setLoading(true);
+        try {
+            await debouncedSendEmail();
+        } finally {
+            setLoading(false);
+            setErrorMessage('');
+            setFailCount(0);
+            setPassword('');
+        }
     }
 
     return (
@@ -99,24 +126,36 @@ export const LoginPC: FC = () => {
 
 
 
-                        <Stack spacing={1}>
-                            <LoadingButton
-                                onClick={() => handleLogin()}
-                                variant='contained'
-                                loading={loading}
-                                disabled={!email || !password}
-                            >
-                                Login
-                            </LoadingButton>
-                            <Typography variant='subtitle2' color='error'>{errorMessage}</Typography>
-                            <Stack direction='row' alignItems='center' spacing={1}>
-                                <Typography variant='caption'>New to Henley Print 3D?</Typography>
-                                <Link href={'signup'}>Create Account Here</Link>
+                        <Stack spacing={2}>
+                            <Stack>
+
+                                <LoadingButton
+                                    onClick={() => handleLogin()}
+                                    variant='contained'
+                                    loading={loading}
+                                    disabled={!email || !password}
+                                >
+                                    Login
+                                </LoadingButton>
+
+
+
+                                <Stack direction='row' alignItems='center' spacing={1}>
+                                    <Typography variant='caption'>Forgotten your password?</Typography>
+                                    <Link sx={{ cursor: 'pointer' }} onClick={() => handleResetPassword()}>Send Reset Email</Link>
+                                </Stack>
                             </Stack>
+
+                            <Typography variant='subtitle2' color='error' >{errorMessage}</Typography>
+
                         </Stack>
 
                     </Stack>
                 </Card>
+                <Stack direction='row' alignItems='center' spacing={1}>
+                    <Typography variant='caption'>New to Henley Print 3D?</Typography>
+                    <Link href={'signup'}>Create Account Here</Link>
+                </Stack>
             </Stack>
 
         </Container>
