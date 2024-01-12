@@ -1,31 +1,69 @@
-import { Button, Card, Container, Fab, FormControl, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, Stack, TextField, Typography } from '@mui/material';
+import { Button, Card, Container, Divider, Fab, FormControl, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, Stack, TextField, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import logoUrl from '@src/assets/logo.png';
 import GoogleIcon from '@mui/icons-material/Google';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { AppRoutes } from '@src/AppRoutes';
-import { signInWithSocialMedia, Providers, loginWithEmailAndPassword } from '@src/lib/firebaseUtils';
+import { signInWithSocialMedia, Providers, loginWithEmailAndPassword, getErrorDescription } from '@src/lib/firebaseUtils';
+import { PasswordField } from '@src/components/generic/PasswordField';
+import { useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@src/components/generic/LoadingButton';
 export const LoginPC: FC = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const navigate = useNavigate();
+    const handleLogin = async () => {
 
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
-    const handleLogin = () => {
         if (!email || !password) return;
-        loginWithEmailAndPassword({ loginEmail: email, loginPassword: password });
+        setLoading(true);
+
+        try {
+            const signupResult = await loginWithEmailAndPassword({ loginEmail: email, loginPassword: password });
+            navigate(signupResult.user.emailVerified ? '/' : '/signup');
+
+        } catch (e: any) {
+            console.log(e, e.code);
+            const msg = getErrorDescription(e.code ?? '');
+            setErrorMessage(`We encoutered an error: ${msg}`);
+        } finally {
+            setLoading(false);
+        }
+
     }
 
-    const handleGoogleLogin = () => {
-        signInWithSocialMedia(Providers.google);
+
+    const handleGoogleLogin = async () => {
+        try {
+
+            await signInWithSocialMedia(Providers.google);
+            navigate('/');
+
+        } catch (e: any) {
+            const msg = getErrorDescription(e.code ?? '');
+            setErrorMessage(`We encoutered an error: ${msg}`);
+        } finally {
+            setLoading(false);
+        }
+
 
     }
+
+
+    const handleSetEmail = (email: string) => {
+        setErrorMessage('');
+        setEmail(email);
+    }
+
+
+    const handleSetPassword = (pass: string) => {
+        setErrorMessage('');
+        setPassword(pass);
+    }
+
     return (
         <Container>
             <Stack alignItems='center' spacing={2}>
@@ -42,40 +80,41 @@ export const LoginPC: FC = () => {
                     </Stack>
                 </Fab>
 
+                <Divider orientation='horizontal' sx={{ marginY: 10 }} />
 
                 <Card>
                     <Stack padding={2} spacing={1}>
-                        <TextField value={email} onChange={e => setEmail(e.target.value)} label='Email' />
+                        <Stack spacing={1} width='100%'>
 
-                        <FormControl sx={{ m: 1, }} variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                            <OutlinedInput
-                                value={password} onChange={e => setPassword(e.target.value)}
-                                id="outlined-adornment-password"
-                                type={showPassword ? 'text' : 'password'}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                                label="Password"
+                            <TextField size='small' value={email} onChange={e => handleSetEmail(e.target.value)} label='Email' />
+
+                            <PasswordField
+                                password={password}
+                                label='Password'
+                                setPassword={handleSetPassword}
+                                verifyPassword={() => ''}
                             />
-                        </FormControl>
-
-                        <Button onClick={() => handleLogin()} variant='contained' disabled={!email || !password}>Login</Button>
-
-
-                        <Stack direction='row'>
-                            <Typography variant='caption'>New to Henley Print 3D?</Typography>
-                            <Link href={'signup'}>Create an account</Link>
                         </Stack>
+
+
+
+
+                        <Stack spacing={1}>
+                            <LoadingButton
+                                onClick={() => handleLogin()}
+                                variant='contained'
+                                loading={loading}
+                                disabled={!email || !password}
+                            >
+                                Login
+                            </LoadingButton>
+                            <Typography variant='subtitle2' color='error'>{errorMessage}</Typography>
+                            <Stack direction='row' alignItems='center' spacing={1}>
+                                <Typography variant='caption'>New to Henley Print 3D?</Typography>
+                                <Link href={'signup'}>Create Account Here</Link>
+                            </Stack>
+                        </Stack>
+
                     </Stack>
                 </Card>
             </Stack>

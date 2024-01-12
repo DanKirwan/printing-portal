@@ -26,7 +26,7 @@ export const getErrorDescription = (code: ErrorCode | string) => {
     }
 }
 
-export const signInWithSocialMedia = (provider: AuthProvider) =>
+export const signInWithSocialMedia = (provider: AuthProvider): Promise<UserCredential> =>
     new Promise<UserCredential>((resolve, reject) => {
         signInWithPopup(auth, provider)
             .then(result => resolve(result))
